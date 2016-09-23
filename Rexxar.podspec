@@ -1,15 +1,15 @@
 Pod::Spec.new do |s|
 
   s.name         = "Rexxar"
-  s.version      = "1.3.2"
-  s.license      = { :type => 'MIT', :text => 'LICENSE.md' }
+  s.version      = "0.1.0"
+  s.license      = { :type => 'MIT', :text => 'LICENSE' }
 
   s.summary      = "Rexxar Hybrid Framework"
   s.description  = "Rexxar is Douban Hybrid Framework. By Rexxar, You can develop UI interface with Web tech."
-  s.homepage     = "http://github.intra.douban.com/rexxar/rexxar-ios"
+  s.homepage     = "https://www.github.com/lincode/rexxar-ios"
   s.author       = { "iOS Dev" => "ios-dev@douban.com" }
   s.platform     = :ios, "7.0"
-  s.source       = { :git => "http://github.intra.douban.com/rexxar/rexxar-ios.git",
+  s.source       = { :git => "https://github.com/lincode/rexxar-ios.git",
                      :tag => "v#{s.version}" }
   s.requires_arc = true
   s.source_files = "Rexxar/**/*.{h,m}"

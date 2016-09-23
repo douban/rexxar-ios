@@ -20,10 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window?.makeKeyAndVisible()
 
     // Config Rexxar
-    let routesMapURL = "https://rexxar.douban.com/api/routes"
+    let routesMapURL = "https://raw.githubusercontent.com/lincode/rexxar-ios/master/Web/routes.json"
     RXRConfig.setRoutesMapURL(URL(string: routesMapURL)!)
     RXRConfig.setRoutesCachePath("com.douban.RexxarDemo")
-    RXRConfig.setRoutesResourcePath("hybrid")
+    //RXRConfig.setRoutesResourcePath("hybrid")
 
     // Update UserAgent need by RexxarDemo javascript code.
     let appSuffix = "com.douban.frodo/4.4.0"
