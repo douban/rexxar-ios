@@ -1,0 +1,16 @@
+- job:
+    name: unittest
+    description: '<a href="http://github.intra.douban.com/rexxar/rexxar-ios">Rexxar iOS Unit Tests</a>'
+    node: qaci-osx2
+    scm:
+      - git:
+          branches:
+            - master
+          skip-tag: True
+          url: http://github.intra.douban.com/rexxar/rexxar-ios.git
+    triggers:
+      - pollscm: '* * * * *'
+    builders:
+      - shell: |
+            pod lib lint --verbose --allow-warnings --sources=http://code.dapps.douban.com/CocoaPodsSpecs.git
+            xcodebuild -destination "name=iPhone 6s" -sdk iphonesimulator -scheme Rexxar -project Rexxar.xcodeproj -derivedDataPath build test

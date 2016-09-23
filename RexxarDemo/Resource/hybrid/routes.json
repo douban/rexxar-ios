@@ -1,0 +1,12 @@
+{
+	"items": [{
+		"remote_file": "https://img3.doubanio.com/dae/rexxar/pre-files/rexxar/demo-dd19d987ef.html",
+		"deploy_time": "Tue, 06 Sep 2016 08:42:09 GMT",
+		"uri": "douban://douban.com/rexxar_demo[/]?.*"
+	}],
+	"partial_items": [{
+		"remote_file": "https://img3.doubanio.com/dae/rexxar/pre-files/rexxar/demo-dd19d987ef.html",
+		"deploy_time": "Tue, 06 Sep 2016 08:42:09 GMT",
+		"uri": "douban://partial.douban.com/rexxar_demo/_.*"
+	}]
+}
