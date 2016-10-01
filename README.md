@@ -1,5 +1,6 @@
 # Rexxar iOS
 
+[![IDE](https://img.shields.io/badge/XCode-8-blue.svg)]()
 [![Language](https://img.shields.io/badge/language-ObjC-blue.svg)](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)
 [![iOS](https://img.shields.io/badge/iOS-7.0-green.svg)]()
 
