@@ -53,7 +53,7 @@
 
 - (void)testCacheCss
 {
-  NSURL *resourceURL = [NSURL URLWithString:@"https://img3.doubanio.com/misc/mixed_static/6f59bfb52430ee85.css"];
+  NSURL *resourceURL = [NSURL URLWithString:@"https://img3.doubanio.com/f/shire/7e852f2bb1782270ae227988d79adc8e7acb1e30/css/frontpage/_init_.css"];
 
   XCTestExpectation *expect = [self expectationWithDescription:@"Resource cached"];
   [[[NSURLSession sharedSession] dataTaskWithRequest:[self webResourceRequest:resourceURL]
