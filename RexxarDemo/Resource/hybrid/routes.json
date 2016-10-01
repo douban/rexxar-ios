@@ -1,12 +1,17 @@
 {
-	"items": [{
-		"remote_file": "https://img3.doubanio.com/dae/rexxar/pre-files/rexxar/demo-dd19d987ef.html",
-		"deploy_time": "Tue, 06 Sep 2016 08:42:09 GMT",
-		"uri": "douban://douban.com/rexxar_demo[/]?.*"
-	}],
-	"partial_items": [{
-		"remote_file": "https://img3.doubanio.com/dae/rexxar/pre-files/rexxar/demo-dd19d987ef.html",
-		"deploy_time": "Tue, 06 Sep 2016 08:42:09 GMT",
-		"uri": "douban://partial.douban.com/rexxar_demo/_.*"
-	}]
+  "items": [
+    {
+      "deploy_time": "Fri, 30 Sep 2016 07:55:33 GMT",
+      "remote_file": "https://raw.githubusercontent.com/lincode/rexxar-ios/master/Web/rexxar/demo-b86ce98b22.html",
+      "uri": "douban://douban.com/rexxar_demo[/]?.*"
+    }
+  ],
+  "partial_items": [
+    {
+      "deploy_time": "Fri, 30 Sep 2016 07:55:33 GMT",
+      "remote_file": "https://raw.githubusercontent.com/lincode/rexxar-ios/master/Web/rexxar/demo-b86ce98b22.html",
+      "uri": "douban://partial.douban.com/rexxar_demo/_.*"
+    }
+  ],
+  "deploy_time": "Fri, 30 Sep 2016 07:55:33 GMT"
 }
