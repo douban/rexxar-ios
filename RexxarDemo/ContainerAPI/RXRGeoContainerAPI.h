@@ -1,5 +1,5 @@
 //
-//  RXRLocContainerAPI.h
+//  RXRGeoContainerAPI.h
 //  Rexxar
 //
 //  Created by GUO Lin on 8/19/16.
@@ -8,6 +8,6 @@
 
 #import <Rexxar/Rexxar.h>
 
-@interface RXRLocContainerAPI : NSObject<RXRContainerAPI>
+@interface RXRGeoContainerAPI : NSObject<RXRContainerAPI>
 
 @end

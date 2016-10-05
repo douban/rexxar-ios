@@ -1,8 +1,8 @@
 # Rexxar iOS
 
 [![IDE](https://img.shields.io/badge/XCode-8-blue.svg)]()
+[![iOS](https://img.shields.io/badge/iOS-7.0-blue.svg)]()
 [![Language](https://img.shields.io/badge/language-ObjC-blue.svg)](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)
-[![iOS](https://img.shields.io/badge/iOS-7.0-green.svg)]()
 
 **Rexxar** 是一个针对移动端的混合开发框架。现在支持 Android 和 iOS 平台。`Rexxar-iOS` 是 Rexxar 在 iOS 系统上的客户端实现。
 
@@ -64,12 +64,12 @@ Rexxar 使用 url 来标识页面。提供一个正确的 url 就可以创建对
 ```json
 {
     "items": [{
-        "remote_file": "https://raw.githubusercontent.com/lincode/rexxar-ios/master/Web/rexxar/demo-dd19d987ef.html",
+        "remote_file": "https://raw.githubusercontent.com/lincode/rexxar-ios/master/Web/rexxar/demo-b86ce98b22.html",
         "deploy_time": "Thu, 04 Aug 2016 07:43:47 GMT",
         "uri": "douban://douban.com/rexxar_demo[/]?.*"
     }],
     "partial_items": [{
-        "remote_file": "https://raw.githubusercontent.com/lincode/rexxar-ios/master/Web/rexxar/demo-dd19d987ef.html",
+        "remote_file": "https://raw.githubusercontent.com/lincode/rexxar-ios/master/Web/rexxar/demo-b86ce98b22.html",
         "deploy_time": "Thu, 04 Aug 2016 07:43:47 GMT",
         "uri": "douban://partial.douban.com/rexxar_demo/_.*"
     }],
@@ -184,7 +184,7 @@ Rexxar Container 提供了一些原生 UI 组件，供 Rexxar Web 使用。RXRWi
 
 我们常常需要在 Rexxar Container 和 Rexxar Web 之间做数据交互。比如 Rexxar Container 可以为 Rexxar Web 提供一些计算结果。如果你需要提供一些由原生代码计算的数据给 Rexxar Web 使用，你就可以选择实现 RXRContainerAPI 协议（Protocol），并实现以下三个方法：`shouldInterceptRequest:`, `responseWithRequest:`, `responseData`。
 
-在 Demo 中可以找到一个例子：`RXRLocContainerAPI`。这个例子中，`RXRLocContainerAPI` 返回了设备所在城市信息。当然，这个 ContainerAPI 仅仅是一个示例，它提供的是一个假数据，数据永远不会变化。你当然可以遵守 `RXRContainerAPI` 协议，实现一个类似的但是数据是真实的功能。
+在 Demo 中可以找到一个例子：`RXRGeoContainerAPI`。这个例子中，`RXRGeoContainerAPI` 返回了设备所在城市，以及经纬度信息。当然，这个 ContainerAPI 仅仅是一个示例，它提供的是一个假数据，数据永远不会变化。你当然可以遵守 `RXRContainerAPI` 协议，实现一个类似的但是数据是真实的功能。
 
 ### 定制 RXRDecorator
 

@@ -26,9 +26,10 @@ class DemoRXRViewController: RXRViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
-    let locContainerAPI = RXRLocContainerAPI()
+    let geoContainerAPI = RXRGeoContainerAPI()
+    let logContainerAPI = RXRLogContainerAPI()
 
-    RXRContainerIntercepter.setContainerAPIs([locContainerAPI])
+    RXRContainerIntercepter.setContainerAPIs([geoContainerAPI, logContainerAPI])
     URLProtocol.registerClass(RXRContainerIntercepter.self)
   }
 

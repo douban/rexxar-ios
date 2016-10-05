@@ -1,5 +1,5 @@
 //
-//  RXRLocContainerAPI.m
+//  RXRGeoContainerAPI.m
 //  Rexxar
 //
 //  Created by GUO Lin on 8/19/16.
@@ -7,16 +7,16 @@
 //
 #import <Rexxar/RXRContainerAPI.h>
 
-#import "RXRLocContainerAPI.h"
+#import "RXRGeoContainerAPI.h"
 
-@implementation RXRLocContainerAPI
+@implementation RXRGeoContainerAPI
 
 - (BOOL)shouldInterceptRequest:(NSURLRequest *)request
 {
   // http://rexxar-container/api/event_location
   if ([request.URL.scheme isEqualToString:@"http"] &&
       [request.URL.host isEqualToString:@"rexxar-container"] &&
-      [request.URL.path hasPrefix:@"/api/event_location"]) {
+      [request.URL.path hasPrefix:@"/api/geo"]) {
 
     return YES;
   }
@@ -36,7 +36,7 @@
 - (NSData *)responseData
 {
   // It's just a demo here.
-  // You can implement your own loc service to get the current city data.
+  // You can implement your own geo service to get the real current city data.
   NSDictionary *dictionary = @{@"name": @"北京",
                                @"letter": @"beijing",
                                @"longitude": @(116.41667),

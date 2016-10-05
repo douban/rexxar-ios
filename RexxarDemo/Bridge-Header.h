@@ -14,5 +14,6 @@
 
 #import "RXRToastWidget.h"
 #import "RXRNavMenuWidget.h"
-#import "RXRLocContainerAPI.h"
+#import "RXRGeoContainerAPI.h"
+#import "RXRLogContainerAPI.h"
 
