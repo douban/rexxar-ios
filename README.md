@@ -1,5 +1,6 @@
 # Rexxar iOS
 
+[![Test Status](https://travis-ci.org/douban/rexxar-ios.svg?branch=master)](https://travis-ci.org/douban/rexxar-ios)
 [![IDE](https://img.shields.io/badge/XCode-8-blue.svg)]()
 [![iOS](https://img.shields.io/badge/iOS-7.0-blue.svg)]()
 [![Language](https://img.shields.io/badge/language-ObjC-blue.svg)](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)
@@ -13,12 +14,15 @@ Rexxar-iOS 现在支持 iOS 7 及以上版本。
 
 ## Rexxar 简介
 
-关于 Rexxar 的整体介绍，可以查看文档：[Rexxar 简介](/docs/INTRODUTION.md)。
+关于 Rexxar 的整体介绍，可以看看这篇博客：[豆瓣的混合开发框架 -- Rexxar](http://lincode.github.io/Rexxar-OpenSource)。
 
-关于 Rexxar Android，可以访问：[https://www.github.com/douban/rexxar-android](https://www.github.com/douban/rexxar-android)。
+Rexxar 包含三个库：
 
-关于 Rexxar Web，可以访问：[https://www.github.com/douban/rexxar-web](https://www.github.com/douban/rexxar-web)。
+- Rexxar Web ：[https://github.com/douban/rexxar-web](https://github.com/douban/rexxar-web)。
 
+- Rexxar Android：[https://github.com/douban/rexxar-android](https://github.com/douban/rexxar-android)。
+
+- Rexxar iOS：[https://github.com/douban/rexxar-ios](https://github.com/douban/rexxar-ios)。
 
 ## 安装
 
