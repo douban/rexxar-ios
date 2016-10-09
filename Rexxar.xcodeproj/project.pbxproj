@@ -15,7 +15,7 @@
 		A3249A0E1D66EF27006CCCCB /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A0A1D66EF27006CCCCB /* ToastView.swift */; };
 		A3249A0F1D66EF27006CCCCB /* UIColor+helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A0B1D66EF27006CCCCB /* UIColor+helper.swift */; };
 		A3249A151D66EF98006CCCCB /* RXRToastWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = A3249A141D66EF98006CCCCB /* RXRToastWidget.m */; };
-		A3249A1A1D66F941006CCCCB /* DemoRXRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A191D66F941006CCCCB /* DemoRXRViewController.swift */; };
+		A3249A1A1D66F941006CCCCB /* FullRXRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A191D66F941006CCCCB /* FullRXRViewController.swift */; };
 		A330D9D21DA49B1800BAB863 /* RXRLogContainerAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = A330D9D11DA49B1800BAB863 /* RXRLogContainerAPI.m */; };
 		A35925261CE487870032B1E6 /* RXRRouteFileCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A35925251CE487870032B1E6 /* RXRRouteFileCacheTests.m */; };
 		A35D15A21D66AE2B009B24DC /* RXRAlertDialogWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = A35D15A01D66AE2B009B24DC /* RXRAlertDialogWidget.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -69,7 +69,7 @@
 		A398DC331D222CC1006D4817 /* RXRModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A398DC311D222CC1006D4817 /* RXRModel.m */; };
 		A398DC361D222D8F006D4817 /* RXRAlertDialogData.h in Headers */ = {isa = PBXBuildFile; fileRef = A398DC341D222D8F006D4817 /* RXRAlertDialogData.h */; };
 		A398DC371D222D8F006D4817 /* RXRAlertDialogData.m in Sources */ = {isa = PBXBuildFile; fileRef = A398DC351D222D8F006D4817 /* RXRAlertDialogData.m */; };
-		A39994651CEDB0280084DCD6 /* PartialRexxarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39994641CEDB0280084DCD6 /* PartialRexxarViewController.swift */; };
+		A39994651CEDB0280084DCD6 /* PartialRXRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39994641CEDB0280084DCD6 /* PartialRXRViewController.swift */; };
 		B90EBEC11BFEAA830055D477 /* Rexxar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98B47B031BF1E0E00087735C /* Rexxar.framework */; };
 		B9E27ED01C049A9900C12DAF /* RXRRouteManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */; };
 		B9E27ED41C054A7A00C12DAF /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E27ED31C054A7A00C12DAF /* RoutesViewController.swift */; };
@@ -115,7 +115,7 @@
 		A3249A0B1D66EF27006CCCCB /* UIColor+helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+helper.swift"; sourceTree = "<group>"; };
 		A3249A131D66EF98006CCCCB /* RXRToastWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXRToastWidget.h; path = RexxarDemo/Widget/RXRToastWidget.h; sourceTree = SOURCE_ROOT; };
 		A3249A141D66EF98006CCCCB /* RXRToastWidget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXRToastWidget.m; path = RexxarDemo/Widget/RXRToastWidget.m; sourceTree = SOURCE_ROOT; };
-		A3249A191D66F941006CCCCB /* DemoRXRViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoRXRViewController.swift; sourceTree = "<group>"; };
+		A3249A191D66F941006CCCCB /* FullRXRViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullRXRViewController.swift; sourceTree = "<group>"; };
 		A330D9D01DA49B1800BAB863 /* RXRLogContainerAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXRLogContainerAPI.h; path = RexxarDemo/ContainerAPI/RXRLogContainerAPI.h; sourceTree = SOURCE_ROOT; };
 		A330D9D11DA49B1800BAB863 /* RXRLogContainerAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXRLogContainerAPI.m; path = RexxarDemo/ContainerAPI/RXRLogContainerAPI.m; sourceTree = SOURCE_ROOT; };
 		A35925251CE487870032B1E6 /* RXRRouteFileCacheTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRRouteFileCacheTests.m; sourceTree = "<group>"; };
@@ -173,7 +173,7 @@
 		A398DC311D222CC1006D4817 /* RXRModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRModel.m; sourceTree = "<group>"; };
 		A398DC341D222D8F006D4817 /* RXRAlertDialogData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRAlertDialogData.h; sourceTree = "<group>"; };
 		A398DC351D222D8F006D4817 /* RXRAlertDialogData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRAlertDialogData.m; sourceTree = "<group>"; };
-		A39994641CEDB0280084DCD6 /* PartialRexxarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartialRexxarViewController.swift; sourceTree = "<group>"; };
+		A39994641CEDB0280084DCD6 /* PartialRXRViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartialRXRViewController.swift; sourceTree = "<group>"; };
 		B90EBEBC1BFEAA830055D477 /* RexxarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RexxarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B90EBEC01BFEAA830055D477 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRRouteManagerTests.m; sourceTree = "<group>"; };
@@ -276,8 +276,8 @@
 				A399647B1D549DB700813A60 /* Decorator */,
 				98B47B141BF1E0F20087735C /* AppDelegate.swift */,
 				B9E27ED31C054A7A00C12DAF /* RoutesViewController.swift */,
-				A39994641CEDB0280084DCD6 /* PartialRexxarViewController.swift */,
-				A3249A191D66F941006CCCCB /* DemoRXRViewController.swift */,
+				A3249A191D66F941006CCCCB /* FullRXRViewController.swift */,
+				A39994641CEDB0280084DCD6 /* PartialRXRViewController.swift */,
 				98B47B1D1BF1E0F20087735C /* LaunchScreen.storyboard */,
 				98B47B201BF1E0F20087735C /* Info.plist */,
 				98B47B391BF1E2BD0087735C /* Bridge-Header.h */,
@@ -674,11 +674,11 @@
 				A3249A0C1D66EF27006CCCCB /* FRDToast.swift in Sources */,
 				987FA5221BFC78310096ED5C /* AppDelegate.swift in Sources */,
 				A3249A151D66EF98006CCCCB /* RXRToastWidget.m in Sources */,
-				A39994651CEDB0280084DCD6 /* PartialRexxarViewController.swift in Sources */,
+				A39994651CEDB0280084DCD6 /* PartialRXRViewController.swift in Sources */,
 				A35E72351D7FCBD300D38BC0 /* RXRGeoContainerAPI.m in Sources */,
 				A3249A0D1D66EF27006CCCCB /* LoadingView.swift in Sources */,
 				A35E72551D8004D400D38BC0 /* RXRNavMenuWidget.m in Sources */,
-				A3249A1A1D66F941006CCCCB /* DemoRXRViewController.swift in Sources */,
+				A3249A1A1D66F941006CCCCB /* FullRXRViewController.swift in Sources */,
 				A35E72521D8004D400D38BC0 /* RXRMenuItem.m in Sources */,
 				A3249A0F1D66EF27006CCCCB /* UIColor+helper.swift in Sources */,
 			);
