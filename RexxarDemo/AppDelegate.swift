@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window?.makeKeyAndVisible()
 
     // Config Rexxar
-    let routesMapURL = "https://raw.githubusercontent.com/lincode/rexxar-ios/master/Web/routes.json"
+    let routesMapURL = "https://raw.githubusercontent.com/douban/rexxar-web/master/example/dist/routes.json"
     RXRConfig.setRoutesMapURL(URL(string: routesMapURL)!)
     RXRConfig.setRoutesCachePath("com.douban.RexxarDemo")
     RXRConfig.setRoutesResourcePath("hybrid")
