@@ -1,6 +1,6 @@
 //
 //  PartialRexxarViewController.swift
-//  Rexxar
+//  RexxarDemo
 //
 //  Created by GUO Lin on 5/19/16.
 //  Copyright © 2016 Douban.Inc. All rights reserved.
@@ -19,7 +19,7 @@ class PartialRexxarViewController: UIViewController {
 
   init(URI: URL) {
     rexxarURI = URI
-    childRexxarViewController = RXRViewController(uri: rexxarURI)
+    childRexxarViewController = FullRXRViewController(uri: rexxarURI)
 
     super.init(nibName: nil, bundle: nil)
   }
@@ -41,13 +41,6 @@ class PartialRexxarViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     childRexxarViewController.beginAppearanceTransition(true, animated: animated)
-
-    let headers = ["Customer-Authorization": "Bearer token"]
-    let parameters = ["apikey": "apikey value"]
-    let requestDecorator = RXRRequestDecorator(headers: headers, parameters: parameters)
-    RXRRequestIntercepter.setDecorators([requestDecorator])
-
-    URLProtocol.registerClass(RXRRequestIntercepter.self)
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -63,8 +56,6 @@ class PartialRexxarViewController: UIViewController {
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     childRexxarViewController.endAppearanceTransition()
-
-    URLProtocol.unregisterClass(RXRRequestIntercepter.self)
   }
 
 }

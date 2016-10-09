@@ -1,6 +1,6 @@
 //
 //  RoutesViewController.swift
-//  Rexxar
+//  RexxarDemo
 //
 //  Created by Tony Li on 11/25/15.
 //  Copyright © 2015 Douban.Inc. All rights reserved.
@@ -35,11 +35,11 @@ class RoutesViewController: UITableViewController {
     let uri = URIs[(indexPath as NSIndexPath).row]
     if (indexPath as NSIndexPath).row == 0 {
 
-      let controller = DemoRXRViewController(uri: uri)
+      let controller = FullRXRViewController(uri: uri)
       navigationController?.pushViewController(controller, animated: true)
-      controller.view.backgroundColor = UIColor.white
     } else if (indexPath as NSIndexPath).row == 1 {
-      navigationController?.pushViewController(PartialRexxarViewController(URI: uri), animated: true)
+      let controller = PartialRexxarViewController(URI: uri)
+      navigationController?.pushViewController(controller, animated: true)
     }
   }
 
