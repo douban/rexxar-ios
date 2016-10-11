@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)setRXRProtocolScheme:(NSString *)scheme;
 
 /**
- * 设置 rxrProtocolScheme。
+ * 读取 rxrProtocolScheme。
  *
  * @discussion Rexxar-Container 实现了实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
  * `rxrProtocolHost` 是对这些特定请求的 scheme 的商定。如不设置，缺省为 douban。
