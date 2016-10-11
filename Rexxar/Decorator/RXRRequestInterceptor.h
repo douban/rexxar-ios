@@ -1,5 +1,5 @@
 //
-//  RXRRequestIntercepter.h
+//  RXRRequestInterceptor.h
 //  Rexxar
 //
 //  Created by GUO Lin on 5/17/16.
@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 这个侦听器用于修改请求，比如增添请求的 url 参数，添加自定义的 http header。
  *
  */
-@interface RXRRequestIntercepter : RXRNSURLProtocol
+@interface RXRRequestInterceptor : RXRNSURLProtocol
 
 /**
  * 设置这个侦听器所有的请求装修器数组，该数组成员是符合 `RXRDecorator` 协议的对象，即一组请求装修器。

@@ -211,11 +211,11 @@ Rexxar Container 提供了一些原生 UI 组件，供 Rexxar Web 使用。RXRWi
 
 * ContainerAPI
   - `RXRNSURLProtocol`
-  - `RXRContainerIntercepter`
+  - `RXRContainerInterceptor`
   - `RXRContainerAPI`
 
 * Decorator
-  - `RXRRequestIntercepter`
+  - `RXRRequestInterceptor`
   - `RXRDecorator`
   - `RXRRequestDecorator`
 

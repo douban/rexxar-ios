@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "RXRViewController.h"
-#import "RXRCacheFileIntercepter.h"
+#import "RXRCacheFileInterceptor.h"
 #import "RXRRouteManager.h"
 #import "RXRLogging.h"
 #import "RXRConfig.h"
@@ -77,14 +77,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-  [NSURLProtocol registerClass:RXRCacheFileIntercepter.class];
+  [NSURLProtocol registerClass:RXRCacheFileInterceptor.class];
   [self onPageVisible];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
   [super viewDidDisappear:animated];
-  [NSURLProtocol unregisterClass:RXRCacheFileIntercepter.class];
+  [NSURLProtocol unregisterClass:RXRCacheFileInterceptor.class];
   [self onPageInvisible];
 }
 

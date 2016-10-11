@@ -1,12 +1,12 @@
 //
-//  RXRCacheFileIntercepter.m
+//  RXRCacheFileInterceptor.m
 //  Rexxar
 //
 //  Created by Tony Li on 11/4/15.
 //  Copyright © 2015 Douban Inc. All rights reserved.
 //
 
-#import "RXRCacheFileIntercepter.h"
+#import "RXRCacheFileInterceptor.h"
 
 #import "RXRRouteFileCache.h"
 
@@ -15,7 +15,7 @@
 
 static NSString * const RXRCacheFileIntercepterHandledKey = @"RXRCacheFileIntercepterHandledKey";
 
-@interface RXRCacheFileIntercepter ()
+@interface RXRCacheFileInterceptor ()
 
 @property (nonatomic, strong) NSURLConnection *connection;
 @property (nonatomic, strong) NSFileHandle *fileHandle;
@@ -24,7 +24,7 @@ static NSString * const RXRCacheFileIntercepterHandledKey = @"RXRCacheFileInterc
 @end
 
 
-@implementation RXRCacheFileIntercepter
+@implementation RXRCacheFileInterceptor
 
 #pragma mark - NSURLProtocol's methods
 
@@ -170,9 +170,9 @@ static NSString * const RXRCacheFileIntercepterHandledKey = @"RXRCacheFileInterc
 
 + (BOOL)_rxr_isCacheableResponse:(NSURLResponse *)response
 {
-  NSSet *cachableTypes = [NSSet setWithObjects:@"application/javascript", @"application/x-javascript",
+  NSSet *cacheableTypes = [NSSet setWithObjects:@"application/javascript", @"application/x-javascript",
                           @"text/javascript", @"text/css", nil];
-  return [cachableTypes containsObject:response.MIMEType];
+  return [cacheableTypes containsObject:response.MIMEType];
 }
 
 - (NSString *)_rxr_temporaryFilePath

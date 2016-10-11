@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "RXRCacheFileIntercepter.h"
+#import "RXRCacheFileInterceptor.h"
 #import "RXRConfig.h"
 
 #import "RXRRouteFileCache.h"
@@ -26,12 +26,12 @@
   [RXRConfig setRoutesResourcePath:resourcePath];
 
   [RXRConfig setRoutesCachePath:[[NSUUID UUID] UUIDString]];
-  [NSURLProtocol registerClass:[RXRCacheFileIntercepter class]];
+  [NSURLProtocol registerClass:[RXRCacheFileInterceptor class]];
 }
 
 + (void)tearDown
 {
-  [NSURLProtocol unregisterClass:[RXRCacheFileIntercepter class]];
+  [NSURLProtocol unregisterClass:[RXRCacheFileInterceptor class]];
 }
 
 

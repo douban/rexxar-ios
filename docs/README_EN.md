@@ -156,11 +156,11 @@ You can find an example `RXRAuthDecorator` in RexxarDemo.
 
 * ContainerAPI
   - `RXRNSURLProtocol`
-  - `RXRContainerIntercepter`
+  - `RXRContainerInterceptor`
   - `RXRContainerAPI`
 
 * Decorator
-  - `RXRRequestIntercepter`
+  - `RXRRequestInterceptor`
   - `RXRDecorator`
   - `RXRRequestDecorator`
 

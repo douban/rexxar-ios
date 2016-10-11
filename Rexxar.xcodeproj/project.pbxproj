@@ -22,8 +22,8 @@
 		A35D15A31D66AE2B009B24DC /* RXRAlertDialogWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = A35D15A11D66AE2B009B24DC /* RXRAlertDialogWidget.m */; };
 		A35E71DF1D7FC86000D38BC0 /* RXRPullRefreshWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E71DD1D7FC86000D38BC0 /* RXRPullRefreshWidget.m */; };
 		A35E71E01D7FC86000D38BC0 /* RXRPullRefreshWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E71DE1D7FC86000D38BC0 /* RXRPullRefreshWidget.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A35E71F31D7FCA0200D38BC0 /* RXRCacheFileIntercepter.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E71E21D7FCA0200D38BC0 /* RXRCacheFileIntercepter.h */; };
-		A35E71F41D7FCA0200D38BC0 /* RXRCacheFileIntercepter.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E71E31D7FCA0200D38BC0 /* RXRCacheFileIntercepter.m */; };
+		A35E71F31D7FCA0200D38BC0 /* RXRCacheFileInterceptor.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E71E21D7FCA0200D38BC0 /* RXRCacheFileInterceptor.h */; };
+		A35E71F41D7FCA0200D38BC0 /* RXRCacheFileInterceptor.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E71E31D7FCA0200D38BC0 /* RXRCacheFileInterceptor.m */; };
 		A35E71F51D7FCA0200D38BC0 /* RXRConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E71E41D7FCA0200D38BC0 /* RXRConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A35E71F61D7FCA0200D38BC0 /* RXRConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E71E51D7FCA0200D38BC0 /* RXRConfig.m */; };
 		A35E71F71D7FCA0200D38BC0 /* RXRLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E71E61D7FCA0200D38BC0 /* RXRLogging.h */; };
@@ -55,11 +55,11 @@
 		A35E72401D7FCBF900D38BC0 /* RXRDecorator.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E72371D7FCBF900D38BC0 /* RXRDecorator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A35E72411D7FCBF900D38BC0 /* RXRRequestDecorator.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E72381D7FCBF900D38BC0 /* RXRRequestDecorator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A35E72421D7FCBF900D38BC0 /* RXRRequestDecorator.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E72391D7FCBF900D38BC0 /* RXRRequestDecorator.m */; };
-		A35E72431D7FCBF900D38BC0 /* RXRRequestIntercepter.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E723A1D7FCBF900D38BC0 /* RXRRequestIntercepter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A35E72441D7FCBF900D38BC0 /* RXRRequestIntercepter.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E723B1D7FCBF900D38BC0 /* RXRRequestIntercepter.m */; };
+		A35E72431D7FCBF900D38BC0 /* RXRRequestInterceptor.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E723A1D7FCBF900D38BC0 /* RXRRequestInterceptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A35E72441D7FCBF900D38BC0 /* RXRRequestInterceptor.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E723B1D7FCBF900D38BC0 /* RXRRequestInterceptor.m */; };
 		A35E72451D7FCBF900D38BC0 /* RXRContainerAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E723D1D7FCBF900D38BC0 /* RXRContainerAPI.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A35E72461D7FCBF900D38BC0 /* RXRContainerIntercepter.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E723E1D7FCBF900D38BC0 /* RXRContainerIntercepter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A35E72471D7FCBF900D38BC0 /* RXRContainerIntercepter.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E723F1D7FCBF900D38BC0 /* RXRContainerIntercepter.m */; };
+		A35E72461D7FCBF900D38BC0 /* RXRContainerInterceptor.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E723E1D7FCBF900D38BC0 /* RXRContainerInterceptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A35E72471D7FCBF900D38BC0 /* RXRContainerInterceptor.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E723F1D7FCBF900D38BC0 /* RXRContainerInterceptor.m */; };
 		A35E72521D8004D400D38BC0 /* RXRMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E724C1D8004D400D38BC0 /* RXRMenuItem.m */; };
 		A35E72551D8004D400D38BC0 /* RXRNavMenuWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E72511D8004D400D38BC0 /* RXRNavMenuWidget.m */; };
 		A37E59431D8FDC38007E73C4 /* hybrid in Resources */ = {isa = PBXBuildFile; fileRef = A37E59421D8FDC38007E73C4 /* hybrid */; };
@@ -123,8 +123,8 @@
 		A35D15A11D66AE2B009B24DC /* RXRAlertDialogWidget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRAlertDialogWidget.m; sourceTree = "<group>"; };
 		A35E71DD1D7FC86000D38BC0 /* RXRPullRefreshWidget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRPullRefreshWidget.m; sourceTree = "<group>"; };
 		A35E71DE1D7FC86000D38BC0 /* RXRPullRefreshWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRPullRefreshWidget.h; sourceTree = "<group>"; };
-		A35E71E21D7FCA0200D38BC0 /* RXRCacheFileIntercepter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRCacheFileIntercepter.h; sourceTree = "<group>"; };
-		A35E71E31D7FCA0200D38BC0 /* RXRCacheFileIntercepter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRCacheFileIntercepter.m; sourceTree = "<group>"; };
+		A35E71E21D7FCA0200D38BC0 /* RXRCacheFileInterceptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRCacheFileInterceptor.h; sourceTree = "<group>"; };
+		A35E71E31D7FCA0200D38BC0 /* RXRCacheFileInterceptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRCacheFileInterceptor.m; sourceTree = "<group>"; };
 		A35E71E41D7FCA0200D38BC0 /* RXRConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRConfig.h; sourceTree = "<group>"; };
 		A35E71E51D7FCA0200D38BC0 /* RXRConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRConfig.m; sourceTree = "<group>"; };
 		A35E71E61D7FCA0200D38BC0 /* RXRLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRLogging.h; sourceTree = "<group>"; };
@@ -157,11 +157,11 @@
 		A35E72371D7FCBF900D38BC0 /* RXRDecorator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRDecorator.h; sourceTree = "<group>"; };
 		A35E72381D7FCBF900D38BC0 /* RXRRequestDecorator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRRequestDecorator.h; sourceTree = "<group>"; };
 		A35E72391D7FCBF900D38BC0 /* RXRRequestDecorator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRRequestDecorator.m; sourceTree = "<group>"; };
-		A35E723A1D7FCBF900D38BC0 /* RXRRequestIntercepter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRRequestIntercepter.h; sourceTree = "<group>"; };
-		A35E723B1D7FCBF900D38BC0 /* RXRRequestIntercepter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRRequestIntercepter.m; sourceTree = "<group>"; };
+		A35E723A1D7FCBF900D38BC0 /* RXRRequestInterceptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRRequestInterceptor.h; sourceTree = "<group>"; };
+		A35E723B1D7FCBF900D38BC0 /* RXRRequestInterceptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRRequestInterceptor.m; sourceTree = "<group>"; };
 		A35E723D1D7FCBF900D38BC0 /* RXRContainerAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRContainerAPI.h; sourceTree = "<group>"; };
-		A35E723E1D7FCBF900D38BC0 /* RXRContainerIntercepter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRContainerIntercepter.h; sourceTree = "<group>"; };
-		A35E723F1D7FCBF900D38BC0 /* RXRContainerIntercepter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRContainerIntercepter.m; sourceTree = "<group>"; };
+		A35E723E1D7FCBF900D38BC0 /* RXRContainerInterceptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRContainerInterceptor.h; sourceTree = "<group>"; };
+		A35E723F1D7FCBF900D38BC0 /* RXRContainerInterceptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRContainerInterceptor.m; sourceTree = "<group>"; };
 		A35E72481D8004D400D38BC0 /* RXRNavMenuWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXRNavMenuWidget.h; path = RexxarDemo/Widget/RXRNavMenuWidget.h; sourceTree = SOURCE_ROOT; };
 		A35E724B1D8004D400D38BC0 /* RXRMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRMenuItem.h; sourceTree = "<group>"; };
 		A35E724C1D8004D400D38BC0 /* RXRMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRMenuItem.m; sourceTree = "<group>"; };
@@ -317,8 +317,8 @@
 			isa = PBXGroup;
 			children = (
 				A35E720A1D7FCB0B00D38BC0 /* Extension */,
-				A35E71E21D7FCA0200D38BC0 /* RXRCacheFileIntercepter.h */,
-				A35E71E31D7FCA0200D38BC0 /* RXRCacheFileIntercepter.m */,
+				A35E71E21D7FCA0200D38BC0 /* RXRCacheFileInterceptor.h */,
+				A35E71E31D7FCA0200D38BC0 /* RXRCacheFileInterceptor.m */,
 				A35E71E41D7FCA0200D38BC0 /* RXRConfig.h */,
 				A35E71E51D7FCA0200D38BC0 /* RXRConfig.m */,
 				A35E71E61D7FCA0200D38BC0 /* RXRLogging.h */,
@@ -363,8 +363,8 @@
 				A35E72371D7FCBF900D38BC0 /* RXRDecorator.h */,
 				A35E72381D7FCBF900D38BC0 /* RXRRequestDecorator.h */,
 				A35E72391D7FCBF900D38BC0 /* RXRRequestDecorator.m */,
-				A35E723A1D7FCBF900D38BC0 /* RXRRequestIntercepter.h */,
-				A35E723B1D7FCBF900D38BC0 /* RXRRequestIntercepter.m */,
+				A35E723A1D7FCBF900D38BC0 /* RXRRequestInterceptor.h */,
+				A35E723B1D7FCBF900D38BC0 /* RXRRequestInterceptor.m */,
 			);
 			path = Decorator;
 			sourceTree = "<group>";
@@ -373,8 +373,8 @@
 			isa = PBXGroup;
 			children = (
 				A35E723D1D7FCBF900D38BC0 /* RXRContainerAPI.h */,
-				A35E723E1D7FCBF900D38BC0 /* RXRContainerIntercepter.h */,
-				A35E723F1D7FCBF900D38BC0 /* RXRContainerIntercepter.m */,
+				A35E723E1D7FCBF900D38BC0 /* RXRContainerInterceptor.h */,
+				A35E723F1D7FCBF900D38BC0 /* RXRContainerInterceptor.m */,
 			);
 			path = ContainerAPI;
 			sourceTree = "<group>";
@@ -483,10 +483,10 @@
 				A35E72011D7FCA0200D38BC0 /* RXRViewController.h in Headers */,
 				A35E72241D7FCB0B00D38BC0 /* NSDictionary+RXRMultipleItems.h in Headers */,
 				A35E722A1D7FCB0B00D38BC0 /* NSURL+Rexxar.h in Headers */,
-				A35E72431D7FCBF900D38BC0 /* RXRRequestIntercepter.h in Headers */,
+				A35E72431D7FCBF900D38BC0 /* RXRRequestInterceptor.h in Headers */,
 				A35E72411D7FCBF900D38BC0 /* RXRRequestDecorator.h in Headers */,
 				A35E71F81D7FCA0200D38BC0 /* RXRNSURLProtocol.h in Headers */,
-				A35E72461D7FCBF900D38BC0 /* RXRContainerIntercepter.h in Headers */,
+				A35E72461D7FCBF900D38BC0 /* RXRContainerInterceptor.h in Headers */,
 				A35E72031D7FCA0200D38BC0 /* RXRWidget.h in Headers */,
 				A35E71F51D7FCA0200D38BC0 /* RXRConfig.h in Headers */,
 				A35E72401D7FCBF900D38BC0 /* RXRDecorator.h in Headers */,
@@ -501,7 +501,7 @@
 				A398DC2D1D221BA4006D4817 /* RXRNavTitleWidget.h in Headers */,
 				A35E722C1D7FCB0B00D38BC0 /* UIColor+Rexxar.h in Headers */,
 				A398DC361D222D8F006D4817 /* RXRAlertDialogData.h in Headers */,
-				A35E71F31D7FCA0200D38BC0 /* RXRCacheFileIntercepter.h in Headers */,
+				A35E71F31D7FCA0200D38BC0 /* RXRCacheFileInterceptor.h in Headers */,
 				A35E71FA1D7FCA0200D38BC0 /* RXRRoute.h in Headers */,
 				98B47B071BF1E0E00087735C /* Rexxar.h in Headers */,
 				A35E71FC1D7FCA0200D38BC0 /* RXRRouteFileCache.h in Headers */,
@@ -644,7 +644,7 @@
 				A35E722B1D7FCB0B00D38BC0 /* NSURL+Rexxar.m in Sources */,
 				A398DC331D222CC1006D4817 /* RXRModel.m in Sources */,
 				A35E72421D7FCBF900D38BC0 /* RXRRequestDecorator.m in Sources */,
-				A35E72441D7FCBF900D38BC0 /* RXRRequestIntercepter.m in Sources */,
+				A35E72441D7FCBF900D38BC0 /* RXRRequestInterceptor.m in Sources */,
 				A35D15A31D66AE2B009B24DC /* RXRAlertDialogWidget.m in Sources */,
 				A35E72251D7FCB0B00D38BC0 /* NSDictionary+RXRMultipleItems.m in Sources */,
 				A35E71F91D7FCA0200D38BC0 /* RXRNSURLProtocol.m in Sources */,
@@ -652,8 +652,8 @@
 				A35E71FB1D7FCA0200D38BC0 /* RXRRoute.m in Sources */,
 				A35E71F61D7FCA0200D38BC0 /* RXRConfig.m in Sources */,
 				A35E72021D7FCA0200D38BC0 /* RXRViewController.m in Sources */,
-				A35E71F41D7FCA0200D38BC0 /* RXRCacheFileIntercepter.m in Sources */,
-				A35E72471D7FCBF900D38BC0 /* RXRContainerIntercepter.m in Sources */,
+				A35E71F41D7FCA0200D38BC0 /* RXRCacheFileInterceptor.m in Sources */,
+				A35E72471D7FCBF900D38BC0 /* RXRContainerInterceptor.m in Sources */,
 				A35E72271D7FCB0B00D38BC0 /* NSMutableDictionary+RXRMultipleItems.m in Sources */,
 				A35E72001D7FCA0200D38BC0 /* RXRViewController+Router.m in Sources */,
 				A35E71DF1D7FC86000D38BC0 /* RXRPullRefreshWidget.m in Sources */,

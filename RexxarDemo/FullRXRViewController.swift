@@ -30,23 +30,23 @@ class FullRXRViewController: RXRViewController {
     let geoContainerAPI = RXRGeoContainerAPI()
     let logContainerAPI = RXRLogContainerAPI()
 
-    RXRContainerIntercepter.setContainerAPIs([geoContainerAPI, logContainerAPI])
-    URLProtocol.registerClass(RXRContainerIntercepter.self)
+    RXRContainerInterceptor.setContainerAPIs([geoContainerAPI, logContainerAPI])
+    URLProtocol.registerClass(RXRContainerInterceptor.self)
 
     let headers = ["Customer-Authorization": "Bearer token"]
     let parameters = ["apikey": "apikey value"]
     let requestDecorator = RXRRequestDecorator(headers: headers, parameters: parameters)
-    RXRRequestIntercepter.setDecorators([requestDecorator])
+    RXRRequestInterceptor.setDecorators([requestDecorator])
 
-    URLProtocol.registerClass(RXRRequestIntercepter.self)
+    URLProtocol.registerClass(RXRRequestInterceptor.self)
   }
 
   override func viewWillDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
 
-    URLProtocol.unregisterClass(RXRContainerIntercepter.self)
+    URLProtocol.unregisterClass(RXRContainerInterceptor.self)
 
-    URLProtocol.unregisterClass(RXRRequestIntercepter.self)
+    URLProtocol.unregisterClass(RXRRequestInterceptor.self)
   }
 
 }
