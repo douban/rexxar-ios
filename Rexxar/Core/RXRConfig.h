@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 设置 rxrProtocolScheme。
  *
- * @discussion Rexxar-Container 实现了实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
+ * @discussion Rexxar-Container 实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
  * `rxrProtocolHost` 是对这些特定请求的 scheme 的商定。如不设置，缺省为 douban。
  */
 + (void)setRXRProtocolScheme:(NSString *)scheme;
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 读取 rxrProtocolScheme。
  *
- * @discussion Rexxar-Container 实现了实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
+ * @discussion Rexxar-Container 实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
  * `rxrProtocolHost` 是对这些特定请求的 scheme 的商定。如不设置，缺省为 douban。
  */
 + (NSString *)rxrProtocolScheme;
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 设置 rxrProtocolHost。
  *
- * @discussion Rexxar-Container 实现了实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
+ * @discussion Rexxar-Container 实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
  * `rxrProtocolHost` 是对这些特定请求的 host 的商定。如不设置，缺省为 rexxar-container。
  */
 + (void)setRXRProtocolHost:(NSString *)host;
@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 读取 rxrProtocolHost。
  * 
- * @discussion Rexxar-Container 实现了实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
+ * @discussion Rexxar-Container 实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
  * `rxrProtocolHost` 是对这些特定请求的 host 的商定。如不设置，缺省为 rexxar-container。
  */
 + (NSString *)rxrProtocolHost;
