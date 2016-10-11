@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSRegularExpression *URIRegex;
 
 /**
- * 该路由对于的 html 文件地址。
+ * 该路由对应的 html 文件地址。
  */
 @property (nonatomic, readonly) NSURL *remoteHTML;
 
