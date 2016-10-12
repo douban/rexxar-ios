@@ -30,8 +30,8 @@ static NSArray<id<RXRContainerAPI>> *sContainerAPIs;
     return NO;
   }
 
-  for (id<RXRContainerAPI> mocker in sContainerAPIs) {
-    if ([mocker shouldInterceptRequest:request]) {
+  for (id<RXRContainerAPI> containerAPI in sContainerAPIs) {
+    if ([containerAPI shouldInterceptRequest:request]) {
       return YES;
     }
   }
