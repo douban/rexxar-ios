@@ -38,7 +38,7 @@ $ gem install cocoapods
 
 ```ruby
 target 'TargetName' do
-  pod 'Rexxar', :git => 'https://github.com/douban/rexxar-ios.git', :commit => '0.1.0'
+  pod 'Rexxar', :git => 'https://github.com/douban/rexxar-ios.git', :commit => '0.2.0'
 end
 ```
 
