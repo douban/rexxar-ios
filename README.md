@@ -194,7 +194,7 @@ Rexxar Container 提供了一些原生 UI 组件，供 Rexxar Web 使用。RXRWi
 
 如果你需要修改运行在 Rexxar Container 中的 Rexxar Web 所发出的请求。例如，在 http 头中添加登录信息，你可以实现 `RXRDecorator` 协议（Protocol），并实现这两个方法：`shouldInterceptRequest:`, `prepareWithRequest:`。
 
-在 Demo 中可以找到一个例子：`RXRAuthDecorator`。这个例子为 Rexxar Web 发出的请求添加了登录信息。
+在 Demo 中可以找到一个使用 `RXRRequestDecorator` 添加登录信息，和 URL 参数的例子。这个例子为 Rexxar Web 发出的请求添加了登录信息，并在 URL 参数中增加了 apikey 信息。
 
 
 ## Rexxar 的公开接口
