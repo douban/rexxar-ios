@@ -15,38 +15,30 @@ class FullRXRViewController: RXRViewController {
     super.viewDidLoad()
     view.backgroundColor = UIColor.white
 
+    // Widgets
     let pullRefreshWidget = RXRPullRefreshWidget()
     let titleWidget = RXRNavTitleWidget()
     let alertDialogWidget = RXRAlertDialogWidget()
     let toastWidget = RXRToastWidget()
     let navMenuWidget = RXRNavMenuWidget()
-
     widgets = [titleWidget, alertDialogWidget, pullRefreshWidget, toastWidget, navMenuWidget]
-  }
 
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-
+    // ContainerAPIs
     let geoContainerAPI = RXRGeoContainerAPI()
     let logContainerAPI = RXRLogContainerAPI()
-
     RXRContainerInterceptor.setContainerAPIs([geoContainerAPI, logContainerAPI])
     URLProtocol.registerClass(RXRContainerInterceptor.self)
 
+    // Decorators
     let headers = ["Customer-Authorization": "Bearer token"]
     let parameters = ["apikey": "apikey value"]
     let requestDecorator = RXRRequestDecorator(headers: headers, parameters: parameters)
     RXRRequestInterceptor.setDecorators([requestDecorator])
-
     URLProtocol.registerClass(RXRRequestInterceptor.self)
   }
 
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-
+  deinit {
     URLProtocol.unregisterClass(RXRContainerInterceptor.self)
-
     URLProtocol.unregisterClass(RXRRequestInterceptor.self)
   }
-
 }

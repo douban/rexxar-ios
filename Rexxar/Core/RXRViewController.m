@@ -42,8 +42,6 @@
   return self;
 }
 
-
-
 - (instancetype)initWithURI:(NSURL *)uri
 {
   self = [super initWithNibName:nil bundle:nil];
@@ -72,20 +70,25 @@
   [self.view addSubview:_webView];
 
   [self reloadWebView];
+
+  [NSURLProtocol registerClass:RXRCacheFileInterceptor.class];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-  [NSURLProtocol registerClass:RXRCacheFileInterceptor.class];
   [self onPageVisible];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
   [super viewDidDisappear:animated];
-  [NSURLProtocol unregisterClass:RXRCacheFileInterceptor.class];
   [self onPageInvisible];
+}
+
+- (void)dealloc
+{
+  [NSURLProtocol unregisterClass:RXRCacheFileInterceptor.class];
 }
 
 #pragma mark - Public methods
