@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * `RXRContainerIntercepter` 是一个 Rexxar-Container 的请求侦听器。
+ * `RXRContainerInterceptor` 是一个 Rexxar-Container 的请求侦听器。
  * 这个侦听器用于模拟网络请求。这些网络请求并不会发送出去，而是由 Native 处理。
  * 比如向 Web 提供当前位置信息。
  *

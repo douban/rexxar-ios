@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * `RXRRequestIntercepter` 是一个 Rexxar-Container 的请求侦听器。
+ * `RXRRequestInterceptor` 是一个 Rexxar-Container 的请求侦听器。
  * 这个侦听器用于修改请求，比如增添请求的 url 参数，添加自定义的 http header。
  *
  */
