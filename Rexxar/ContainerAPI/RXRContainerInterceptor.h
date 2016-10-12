@@ -1,5 +1,5 @@
 //
-//  RXRContainerIntercepter.h
+//  RXRContainerInterceptor.h
 //  Rexxar
 //
 //  Created by GUO Lin on 5/17/16.
@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 比如向 Web 提供当前位置信息。
  *
  */
-@interface RXRContainerIntercepter : RXRNSURLProtocol
+@interface RXRContainerInterceptor : RXRNSURLProtocol
 
 /**
  * 设置这个侦听器所有的请求模仿器数组，该数组成员是符合 `RXRContainerAPI` 协议的对象，即一组请求模仿器。

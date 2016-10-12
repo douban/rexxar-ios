@@ -47,9 +47,9 @@
 {
   NSData *data = request.HTTPBody;
   NSString *encodeStr = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-  NSString *decodestr = [encodeStr rxr_decodingStringUsingURLEscape];
+  NSString *decodeStr = [encodeStr rxr_decodingStringUsingURLEscape];
 
-  NSArray<NSString *> *keyValues = [decodestr componentsSeparatedByString:@"&"];
+  NSArray<NSString *> *keyValues = [decodeStr componentsSeparatedByString:@"&"];
   if (keyValues.count > 0) {
     NSMutableDictionary *form = [NSMutableDictionary dictionary];
     for (NSString *keyValue in keyValues) {

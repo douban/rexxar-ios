@@ -16,10 +16,10 @@
 
 #import "RXRNSURLProtocol.h"
 
-#import "RXRContainerIntercepter.h"
+#import "RXRContainerInterceptor.h"
 #import "RXRContainerAPI.h"
 
-#import "RXRRequestIntercepter.h"
+#import "RXRRequestInterceptor.h"
 #import "RXRDecorator.h"
 #import "RXRRequestDecorator.h"
 
