@@ -127,7 +127,7 @@ Rexxar 使用 url 来标识页面。提供一个正确的 url 就可以创建对
 
 你可以直接使用 `RXRViewController` 作为你的混合开发客户端容器。或者你也可以继承 `RXRViewController`，在 `RXRViewController` 基础上实现你自己的客户端容器。在 Demo 中，创建了 `FullRXRViewController`，它继承于 `RXRViewController`。
 
-为了初始化 RXRViewController，你需要只一个 url。在路由表文件 api 提供的路由表中可以找到这个 url。这个 url 标识了该页面所需使用的资源文件的位置。Rexxar Container 会通过 url 在路由表中寻找对应的 javascript，css，html 资源文件。
+为了初始化 RXRViewController，你只需要一个 url。在路由表文件 api 提供的路由表中可以找到这个 url。这个 url 标识了该页面所需使用的资源文件的位置。Rexxar Container 会通过 url 在路由表中寻找对应的 javascript，css，html 资源文件。
 
 ```Swift
   let controller = RXRViewController(URI: uri)
