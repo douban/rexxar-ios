@@ -42,7 +42,7 @@ class FullRXRViewController: RXRViewController {
   }
 
   override func viewWillDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
+    super.viewWillDisappear(animated)
 
     URLProtocol.unregisterClass(RXRContainerIntercepter.self)
 
