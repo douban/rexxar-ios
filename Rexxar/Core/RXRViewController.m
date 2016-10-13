@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "RXRViewController.h"
-#import "RXRCacheFileIntercepter.h"
+#import "RXRCacheFileInterceptor.h"
 #import "RXRRouteManager.h"
 #import "RXRLogging.h"
 #import "RXRConfig.h"
@@ -42,8 +42,6 @@
   return self;
 }
 
-
-
 - (instancetype)initWithURI:(NSURL *)uri
 {
   self = [super initWithNibName:nil bundle:nil];
@@ -72,20 +70,25 @@
   [self.view addSubview:_webView];
 
   [self reloadWebView];
+
+  [NSURLProtocol registerClass:RXRCacheFileInterceptor.class];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-  [NSURLProtocol registerClass:RXRCacheFileIntercepter.class];
   [self onPageVisible];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
   [super viewDidDisappear:animated];
-  [NSURLProtocol unregisterClass:RXRCacheFileIntercepter.class];
   [self onPageInvisible];
+}
+
+- (void)dealloc
+{
+  [NSURLProtocol unregisterClass:RXRCacheFileInterceptor.class];
 }
 
 #pragma mark - Public methods

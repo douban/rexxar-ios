@@ -1,17 +1,17 @@
 //
-//  RXRContainerIntercepter.m
+//  RXRContainerInterceptor.m
 //  Rexxar
 //
 //  Created by GUO Lin on 5/17/16.
 //  Copyright © 2016 Douban Inc. All rights reserved.
 //
 
-#import "RXRContainerIntercepter.h"
+#import "RXRContainerInterceptor.h"
 #import "RXRContainerAPI.h"
 
 static NSArray<id<RXRContainerAPI>> *sContainerAPIs;
 
-@implementation RXRContainerIntercepter
+@implementation RXRContainerInterceptor
 
 + (void)setContainerAPIs:(NSArray<id<RXRContainerAPI>> *)mockers
 {
@@ -30,8 +30,8 @@ static NSArray<id<RXRContainerAPI>> *sContainerAPIs;
     return NO;
   }
 
-  for (id<RXRContainerAPI> mocker in sContainerAPIs) {
-    if ([mocker shouldInterceptRequest:request]) {
+  for (id<RXRContainerAPI> containerAPI in sContainerAPIs) {
+    if ([containerAPI shouldInterceptRequest:request]) {
       return YES;
     }
   }

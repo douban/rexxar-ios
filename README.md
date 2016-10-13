@@ -38,7 +38,7 @@ $ gem install cocoapods
 
 ```ruby
 target 'TargetName' do
-  pod 'Rexxar', :git => 'https://github.com/douban/rexxar-ios.git', :commit => '0.1.0'
+  pod 'Rexxar', :git => 'https://github.com/douban/rexxar-ios.git', :commit => '0.2.0'
 end
 ```
 
@@ -194,8 +194,38 @@ Rexxar Container 提供了一些原生 UI 组件，供 Rexxar Web 使用。RXRWi
 
 如果你需要修改运行在 Rexxar Container 中的 Rexxar Web 所发出的请求。例如，在 http 头中添加登录信息，你可以实现 `RXRDecorator` 协议（Protocol），并实现这两个方法：`shouldInterceptRequest:`, `prepareWithRequest:`。
 
-在 Demo 中可以找到一个例子：`RXRAuthDecorator`。这个例子为 Rexxar Web 发出的请求添加了登录信息。
+在 Demo 的 `FullRXRViewController` 类中，可以找到一个使用 `RXRRequestDecorator` 添加登录信息，和 URL 参数的例子。这个例子为 Rexxar Web 发出的请求添加了登录信息，并在 URL 参数中增加了 apikey 信息。
 
+### 使用 RXRContainerAPI 和 RXRDecorator
+
+RXRContainerAPI 和 RXRDecorator 生效期应该和 RXRViewController 的生命周期一致。
+
+这就是说可以在 RXRViewController 的 `viewDidLoad:` 方法中注册 RXRContainerAPI 和 RXRDecorator：
+
+```Swift
+override func viewDidLoad() {
+  super.viewDidLoad()
+
+  ...
+
+  URLProtocol.registerClass(RXRContainerInterceptor.self)
+
+  ...
+
+  URLProtocol.registerClass(RXRRequestInterceptor.self)
+}
+```
+
+可以在 Objective-C 的 `dealloc` 或者 Swift 的 `deinit` 方法中取消 RXRContainerAPI 和 RXRDecorator 的注册:
+
+```Swift
+deinit {
+  URLProtocol.unregisterClass(RXRContainerInterceptor.self)
+  URLProtocol.unregisterClass(RXRRequestInterceptor.self)
+}
+```
+
+在 Demo 中的 `FullRXRViewController` 可以看到如何注册和取消注册 RXRContainerAPI 和 RXRDecorator。
 
 ## Rexxar 的公开接口
 
@@ -211,11 +241,11 @@ Rexxar Container 提供了一些原生 UI 组件，供 Rexxar Web 使用。RXRWi
 
 * ContainerAPI
   - `RXRNSURLProtocol`
-  - `RXRContainerIntercepter`
+  - `RXRContainerInterceptor`
   - `RXRContainerAPI`
 
 * Decorator
-  - `RXRRequestIntercepter`
+  - `RXRRequestInterceptor`
   - `RXRDecorator`
   - `RXRRequestDecorator`
 

@@ -8,7 +8,7 @@
 #import <XCTest/XCTest.h>
 
 #import "Rexxar.h"
-#import "RXRRequestIntercepter.h"
+#import "RXRRequestInterceptor.h"
 #import "RXRRouteFileManager.h"
 #import "RequestDecorator.h"
 

@@ -43,7 +43,7 @@
   }
 
   if (color == nil) {
-    NSLog(@"Unkown color: %@", colorComponents);
+    NSLog(@"Unknown color: %@", colorComponents);
   }
 
   return color;

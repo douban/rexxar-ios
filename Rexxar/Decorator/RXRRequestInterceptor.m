@@ -1,18 +1,18 @@
 //
-//  RXRRequestIntercepter.m
+//  RXRRequestInterceptor.m
 //  Rexxar
 //
 //  Created by GUO Lin on 5/17/16.
 //  Copyright © 2016 Douban Inc. All rights reserved.
 //
 
-#import "RXRRequestIntercepter.h"
+#import "RXRRequestInterceptor.h"
 
 #import "RXRDecorator.h"
 
 static NSArray<id<RXRDecorator>> *sDecorators;
 
-@implementation RXRRequestIntercepter
+@implementation RXRRequestInterceptor
 
 + (void)setDecorators:(NSArray<id<RXRDecorator>> *)decorators
 {
