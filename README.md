@@ -2,7 +2,7 @@
 
 [![Test Status](https://travis-ci.org/douban/rexxar-ios.svg?branch=master)](https://travis-ci.org/douban/rexxar-ios)
 [![IDE](https://img.shields.io/badge/XCode-8-blue.svg)]()
-[![iOS](https://img.shields.io/badge/iOS-7.0-blue.svg)]()
+[![iOS](https://img.shields.io/badge/iOS-7.0-green.svg)]()
 [![Language](https://img.shields.io/badge/language-ObjC-blue.svg)](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)
 
 **Rexxar** 是一个针对移动端的混合开发框架。现在支持 Android 和 iOS 平台。`Rexxar-iOS` 是 Rexxar 在 iOS 系统上的客户端实现。

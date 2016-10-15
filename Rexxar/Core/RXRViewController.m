@@ -107,15 +107,15 @@
 - (void)onPageVisible
 {
   // Call the WebView's visiblity change hook for javascript.
-  RXRDebugLog(@"window.Rexxar.Lifecycle.onPageVisible: %@",
-              [_webView stringByEvaluatingJavaScriptFromString:@"window.Rexxar.Lifecycle.onPageVisible()"]);
+  NSString *result = [_webView stringByEvaluatingJavaScriptFromString:@"window.Rexxar.Lifecycle.onPageVisible()"];
+  RXRDebugLog(@"window.Rexxar.Lifecycle.onPageVisible: %@", result);
 }
 
 - (void)onPageInvisible
 {
   // Call the WebView's visiblity change hook for javascript.
-  RXRDebugLog(@"window.Rexxar.Lifecycle.onPageInvisible: %@",
-              [_webView stringByEvaluatingJavaScriptFromString:@"window.Rexxar.Lifecycle.onPageInvisible()"]);
+  NSString *result = [_webView stringByEvaluatingJavaScriptFromString:@"window.Rexxar.Lifecycle.onPageInvisible()"];
+  RXRDebugLog(@"window.Rexxar.Lifecycle.onPageInvisible: %@", result);
 }
 
 #pragma mark - UIWebViewDelegate's method
