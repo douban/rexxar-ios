@@ -5,6 +5,8 @@
 [![iOS](https://img.shields.io/badge/iOS-7.0-green.svg)]()
 [![Language](https://img.shields.io/badge/language-ObjC-blue.svg)](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)
 
+**[README in English](https://github.com/douban/rexxar-ios/blob/master/README_EN.md)**
+
 **Rexxar** 是一个针对移动端的混合开发框架。现在支持 Android 和 iOS 平台。`Rexxar-iOS` 是 Rexxar 在 iOS 系统上的客户端实现。
 
 通过 Rexxar，你可以使用包括 javascript，css，html 在内的传统前端技术开发移动应用。Rexxar 的客户端实现 Rexxar Container 对于 Web 端使用何种技术并无要求。我们现在的 Rexxar 的前端实现 Rexxar Web，以及 Rexxar Container 在两个平台的实现 Rexxar-iOS 和 Rexxar-Android 项目中所带的 Demo 都使用了 [React](https://facebook.github.io/react/)。但你完全可以选择自己的前端框架在 Rexxar Container 中进行开发。
@@ -19,9 +21,7 @@ Rexxar-iOS 现在支持 iOS 7 及以上版本。
 Rexxar 包含三个库：
 
 - Rexxar Web ：[https://github.com/douban/rexxar-web](https://github.com/douban/rexxar-web)。
-
 - Rexxar Android：[https://github.com/douban/rexxar-android](https://github.com/douban/rexxar-android)。
-
 - Rexxar iOS：[https://github.com/douban/rexxar-ios](https://github.com/douban/rexxar-ios)。
 
 ## 安装
@@ -38,7 +38,7 @@ $ gem install cocoapods
 
 ```ruby
 target 'TargetName' do
-  pod 'Rexxar', :git => 'https://github.com/douban/rexxar-ios.git', :commit => '0.2.0'
+  pod 'Rexxar', :git => 'https://github.com/douban/rexxar-ios.git', :commit => '0.2.1'
 end
 ```
 
@@ -97,9 +97,9 @@ Rexxar 使用 url 来标识页面。提供一个正确的 url 就可以创建对
   RXRConfig.setRoutesCachePath("com.douban.RexxarDemo.rexxar")
 ```
 
-以上配置设置了缓存路径。缓存文件夹存在的目的也是减少资源文件的下载次数，加快打开页面的速度。使得用户可以得到近似原生页面的页面加载体验。
+缓存文件夹存在的目的也是减少资源文件的下载次数，加快打开页面的速度。使得用户可以得到近似原生页面的页面加载体验。
 
-缓存资源文件一般会出现在 Rexxar 部署了一次路由表的更新之后。这也是 Rexxar 支持`热部署`的方法：由路由表控制资源文件的更新。一般可以让应用定期访问路由表。比如，在开启应用时，或者关闭应用时更新路由表。更新路由表的方法如下：
+缓存资源文件一般会出现在 Rexxar 部署了一次路由表的更新之后。这也是 Rexxar 支持`热部署`的方法：路由表控制资源文件的更新。一般可以让应用定期访问路由表。比如，在开启应用时，或者关闭应用时更新路由表。更新路由表的方法如下：
 
 ```Swift
   RXRViewController.updateRouteFiles(completion: nil)
@@ -142,7 +142,7 @@ Rexxar 使用 url 来标识页面。提供一个正确的 url 就可以创建对
 
 首先，可以继承 `RXRViewController`，在 `RXRViewController` 基础上以实现你自己客户端容器。
 
-我们暴露了三类接口。供开发者更方便地扩展属于自己的特定功能实现。
+然后，可以使用 Rexxar 提供的三个接口。下面会介绍如何使用这三个接口，更方便地扩展属于自己的特定功能。
 
 ### 定制 RXRWidget
 
@@ -227,6 +227,14 @@ deinit {
 
 在 Demo 中的 `FullRXRViewController` 可以看到如何注册和取消注册 RXRContainerAPI 和 RXRDecorator。
 
+
+## Partial RXRViewController
+
+如果，你发现一个页面无法全部使用 Rexxar 实现。你可以在一个原生页面内内嵌一个 RXRViewController，部分功能使用原生实现，另一部分功能使用 Rexxar 实现。
+
+Demo 中的 PartialRexxarViewController 给出了一个示例。
+
+
 ## Rexxar 的公开接口
 
 * Rexxar Container
@@ -252,13 +260,6 @@ deinit {
 * Util
   - `NSURL+Rexxar`
   - `NSDictionary+RXRMultipleItem`
-
-
-## Partial RXRViewController
-
-如果，你发现一个页面无法全部使用 Rexxar 实现。你可以在一个原生页面内内嵌一个 RXRViewController，部分功能使用原生实现，另一部分功能使用 Rexxar 实现。
-
-Demo 中的 PartialRexxarViewController 给出了一个示例。
 
 
 ## 未来可能的改进
