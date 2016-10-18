@@ -34,6 +34,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (nullable NSArray<id<RXRContainerAPI>> *)containerAPIs;
 
+/**
+ * 注册一个侦听器。
+ */
++ (BOOL)registerInterceptor;
+
+/**
+ * 注销一个侦听器。
+ */
++ (void)unregisterInterceptor;
+
 @end
 
 NS_ASSUME_NONNULL_END

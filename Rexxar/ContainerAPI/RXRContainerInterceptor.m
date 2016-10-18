@@ -10,6 +10,7 @@
 #import "RXRContainerAPI.h"
 
 static NSArray<id<RXRContainerAPI>> *sContainerAPIs;
+static NSInteger sRegisterInterceptorCounter;
 
 @implementation RXRContainerInterceptor
 
@@ -21,6 +22,28 @@ static NSArray<id<RXRContainerAPI>> *sContainerAPIs;
 + (NSArray<id<RXRContainerAPI>> *)containerAPIs
 {
   return sContainerAPIs;
+}
+
++ (BOOL)registerInterceptor
+{
+  @synchronized (self) {
+    sRegisterInterceptorCounter += 1;
+  }
+  return [NSURLProtocol registerClass:[self class]];
+}
+
++ (void)unregisterInterceptor
+{
+  @synchronized (self) {
+    sRegisterInterceptorCounter -= 1;
+    if (sRegisterInterceptorCounter < 0) {
+      sRegisterInterceptorCounter = 0;
+    }
+  }
+
+  if (sRegisterInterceptorCounter == 0) {
+    return [NSURLProtocol unregisterClass:[self class]];
+  }
 }
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request
