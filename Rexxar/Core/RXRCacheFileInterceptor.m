@@ -12,6 +12,7 @@
 #import "NSURL+Rexxar.h"
 
 static NSString * const RXRCacheFileIntercepterHandledKey = @"RXRCacheFileIntercepterHandledKey";
+static NSInteger sRegisterInterceptorCounter;
 
 @interface RXRCacheFileInterceptor ()
 
@@ -23,6 +24,29 @@ static NSString * const RXRCacheFileIntercepterHandledKey = @"RXRCacheFileInterc
 
 
 @implementation RXRCacheFileInterceptor
+
++ (BOOL)registerInterceptor
+{
+  @synchronized (self) {
+    sRegisterInterceptorCounter += 1;
+  }
+  return [NSURLProtocol registerClass:[self class]];
+}
+
++ (void)unregisterInterceptor
+{
+  @synchronized (self) {
+    sRegisterInterceptorCounter -= 1;
+    if (sRegisterInterceptorCounter < 0) {
+      sRegisterInterceptorCounter = 0;
+    }
+  }
+
+  if (sRegisterInterceptorCounter == 0) {
+    return [NSURLProtocol unregisterClass:[self class]];
+  }
+}
+
 
 #pragma mark - NSURLProtocol's methods
 

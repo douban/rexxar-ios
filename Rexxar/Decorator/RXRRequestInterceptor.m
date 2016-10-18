@@ -11,6 +11,7 @@
 #import "RXRDecorator.h"
 
 static NSArray<id<RXRDecorator>> *sDecorators;
+static NSInteger sRegisterInterceptorCounter;
 
 @implementation RXRRequestInterceptor
 
@@ -22,6 +23,28 @@ static NSArray<id<RXRDecorator>> *sDecorators;
 + (NSArray<id<RXRDecorator>> *)decorators
 {
   return sDecorators;
+}
+
++ (BOOL)registerInterceptor
+{
+  @synchronized (self) {
+    sRegisterInterceptorCounter += 1;
+  }
+  return [NSURLProtocol registerClass:[self class]];
+}
+
++ (void)unregisterInterceptor
+{
+  @synchronized (self) {
+    sRegisterInterceptorCounter -= 1;
+    if (sRegisterInterceptorCounter < 0) {
+      sRegisterInterceptorCounter = 0;
+    }
+  }
+
+  if (sRegisterInterceptorCounter == 0) {
+    return [NSURLProtocol unregisterClass:[self class]];
+  }
 }
 
 #pragma mark - Implement NSURLProtocol methods

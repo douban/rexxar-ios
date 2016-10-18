@@ -71,7 +71,7 @@
 
   [self reloadWebView];
 
-  [NSURLProtocol registerClass:RXRCacheFileInterceptor.class];
+  [RXRCacheFileInterceptor registerInterceptor];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -88,7 +88,7 @@
 
 - (void)dealloc
 {
-  [NSURLProtocol unregisterClass:RXRCacheFileInterceptor.class];
+  [RXRCacheFileInterceptor unregisterInterceptor];
 }
 
 #pragma mark - Public methods

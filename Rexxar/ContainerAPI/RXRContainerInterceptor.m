@@ -46,6 +46,8 @@ static NSInteger sRegisterInterceptorCounter;
   }
 }
 
+#pragma mark - Implement NSURLProtocol methods
+
 + (BOOL)canInitWithRequest:(NSURLRequest *)request
 {
   // 请求不是来自浏览器，不处理

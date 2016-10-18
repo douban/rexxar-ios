@@ -15,7 +15,6 @@
 
 @interface RXRRouteFileCacheTests : XCTestCase
 
-
 @end
 
 @implementation RXRRouteFileCacheTests
@@ -26,12 +25,12 @@
   [RXRConfig setRoutesResourcePath:resourcePath];
 
   [RXRConfig setRoutesCachePath:[[NSUUID UUID] UUIDString]];
-  [NSURLProtocol registerClass:[RXRCacheFileInterceptor class]];
+  [RXRCacheFileInterceptor registerInterceptor];
 }
 
 + (void)tearDown
 {
-  [NSURLProtocol unregisterClass:[RXRCacheFileInterceptor class]];
+  [RXRCacheFileInterceptor unregisterInterceptor];
 }
 
 

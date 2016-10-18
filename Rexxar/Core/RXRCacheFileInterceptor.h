@@ -14,4 +14,14 @@
  */
 @interface RXRCacheFileInterceptor : NSURLProtocol
 
+/**
+ * 注册一个侦听器。
+ */
++ (BOOL)registerInterceptor;
+
+/**
+ * 注销一个侦听器。
+ */
++ (void)unregisterInterceptor;
+
 @end
