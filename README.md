@@ -60,7 +60,7 @@ Demo 中使用 github 的 raw 文件服务提供一个简单的路由表文件 r
 #### 设置路由表文件 api：
 
 ```Swift
-  RXRConfig.setRoutesMapURL(NSURL(string:"https://raw.githubusercontent.com/douban/rexxar-web/master/example/dist/routes.json)!)
+  RXRConfig.setRoutesMapURL(NSURL(string:"https://raw.githubusercontent.com/douban/rexxar-web/master/example/dist/routes.json")!)
 ```
 
 Rexxar 使用 url 来标识页面。提供一个正确的 url 就可以创建对应的 RXRViewController。路由表提供了每个 url 对应的 html 资源的下载地址。Demo 中的路由表如下：
