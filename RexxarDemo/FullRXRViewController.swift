@@ -27,7 +27,6 @@ class FullRXRViewController: RXRViewController {
     let geoContainerAPI = RXRGeoContainerAPI()
     let logContainerAPI = RXRLogContainerAPI()
     RXRContainerInterceptor.setContainerAPIs([geoContainerAPI, logContainerAPI])
-    //URLProtocol.registerClass(RXRContainerInterceptor.self)
     let _  = RXRContainerInterceptor.register()
 
     // Decorators
@@ -36,12 +35,11 @@ class FullRXRViewController: RXRViewController {
     let requestDecorator = RXRRequestDecorator(headers: headers, parameters: parameters)
     RXRRequestInterceptor.setDecorators([requestDecorator])
     URLProtocol.registerClass(RXRRequestInterceptor.self)
+    let _ = RXRRequestInterceptor.register()
   }
 
   deinit {
-    //URLProtocol.unregisterClass(RXRContainerInterceptor.self)
     RXRContainerInterceptor.unregisterInterceptor()
-
-    URLProtocol.unregisterClass(RXRRequestInterceptor.self)
+    RXRRequestInterceptor.unregisterInterceptor()
   }
 }
