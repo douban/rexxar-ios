@@ -69,6 +69,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)onPageInvisible;
 
+/**
+ * 调用 WebView 的一个 JavaScript 函数，并传入一个 json 串作为参数。
+ *
+ * @param function 调用的函数。
+ * @param jsonParameter 传递的参数，json 串。
+ */
+- (nullable NSString *)callJavaScript:(NSString *)function jsonParameter:(nullable NSString *)jsonParameter;
+
 @end
 
 
@@ -87,16 +95,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)updateRouteFilesWithCompletion:(nullable void (^)(BOOL success))completion;
 
 /**
- * 判断存在对应于 uri 的 route 信息
+ * 判断路由表是否存在对应于 uri 的 route 信息。
  *
- * @param uri 待判断的 uri
+ * @param uri 待判断的 uri。
  */
 + (BOOL)isRouteExistForURI:(NSURL *)uri;
 
 /**
- * 判断存在对应于 uri 的 route 信息
+ * 判断本地（缓存，或预置资源中）是否已经下载了存在对应于 uri 的 route 信息的资源。
  *
- * @param uri 待判断的 uri
+ * @param uri 待判断的 uri。
  */
 + (BOOL)isLocalRouteFileExistForURI:(NSURL *)uri;
 
