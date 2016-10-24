@@ -104,18 +104,39 @@
   }
 }
 
+#pragma mark - Native Call WebView JavaScript interfaces.
+
 - (void)onPageVisible
 {
   // Call the WebView's visiblity change hook for javascript.
-  NSString *result = [_webView stringByEvaluatingJavaScriptFromString:@"window.Rexxar.Lifecycle.onPageVisible()"];
-  RXRDebugLog(@"window.Rexxar.Lifecycle.onPageVisible: %@", result);
+  [self callJavaScript:@"window.Rexxar.Lifecycle.onPageVisible" jsonParameter:nil];
 }
 
 - (void)onPageInvisible
 {
   // Call the WebView's visiblity change hook for javascript.
-  NSString *result = [_webView stringByEvaluatingJavaScriptFromString:@"window.Rexxar.Lifecycle.onPageInvisible()"];
-  RXRDebugLog(@"window.Rexxar.Lifecycle.onPageInvisible: %@", result);
+  [self callJavaScript:@"window.Rexxar.Lifecycle.onPageInvisible" jsonParameter:nil];
+}
+
+- (NSString *)callJavaScript:(NSString *)function jsonParameter:(NSString *)jsonParameter
+{
+  NSString *jsCall;
+  if (jsonParameter) {
+    jsonParameter = [jsonParameter stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
+    jsonParameter = [jsonParameter stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+    jsonParameter = [jsonParameter stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
+    jsonParameter = [jsonParameter stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n"];
+    jsonParameter = [jsonParameter stringByReplacingOccurrencesOfString:@"\r" withString:@"\\r"];
+    jsonParameter = [jsonParameter stringByReplacingOccurrencesOfString:@"\f" withString:@"\\f"];
+    jsonParameter = [jsonParameter stringByReplacingOccurrencesOfString:@"\u2028" withString:@"\\u2028"];
+    jsonParameter = [jsonParameter stringByReplacingOccurrencesOfString:@"\u2029" withString:@"\\u2029"];
+    jsCall = [NSString stringWithFormat:@"%@('%@')", function, jsonParameter];
+  } else {
+    jsCall = [NSString stringWithFormat:@"%@()", function];
+  }
+  NSString *result = [_webView stringByEvaluatingJavaScriptFromString:jsCall];
+  RXRDebugLog(@"jsCall: function:%@, parameter %@, result: %@", function, jsonParameter, result);
+  return result;
 }
 
 #pragma mark - UIWebViewDelegate's method
