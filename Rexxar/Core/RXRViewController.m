@@ -152,7 +152,7 @@
   }
 
   // http:// or https:// 开头，则打开网页
-  if ([reqURL rxr_isHttpOrHttps]) {
+  if ([reqURL rxr_isHttpOrHttps] && navigationType == UIWebViewNavigationTypeLinkClicked) {
     return ![self _rxr_openWebPage:reqURL];
   }
 
@@ -249,7 +249,7 @@
   } else if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
     [delegate application:[UIApplication sharedApplication]
                   openURL:url
-        sourceApplication:nil
+        sourceApplication:NSStringFromClass([self class])
                annotation:@""];
   } else if ([delegate respondsToSelector:@selector(application:handleOpenURL:)]) {
     [delegate application:[UIApplication sharedApplication] handleOpenURL:url];
