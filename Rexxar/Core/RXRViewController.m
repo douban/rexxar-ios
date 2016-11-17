@@ -225,8 +225,11 @@
   // 把 uri 的原始文本所有内容全部 escape。
   NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@""];
   uriText = [uriText stringByAddingPercentEncodingWithAllowedCharacters:set];
-
-  return  [NSURL URLWithString:[NSString stringWithFormat:@"%@?uri=%@", htmlFileURL.absoluteString, uriText]];
+  NSString *url = [NSString stringWithFormat:@"%@://%@%@",htmlFileURL.scheme,htmlFileURL.host,htmlFileURL.path];
+  url = [url stringByAppendingFormat:@"?uri=%@",uriText];
+  url = [url stringByAppendingFormat:@"&%@",uri.query];
+  url = [url stringByAppendingFormat:@"&%@",htmlFileURL.query];
+  return  [NSURL URLWithString:url];
 }
 
 - (void)_rxr_resetControllerAppearance
