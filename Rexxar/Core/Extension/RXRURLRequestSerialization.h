@@ -1,5 +1,5 @@
 //
-//  UIColor+Rexxar.h
+//  RXRURLRequestSerialization.h
 //  Rexxar
 //
 //  Created by bigyelow on 11/24/16.
