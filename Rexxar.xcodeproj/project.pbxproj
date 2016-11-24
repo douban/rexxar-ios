@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		719255591DE6E055009F0687 /* RXRURLRequestSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 719255571DE6E055009F0687 /* RXRURLRequestSerialization.h */; };
+		7192555A1DE6E055009F0687 /* RXRURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 719255581DE6E055009F0687 /* RXRURLRequestSerialization.m */; };
 		987FA5221BFC78310096ED5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B47B141BF1E0F20087735C /* AppDelegate.swift */; };
 		98B47B071BF1E0E00087735C /* Rexxar.h in Headers */ = {isa = PBXBuildFile; fileRef = 98B47B061BF1E0E00087735C /* Rexxar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		98B47B1F1BF1E0F20087735C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98B47B1D1BF1E0F20087735C /* LaunchScreen.storyboard */; };
@@ -98,6 +100,8 @@
 /* Begin PBXFileReference section */
 		2A439B659D80C1F6A81CEB22 /* Pods-RexxarDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RexxarDemo.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-RexxarDemo/Pods-RexxarDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		6143A5FB8F8F1D086AC883C1 /* libPods-RexxarDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RexxarDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		719255571DE6E055009F0687 /* RXRURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRURLRequestSerialization.h; sourceTree = "<group>"; };
+		719255581DE6E055009F0687 /* RXRURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRURLRequestSerialization.m; sourceTree = "<group>"; };
 		77BB1328573CD94C05F4665D /* libPods-Rexxar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rexxar.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		83BCA0BDFDFD248FED598EEA /* Pods-Rexxar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rexxar.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Rexxar/Pods-Rexxar.release.xcconfig"; sourceTree = "<group>"; };
 		98B47B031BF1E0E00087735C /* Rexxar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rexxar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -353,6 +357,8 @@
 				A35E72141D7FCB0B00D38BC0 /* NSURL+Rexxar.m */,
 				A35E72151D7FCB0B00D38BC0 /* UIColor+Rexxar.h */,
 				A35E72161D7FCB0B00D38BC0 /* UIColor+Rexxar.m */,
+				719255571DE6E055009F0687 /* RXRURLRequestSerialization.h */,
+				719255581DE6E055009F0687 /* RXRURLRequestSerialization.m */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -479,6 +485,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				719255591DE6E055009F0687 /* RXRURLRequestSerialization.h in Headers */,
 				A35E72281D7FCB0B00D38BC0 /* NSString+RXRURLEscape.h in Headers */,
 				A35E72011D7FCA0200D38BC0 /* RXRViewController.h in Headers */,
 				A35E72241D7FCB0B00D38BC0 /* NSDictionary+RXRMultipleItems.h in Headers */,
@@ -659,6 +666,7 @@
 				A35E71DF1D7FC86000D38BC0 /* RXRPullRefreshWidget.m in Sources */,
 				A398DC2E1D221BA4006D4817 /* RXRNavTitleWidget.m in Sources */,
 				A35E72291D7FCB0B00D38BC0 /* NSString+RXRURLEscape.m in Sources */,
+				7192555A1DE6E055009F0687 /* RXRURLRequestSerialization.m in Sources */,
 				A35E72231D7FCB0B00D38BC0 /* NSData+RXRDigest.m in Sources */,
 				A35E722D1D7FCB0B00D38BC0 /* UIColor+Rexxar.m in Sources */,
 			);
