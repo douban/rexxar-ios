@@ -6,6 +6,7 @@
 //  Copyright © 2016 Douban.Inc. All rights reserved.
 //
 
+#import "RXRURLRequestSerialization.h"
 #import "RXRRequestDecorator.h"
 
 #import "NSURL+Rexxar.h"
@@ -42,7 +43,7 @@
   }];
 
   // Request url parameters
-  NSMutableDictionary *parametersEncoded = [NSMutableDictionary dictionaryWithDictionary:self.parameters];
+  NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:self.parameters];
   for (NSString *pair in [request.URL.query componentsSeparatedByString:@"&"]) {
 
     NSArray *keyValuePair = [pair componentsSeparatedByString:@"="];
@@ -51,17 +52,14 @@
     }
 
     NSString *key = [keyValuePair[0] stringByRemovingPercentEncoding];
-    if (parametersEncoded[key] == nil) {
-      parametersEncoded[key] = [keyValuePair[1] stringByRemovingPercentEncoding];
+    if (parameters[key] == nil) {
+      parameters[key] = [keyValuePair[1] stringByRemovingPercentEncoding];
     }
   }
 
-  NSString *query = [NSURL rxr_queryFromDictionary:parametersEncoded];
-  if (query) {
-    NSURLComponents *urlComps = [NSURLComponents componentsWithURL:request.URL resolvingAgainstBaseURL:YES];
-    urlComps.query = query;
-    request.URL = urlComps.URL;
-  }
+  request = [[[RXRHTTPRequestSerializer serializer] requestBySerializingRequest:request
+                                                                 withParameters:parameters
+                                                                          error:nil] mutableCopy];
 }
 
 @end
