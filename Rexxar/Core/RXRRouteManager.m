@@ -55,7 +55,7 @@
 - (void)setRoutesMapURL:(NSURL *)routesMapURL
 {
   if (_routesMapURL != routesMapURL) {
-    _routesMapURL = routesMapURL;
+    _routesMapURL = [routesMapURL copy];
     self.routes = [self _rxr_routesWithData:[[RXRRouteFileCache sharedInstance] routesMapFile]];
   }
 }

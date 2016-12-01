@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 对应的 uri。
  */
-@property (nonatomic, strong, readonly) NSURL *uri;
+@property (nonatomic, copy, readonly) NSURL *uri;
 
 /**
  * 内置的 WebView。
@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * activities 代表该 Rexxar Container 可以响应的协议。
  */
-@property (nonatomic, strong) NSArray<id<RXRWidget>> *widgets;
+@property (nonatomic, copy) NSArray<id<RXRWidget>> *widgets;
 
 /**
  * 初始化一个RXRViewController。

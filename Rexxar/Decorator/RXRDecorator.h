@@ -24,11 +24,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)shouldInterceptRequest:(NSURLRequest *)request;
 
 /**
- * 对该请求的修改动作
- *
- * @param request 对应请求
+ 对该请求的修改动作
+
+ @param originalRequest 修改前的 request
+ @return 修改后的 request
  */
-- (void)decorateRequest:(NSMutableURLRequest *)request;
+- (NSURLRequest *)decoratedRequestFromOriginalRequest:(NSURLRequest *)originalRequest;
 
 
 @optional

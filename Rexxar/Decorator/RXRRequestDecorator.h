@@ -21,12 +21,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 需要为请求增添的自定义 header。
  */
-@property (nonatomic, strong) NSDictionary *headers;
+@property (nonatomic, copy) NSDictionary *headers;
 
 /**
  * 需要为请求增添的 url 参数。
  */
-@property (nonatomic, strong) NSDictionary *parameters;
+@property (nonatomic, copy) NSDictionary *parameters;
 
 /**
  * 初始化一个请求装修器。
