@@ -33,18 +33,20 @@
   return NO;
 }
 
-- (void)decorateRequest:(NSMutableURLRequest *)request
+- (NSURLRequest *)decoratedRequestFromOriginalRequest:(NSURLRequest *)originalRequest
 {
+  NSMutableURLRequest *mutableRequest = [originalRequest mutableCopy];
+
   // Request headers
   [self.headers enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
     if ([key isKindOfClass:[NSString class]] && [obj isKindOfClass:[NSString class]]){
-      [request setValue:obj forHTTPHeaderField:key];
+      [mutableRequest setValue:obj forHTTPHeaderField:key];
     }
   }];
 
   // Request url parameters
   NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:self.parameters];
-  for (NSString *pair in [request.URL.query componentsSeparatedByString:@"&"]) {
+  for (NSString *pair in [mutableRequest.URL.query componentsSeparatedByString:@"&"]) {
 
     NSArray *keyValuePair = [pair componentsSeparatedByString:@"="];
     if (keyValuePair.count != 2) {
@@ -57,9 +59,9 @@
     }
   }
 
-  request = [[[RXRHTTPRequestSerializer serializer] requestBySerializingRequest:request
-                                                                 withParameters:parameters
-                                                                          error:nil] mutableCopy];
+  return [[RXRHTTPRequestSerializer serializer] requestBySerializingRequest:[mutableRequest copy]
+                                                             withParameters:parameters
+                                                                      error:nil];
 }
 
 @end
