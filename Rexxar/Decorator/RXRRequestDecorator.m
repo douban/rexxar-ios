@@ -57,8 +57,8 @@
     }
   }
 
-  [[RXRHTTPRequestSerializer serializer] rxr_serializeRequest:request
-                                               withParameters:parameters
-                                                        error:nil];
+  [[RXRHTTPRequestSerializer serializer] serializeRequest:request
+                                           withParameters:parameters
+                                                    error:nil];
 }
 @end
