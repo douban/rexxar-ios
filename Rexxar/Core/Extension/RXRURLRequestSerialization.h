@@ -261,6 +261,13 @@ forHTTPHeaderField:(NSString *)field;
                              writingStreamContentsToFile:(NSURL *)fileURL
                                        completionHandler:(nullable void (^)(NSError * _Nullable error))handler;
 
+/**
+ Directly serialize mutable request.
+ */
+- (void)rxr_serializeRequest:(nullable NSMutableURLRequest *)request
+              withParameters:(nullable NSDictionary *)parameters
+                       error:(NSError *__autoreleasing *)error;
+
 @end
 
 #pragma mark -

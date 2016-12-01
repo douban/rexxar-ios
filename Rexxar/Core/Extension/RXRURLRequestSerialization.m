@@ -455,54 +455,64 @@ forHTTPHeaderField:(NSString *)field
                                withParameters:(id)parameters
                                         error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(request);
+  NSParameterAssert(request);
 
-    NSMutableURLRequest *mutableRequest = [request mutableCopy];
+  NSMutableURLRequest *mutableRequest = [request mutableCopy];
+  [self rxr_serializeRequest:mutableRequest withParameters:parameters error:error];
+  
+  return [mutableRequest copy];
+}
 
-    [self.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
-        if (![request valueForHTTPHeaderField:field]) {
-            [mutableRequest setValue:value forHTTPHeaderField:field];
-        }
-    }];
+- (void)rxr_serializeRequest:(NSMutableURLRequest *)request
+              withParameters:(NSDictionary *)parameters
+                       error:(NSError *__autoreleasing *)error
+{
+  if (!request) {
+    return;
+  }
 
-    NSString *query = nil;
-    if (parameters) {
-        if (self.queryStringSerialization) {
-            NSError *serializationError;
-            query = self.queryStringSerialization(request, parameters, &serializationError);
-
-            if (serializationError) {
-                if (error) {
-                    *error = serializationError;
-                }
-
-                return nil;
-            }
-        } else {
-            switch (self.queryStringSerializationStyle) {
-                case RXRHTTPRequestQueryStringDefaultStyle:
-                    query = RXRQueryStringFromParameters(parameters);
-                    break;
-            }
-        }
+  [self.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
+    if (![request valueForHTTPHeaderField:field]) {
+      [request setValue:value forHTTPHeaderField:field];
     }
+  }];
 
-    if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
-        if (query && query.length > 0) {
-            mutableRequest.URL = [NSURL URLWithString:[[mutableRequest.URL absoluteString] stringByAppendingFormat:mutableRequest.URL.query ? @"&%@" : @"?%@", query]];
+  NSString *query = nil;
+  if (parameters) {
+    if (self.queryStringSerialization) {
+      NSError *serializationError;
+      query = self.queryStringSerialization(request, parameters, &serializationError);
+
+      if (serializationError) {
+        if (error) {
+          *error = serializationError;
         }
+
+        return;
+      }
     } else {
-        // #2864: an empty string is a valid x-www-form-urlencoded payload
-        if (!query) {
-            query = @"";
-        }
-        if (![mutableRequest valueForHTTPHeaderField:@"Content-Type"]) {
-            [mutableRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        }
-        [mutableRequest setHTTPBody:[query dataUsingEncoding:self.stringEncoding]];
+      switch (self.queryStringSerializationStyle) {
+        case RXRHTTPRequestQueryStringDefaultStyle:
+          query = RXRQueryStringFromParameters(parameters);
+          break;
+      }
     }
+  }
 
-    return mutableRequest;
+  if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
+    if (query && query.length > 0) {
+      request.URL = [NSURL URLWithString:[[request.URL absoluteString] stringByAppendingFormat:request.URL.query ? @"&%@" : @"?%@", query]];
+    }
+  } else {
+    // #2864: an empty string is a valid x-www-form-urlencoded payload
+    if (!query) {
+      query = @"";
+    }
+    if (![request valueForHTTPHeaderField:@"Content-Type"]) {
+      [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    }
+    [request setHTTPBody:[query dataUsingEncoding:self.stringEncoding]];
+  }
 }
 
 #pragma mark - NSKeyValueObserving
