@@ -18,8 +18,8 @@
 {
   self = [super init];
   if (self) {
-    _headers = headers;
-    _parameters = parameters;
+    _headers = [headers copy];
+    _parameters = [parameters copy];
   }
   return self;
 }

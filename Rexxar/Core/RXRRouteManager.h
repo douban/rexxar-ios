@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 读取 Routes Map 信息的 URL 地址。路由表应该由服务器提供。
  */
-@property (nonatomic, strong) NSURL *routesMapURL;
+@property (nonatomic, copy) NSURL *routesMapURL;
 
 /**
  * 单例方法，获取一个 RXRRouteManager 实例。

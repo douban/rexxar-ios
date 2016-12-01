@@ -21,9 +21,9 @@
 
 @interface RXRViewController ()
 
-@property (nonatomic, strong) NSURL *requestURL;
+@property (nonatomic, copy) NSURL *requestURL;
 
-@property (nonatomic, strong) NSURL *htmlFileURL;
+@property (nonatomic, copy) NSURL *htmlFileURL;
 
 @end
 
@@ -36,8 +36,8 @@
 {
   self = [super initWithNibName:nil bundle:nil];
   if (self) {
-    _uri = uri;
-    _htmlFileURL = htmlFileURL;
+    _uri = [uri copy];
+    _htmlFileURL = [htmlFileURL copy] ;
   }
   return self;
 }
@@ -46,7 +46,7 @@
 {
   self = [super initWithNibName:nil bundle:nil];
   if (self) {
-    _uri = uri;
+    _uri = [uri copy];
   }
   return self;
 }
