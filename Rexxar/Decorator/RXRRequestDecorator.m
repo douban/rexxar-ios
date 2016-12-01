@@ -57,9 +57,8 @@
     }
   }
 
-  request = [[[RXRHTTPRequestSerializer serializer] requestBySerializingRequest:request
-                                                                 withParameters:parameters
-                                                                          error:nil] mutableCopy];
+  [[RXRHTTPRequestSerializer serializer] serializeRequest:request
+                                           withParameters:parameters
+                                                    error:nil];
 }
-
 @end

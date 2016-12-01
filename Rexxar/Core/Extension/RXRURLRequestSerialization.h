@@ -27,9 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
  In RFC 3986 - Section 3.4, it states that the "?" and "/" characters should not be escaped to allow
  query strings to include a URL. Therefore, all "reserved" characters with the exception of "?" and "/"
  should be percent-escaped in the query string.
- 
+
  @param string The string to be percent-escaped.
- 
+
  @return The percent-escaped string.
  */
 FOUNDATION_EXPORT NSString * RXRPercentEscapedStringFromString(NSString *string);
@@ -60,8 +60,8 @@ FOUNDATION_EXPORT NSString * RXRQueryStringFromParameters(NSDictionary *paramete
  @return A serialized request.
  */
 - (nullable NSURLRequest *)requestBySerializingRequest:(NSURLRequest *)request
-                               withParameters:(nullable id)parameters
-                                        error:(NSError * _Nullable __autoreleasing *)error NS_SWIFT_NOTHROW;
+                                        withParameters:(nullable id)parameters
+                                                 error:(NSError * _Nullable __autoreleasing *)error NS_SWIFT_NOTHROW;
 
 @end
 
@@ -71,7 +71,7 @@ FOUNDATION_EXPORT NSString * RXRQueryStringFromParameters(NSDictionary *paramete
 
  */
 typedef NS_ENUM(NSUInteger, RXRHTTPRequestQueryStringSerializationStyle) {
-    RXRHTTPRequestQueryStringDefaultStyle = 0,
+  RXRHTTPRequestQueryStringDefaultStyle = 0,
 };
 
 @protocol RXRMultipartFormData;
@@ -260,6 +260,13 @@ forHTTPHeaderField:(NSString *)field;
 - (NSMutableURLRequest *)requestWithMultipartFormRequest:(NSURLRequest *)request
                              writingStreamContentsToFile:(NSURL *)fileURL
                                        completionHandler:(nullable void (^)(NSError * _Nullable error))handler;
+
+/**
+ Directly serialize mutable request.
+ */
+- (void)serializeRequest:(nullable NSMutableURLRequest *)request
+          withParameters:(nullable NSDictionary *)parameters
+                   error:(NSError *__autoreleasing *)error;
 
 @end
 
