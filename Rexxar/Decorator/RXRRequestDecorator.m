@@ -46,8 +46,35 @@
 
   // Request url parameters
   NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:self.parameters];
-  for (NSString *pair in [mutableRequest.URL.query componentsSeparatedByString:@"&"]) {
+  [self _rxr_addQuery:mutableRequest.URL.query toParameters:parameters];
 
+  // Get parameters from POST request body
+  // Note: `requestBySerializingRequest:withParameters:error:` method will add query to HTTP body for POST request
+  if ([mutableRequest.HTTPMethod.uppercaseString isEqualToString:@"POST"]
+      && mutableRequest.HTTPBody
+      && [[[mutableRequest valueForHTTPHeaderField:@"Content-Type"] lowercaseString] isEqualToString:@"application/x-www-form-urlencoded"]) {
+    NSString *bodyQueries = [[NSString alloc] initWithData:mutableRequest.HTTPBody encoding:kCFStringEncodingUTF8];
+    [self _rxr_addQuery:bodyQueries toParameters:parameters];
+  }
+
+  // Remove query from url because RXRHTTPRequestSerializer will add all the parameters through
+  // `requestBySerializingRequest:withParameters:error:` method.
+  NSURLComponents *comp = [[NSURLComponents alloc] initWithURL:mutableRequest.URL resolvingAgainstBaseURL:NO];
+  comp.query = nil;
+  mutableRequest.URL = comp.URL;
+
+  return [[RXRHTTPRequestSerializer serializer] requestBySerializingRequest:[mutableRequest copy]
+                                                             withParameters:parameters
+                                                                      error:nil];
+}
+
+- (void)_rxr_addQuery:(NSString *)query toParameters:(NSMutableDictionary *)parameters
+{
+  if (!parameters) {
+    return;
+  }
+
+  for (NSString *pair in [query componentsSeparatedByString:@"&"]) {
     NSArray *keyValuePair = [pair componentsSeparatedByString:@"="];
     if (keyValuePair.count != 2) {
       continue;
@@ -58,10 +85,6 @@
       parameters[key] = [keyValuePair[1] stringByRemovingPercentEncoding];
     }
   }
-
-  return [[RXRHTTPRequestSerializer serializer] requestBySerializingRequest:[mutableRequest copy]
-                                                             withParameters:parameters
-                                                                      error:nil];
 }
 
 @end
