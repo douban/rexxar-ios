@@ -11,7 +11,18 @@
 
 #import "NSURL+Rexxar.h"
 
+@interface RXRRequestDecorator ()
+
+@property (nonatomic, strong) RXRHTTPRequestSerializer *requestSerializer;
+
+@end
+
 @implementation RXRRequestDecorator
+
+- (instancetype)init
+{
+  return [self initWithHeaders:@{} parameters:@{}];
+}
 
 - (instancetype)initWithHeaders:(NSDictionary *)headers
                      parameters:(NSDictionary *)parameters
@@ -20,6 +31,14 @@
   if (self) {
     _headers = [headers copy];
     _parameters = [parameters copy];
+    _requestSerializer = [[RXRHTTPRequestSerializer alloc] init];
+
+    // Do not encode queries to HTTP body for POST method.
+    if (![_requestSerializer.HTTPMethodsEncodingParametersInURI containsObject:@"POST"]) {
+      NSMutableSet *set = [_requestSerializer.HTTPMethodsEncodingParametersInURI mutableCopy];
+      [set addObject:@"POST"];
+      _requestSerializer.HTTPMethodsEncodingParametersInURI = [set copy];
+    }
   }
   return self;
 }
@@ -46,8 +65,27 @@
 
   // Request url parameters
   NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:self.parameters];
-  for (NSString *pair in [mutableRequest.URL.query componentsSeparatedByString:@"&"]) {
+  [self _rxr_addQuery:mutableRequest.URL.query toParameters:parameters];
 
+  // Note: mutableRequest.URL.query has been added to the paramters, _requestSerializer will generate a new NSURLRequest
+  // object from the parameters every time when it decorates a request. If we don't remove query from URL, request may
+  // contain duplicated query string if the original request is decorated more than 2 times.
+  NSURLComponents *comp = [[NSURLComponents alloc] initWithURL:mutableRequest.URL resolvingAgainstBaseURL:NO];
+  comp.query = nil;
+  mutableRequest.URL = comp.URL;
+
+  return [_requestSerializer requestBySerializingRequest:mutableRequest
+                                          withParameters:parameters
+                                                   error:nil];
+}
+
+- (void)_rxr_addQuery:(NSString *)query toParameters:(NSMutableDictionary *)parameters
+{
+  if (!parameters) {
+    return;
+  }
+
+  for (NSString *pair in [query componentsSeparatedByString:@"&"]) {
     NSArray *keyValuePair = [pair componentsSeparatedByString:@"="];
     if (keyValuePair.count != 2) {
       continue;
@@ -58,10 +96,6 @@
       parameters[key] = [keyValuePair[1] stringByRemovingPercentEncoding];
     }
   }
-
-  return [[RXRHTTPRequestSerializer serializer] requestBySerializingRequest:[mutableRequest copy]
-                                                             withParameters:parameters
-                                                                      error:nil];
 }
 
 @end

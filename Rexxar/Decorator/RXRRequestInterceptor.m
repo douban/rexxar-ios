@@ -86,7 +86,7 @@ static NSInteger sRegisterInterceptorCounter;
       if ([decorator respondsToSelector:@selector(prepareWithRequest:)]) {
         [decorator prepareWithRequest:request];
       }
-      request = [[decorator decoratedRequestFromOriginalRequest:[request copy]] mutableCopy];
+      request = [[decorator decoratedRequestFromOriginalRequest:request] mutableCopy];
     }
   }
 
