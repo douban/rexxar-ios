@@ -18,6 +18,8 @@ Rexxar-iOS 现在支持 iOS 7 及以上版本。
 
 关于 Rexxar 的整体介绍，可以看看这篇博客：[豆瓣的混合开发框架 -- Rexxar](http://lincode.github.io/Rexxar-OpenSource)。
 
+关于 Rexxar 的设计思想，可以看看这篇问答：[Infoq 采访：豆瓣混合开发框架 Rexxar](http://lincode.github.io/Rexxar-Interview)。
+
 Rexxar 包含三个库：
 
 - Rexxar Web ：[https://github.com/douban/rexxar-web](https://github.com/douban/rexxar-web)。
