@@ -225,10 +225,14 @@
   // 把 uri 的原始文本所有内容全部 escape。
   NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@""];
   uriText = [uriText stringByAddingPercentEncodingWithAllowedCharacters:set];
-  NSString *url = [NSString stringWithFormat:@"%@://%@%@",htmlFileURL.scheme,htmlFileURL.host,htmlFileURL.path];
+  NSString *url = [NSString stringWithFormat:@"%@://%@:%@%@",htmlFileURL.scheme,htmlFileURL.host,htmlFileURL.port,htmlFileURL.path];
   url = [url stringByAppendingFormat:@"?uri=%@",uriText];
-  url = [url stringByAppendingFormat:@"&%@",uri.query];
-  url = [url stringByAppendingFormat:@"&%@",htmlFileURL.query];
+  if (uri.query!=nil) {
+    url = [url stringByAppendingFormat:@"&%@",uri.query];
+  }
+  if (htmlFileURL.query!=nil) {
+    url = [url stringByAppendingFormat:@"&%@",htmlFileURL.query];
+  }
   return  [NSURL URLWithString:url];
 }
 
