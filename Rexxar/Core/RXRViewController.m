@@ -243,7 +243,7 @@
 
 - (void)_rxr_resetControllerAppearance
 {
-  self.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+//  self.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 
   NSString *bgColor = [self.webView stringByEvaluatingJavaScriptFromString:
                        @"window.getComputedStyle(document.getElementsByTagName('body')[0]).backgroundColor"];
