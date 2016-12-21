@@ -71,7 +71,7 @@
 
   [self reloadWebView];
 
-  [RXRCacheFileInterceptor registerInterceptor];
+  //[RXRCacheFileInterceptor registerInterceptor];
 }
 
 - (void)viewWillAppear:(BOOL)animated
