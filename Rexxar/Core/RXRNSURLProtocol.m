@@ -10,35 +10,34 @@
 
 @implementation RXRNSURLProtocol
 
+- (instancetype)initWithRequest:(NSURLRequest *)request
+                 cachedResponse:(nullable NSCachedURLResponse *)cachedResponse
+                         client:(nullable id <NSURLProtocolClient>)client
+{
+  self = [super initWithRequest:request cachedResponse:cachedResponse client:client];
+  if (self != nil) {
+    NSURLSessionConfiguration *URLSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+
+    NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
+    [delegateQueue setMaxConcurrentOperationCount:1];
+
+    _URLSession = [NSURLSession sessionWithConfiguration:URLSessionConfiguration delegate:self delegateQueue:delegateQueue];
+  }
+
+  return self;
+}
+
 - (void)stopLoading
 {
-  [self.connection cancel];
-  self.connection = nil;
+  if ([self dataTask] != nil) {
+    [[self dataTask] cancel];
+    [self setDataTask:nil];
+  }
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request
 {
   return request;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-  [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-  [self.client URLProtocol:self didLoadData:data];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-  [self.client URLProtocolDidFinishLoading:self];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-  [self.client URLProtocol:self didFailWithError:error];
 }
 
 + (void)markRequestAsIgnored:(NSMutableURLRequest *)request
@@ -54,6 +53,67 @@
     return YES;
   }
   return NO;
+}
+
+#pragma mark - NSURLSessionTaskDelegate
+
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+willPerformHTTPRedirection:(NSHTTPURLResponse *)response
+        newRequest:(NSURLRequest *)request
+ completionHandler:(void (^)(NSURLRequest *_Nullable))completionHandler
+{
+  if ([self client] != nil && [self dataTask] == task) {
+    [[self client] URLProtocol:self wasRedirectedToRequest:request redirectResponse:response];
+    completionHandler(request);
+  }
+}
+
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+didCompleteWithError:(nullable NSError *)error
+{
+  if ([self client] != nil && [self dataTask] == task) {
+    if (error == nil) {
+      [[self client] URLProtocolDidFinishLoading:self];
+    } else {
+      [[self client] URLProtocol:self didFailWithError:error];
+    }
+  }
+}
+
+#pragma mark - NSURLSessionDataDelegate
+
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
+didReceiveResponse:(NSURLResponse *)response
+ completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
+{
+  if ([self client] != nil && [self dataTask] != nil && [self dataTask] == dataTask) {
+    [[self client] URLProtocol:self
+            didReceiveResponse:response
+            cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+    completionHandler(NSURLSessionResponseAllow);
+  }
+}
+
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
+    didReceiveData:(NSData *)data
+{
+  if ([self client] != nil && [self dataTask] == dataTask) {
+    [[self client] URLProtocol:self didLoadData:data];
+  }
+}
+
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
+ willCacheResponse:(NSCachedURLResponse *)proposedResponse
+ completionHandler:(void (^)(NSCachedURLResponse *_Nullable cachedResponse))completionHandler
+{
+  if ([self client] != nil && [self dataTask] == dataTask) {
+    completionHandler(proposedResponse);
+  }
 }
 
 @end
