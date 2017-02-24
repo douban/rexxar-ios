@@ -14,9 +14,10 @@
 static NSString * const RXRCacheFileIntercepterHandledKey = @"RXRCacheFileIntercepterHandledKey";
 static NSInteger sRegisterInterceptorCounter;
 
-@interface RXRCacheFileInterceptor ()
+@interface RXRCacheFileInterceptor () <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
-@property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, strong) NSURLSession *session;
+@property (nonatomic, strong) NSURLSessionTask *dataTask;
 @property (nonatomic, strong) NSFileHandle *fileHandle;
 @property (nonatomic, strong) NSString *responseDataFilePath;
 
@@ -48,7 +49,7 @@ static NSInteger sRegisterInterceptorCounter;
 }
 
 
-#pragma mark - NSURLProtocol's methods
+#pragma mark - NSURLProtocol
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request
 {
@@ -80,7 +81,7 @@ static NSInteger sRegisterInterceptorCounter;
 
 - (void)startLoading
 {
-  NSParameterAssert(self.connection == nil);
+  NSParameterAssert(self.dataTask == nil);
   NSParameterAssert([[self class] canInitWithRequest:self.request]);
 
   RXRDebugLog(@"Intercept <%@> within <%@>", self.request.URL, self.request.mainDocumentURL);
@@ -96,62 +97,102 @@ static NSInteger sRegisterInterceptorCounter;
   if (localURL) {
     request.URL = localURL;
   }
-  
+
   [[self class] markRequestAsIgnored:request];
-  self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
+
+  NSURLSessionTask *dataTask = [self.session dataTaskWithRequest:request];
+  [dataTask resume];
+  [self setDataTask:dataTask];
 }
 
 - (void)stopLoading
 {
-  [self.connection cancel];
+  if (self.dataTask != nil) {
+    [self.dataTask cancel];
+    [self setDataTask:nil];
+  }
 }
 
-#pragma mark - NSURLConnectionDataDelegate' methods
+#pragma mark - NSURLSessionDataDelegate
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+willPerformHTTPRedirection:(nonnull NSHTTPURLResponse *)response
+        newRequest:(nonnull NSURLRequest *)request
+ completionHandler:(nonnull void (^)(NSURLRequest * _Nullable))completionHandler
 {
-  NSURLRequest *request = connection.currentRequest;
+  if (self.client != nil && self.dataTask == task) {
+    [self.client URLProtocol:self wasRedirectedToRequest:request redirectResponse:response];
+    completionHandler(request);
+  }
+}
 
-  if (![request.URL isFileURL] &&
-      [[self class] shouldInterceptRequest:request] &&
-      [[self class] _rxr_isCacheableResponse:response]) {
-
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
+didReceiveResponse:(NSURLResponse *)response
+ completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
+{
+  if ([[self class] _rxr_isCacheableResponse:response]) {
     self.responseDataFilePath = [self _rxr_temporaryFilePath];
     [[NSFileManager defaultManager] createFileAtPath:self.responseDataFilePath contents:nil attributes:nil];
     self.fileHandle = nil;
     self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.responseDataFilePath];
   }
-  
+
   [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+  completionHandler(NSURLSessionResponseAllow);
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
+    didReceiveData:(NSData *)data
 {
-  if ([[self class] shouldInterceptRequest:connection.currentRequest] && self.fileHandle) {
+  if (self.fileHandle != nil) {
     [self.fileHandle writeData:data];
   }
- [self.client URLProtocol:self didLoadData:data];
+  [self.client URLProtocol:self didLoadData:data];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+didCompleteWithError:(nullable NSError *)error
 {
-  if ([[self class] shouldInterceptRequest:connection.currentRequest] && self.fileHandle) {
-    [self.fileHandle closeFile];
-    self.fileHandle = nil;
-    NSData *data = [NSData dataWithContentsOfFile:self.responseDataFilePath];
-    [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:connection.currentRequest.URL];
+  if (self.client != nil && self.dataTask == task) {
+    if (error == nil) {
+      if ([[self class] shouldInterceptRequest:task.currentRequest] && self.fileHandle) {
+        [self.fileHandle closeFile];
+        self.fileHandle = nil;
+        NSData *data = [NSData dataWithContentsOfFile:self.responseDataFilePath];
+        [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:task.currentRequest.URL];
+        [self.client URLProtocolDidFinishLoading:self];
+      }
+    } else {
+      if ([[self class] shouldInterceptRequest:task.currentRequest] && self.fileHandle) {
+        [self.fileHandle closeFile];
+        self.fileHandle = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:self.responseDataFilePath error:nil];
+      }
+      [self.client URLProtocol:self didFailWithError:error];
+    }
   }
-  [self.client URLProtocolDidFinishLoading:self];
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+#pragma mark - Init
+
+- (instancetype)initWithRequest:(NSURLRequest *)request
+                 cachedResponse:(nullable NSCachedURLResponse *)cachedResponse
+                         client:(nullable id <NSURLProtocolClient>)client
 {
-  if ([[self class] shouldInterceptRequest:connection.currentRequest] && self.fileHandle) {
-    [self.fileHandle closeFile];
-    self.fileHandle = nil;
-    [[NSFileManager defaultManager] removeItemAtPath:self.responseDataFilePath error:nil];
+  self = [super initWithRequest:request cachedResponse:cachedResponse client:client];
+  if (self != nil) {
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+
+    NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
+    delegateQueue.maxConcurrentOperationCount = 1;
+
+    _session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:delegateQueue];
   }
-  [self.client URLProtocol:self didFailWithError:error];
+  return self;
 }
 
 #pragma mark - Public methods
@@ -193,7 +234,7 @@ static NSInteger sRegisterInterceptorCounter;
 + (BOOL)_rxr_isCacheableResponse:(NSURLResponse *)response
 {
   NSSet *cacheableTypes = [NSSet setWithObjects:@"application/javascript", @"application/x-javascript",
-                          @"text/javascript", @"text/css", nil];
+                           @"text/javascript", @"text/css", nil];
   return [cacheableTypes containsObject:response.MIMEType];
 }
 
