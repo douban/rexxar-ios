@@ -11,7 +11,7 @@ import UIKit
 class RoutesViewController: UITableViewController {
 
   fileprivate let URIs = [URL(string: "douban://douban.com/rexxar_demo")!,
-                      URL(string: "douban://partial.douban.com/rexxar_demo/_.s")!]
+                          URL(string: "douban://partial.douban.com/rexxar_demo/_.s")!]
 
   override func viewDidLoad() {
     super.viewDidLoad()
