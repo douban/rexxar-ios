@@ -7,10 +7,9 @@
 //
 
 #import <Rexxar/Rexxar.h>
-#import "Rexxar/RXRNavTitleWidget.h"
-#import "Rexxar/RXRAlertDialogWidget.h"
-#import "Rexxar/RXRPullRefreshWidget.h"
-
+#import <Rexxar/RXRNavTitleWidget.h>
+#import <Rexxar/RXRAlertDialogWidget.h>
+#import <Rexxar/RXRPullRefreshWidget.h>
 
 #import "RXRToastWidget.h"
 #import "RXRNavMenuWidget.h"

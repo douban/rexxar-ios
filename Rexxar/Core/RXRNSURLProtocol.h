@@ -8,9 +8,10 @@
 
 @import Foundation;
 
-@interface RXRNSURLProtocol : NSURLProtocol
+@interface RXRNSURLProtocol : NSURLProtocol <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
-@property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, readonly) NSURLSession *URLSession;
+@property (nonatomic, strong) NSURLSessionTask *dataTask;
 
 /**
  * 将该请求标记为可以忽略

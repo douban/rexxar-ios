@@ -71,7 +71,7 @@ static NSInteger sRegisterInterceptorCounter;
 
 - (void)startLoading
 {
-  NSParameterAssert(self.connection == nil);
+  NSParameterAssert([self dataTask] == nil);
   NSParameterAssert([[self class] canInitWithRequest:self.request]);
 
   __block NSMutableURLRequest *request = nil;
@@ -91,7 +91,10 @@ static NSInteger sRegisterInterceptorCounter;
   }
 
   [[self class] markRequestAsIgnored:request];
-  self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
+
+  NSURLSessionTask *dataTask = [[self URLSession] dataTaskWithRequest:request];
+  [dataTask resume];
+  [self setDataTask:dataTask];
 }
 
 @end
