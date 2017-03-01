@@ -132,7 +132,11 @@ willPerformHTTPRedirection:(nonnull NSHTTPURLResponse *)response
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
 {
-  if ([[self class] _rxr_isCacheableResponse:response]) {
+  NSURLRequest *request = dataTask.currentRequest;
+
+  if (![request.URL isFileURL] &&
+      [[self class] shouldInterceptRequest:request] &&
+      [[self class] _rxr_isCacheableResponse:response]) {
     self.responseDataFilePath = [self _rxr_temporaryFilePath];
     [[NSFileManager defaultManager] createFileAtPath:self.responseDataFilePath contents:nil attributes:nil];
     self.fileHandle = nil;
@@ -147,7 +151,7 @@ didReceiveResponse:(NSURLResponse *)response
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data
 {
-  if (self.fileHandle != nil) {
+  if ([[self class] shouldInterceptRequest:dataTask.currentRequest] && self.fileHandle) {
     [self.fileHandle writeData:data];
   }
   [self.client URLProtocol:self didLoadData:data];
@@ -164,8 +168,8 @@ didCompleteWithError:(nullable NSError *)error
         self.fileHandle = nil;
         NSData *data = [NSData dataWithContentsOfFile:self.responseDataFilePath];
         [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:task.currentRequest.URL];
-        [self.client URLProtocolDidFinishLoading:self];
       }
+      [self.client URLProtocolDidFinishLoading:self];
     } else {
       if ([[self class] shouldInterceptRequest:task.currentRequest] && self.fileHandle) {
         [self.fileHandle closeFile];
