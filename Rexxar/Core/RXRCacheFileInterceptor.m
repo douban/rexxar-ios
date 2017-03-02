@@ -28,24 +28,38 @@ static NSInteger sRegisterInterceptorCounter;
 
 + (BOOL)registerInterceptor
 {
-  @synchronized (self) {
-    sRegisterInterceptorCounter += 1;
-  }
-  return [NSURLProtocol registerClass:[self class]];
+  __block BOOL result;
+  dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+  dispatch_barrier_sync(globalQueue, ^{
+
+    if (sRegisterInterceptorCounter <= 0) {
+      result = [NSURLProtocol registerClass:[self class]];
+      if (result) {
+        sRegisterInterceptorCounter = 1;
+      }
+    } else {
+      sRegisterInterceptorCounter++;
+      result = YES;
+    }
+
+  });
+
+  return result;
 }
 
 + (void)unregisterInterceptor
 {
-  @synchronized (self) {
-    sRegisterInterceptorCounter -= 1;
+  dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+  dispatch_barrier_async(globalQueue, ^{
+    sRegisterInterceptorCounter--;
     if (sRegisterInterceptorCounter < 0) {
       sRegisterInterceptorCounter = 0;
     }
-  }
 
-  if (sRegisterInterceptorCounter == 0) {
-    return [NSURLProtocol unregisterClass:[self class]];
-  }
+    if (sRegisterInterceptorCounter == 0) {
+      [NSURLProtocol unregisterClass:[self class]];
+    }
+  });
 }
 
 
