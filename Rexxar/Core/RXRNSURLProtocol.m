@@ -18,6 +18,7 @@
   self = [super initWithRequest:request cachedResponse:cachedResponse client:client];
   if (self != nil) {
     NSURLSessionConfiguration *URLSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    URLSessionConfiguration.protocolClasses = @[[self class]];
 
     NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
     [delegateQueue setMaxConcurrentOperationCount:1];
@@ -91,7 +92,7 @@ didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
 {
   if ([self client] != nil && [self dataTask] != nil && [self dataTask] == dataTask) {
-    NSURLResponse *URLResponse = [response rxr_noAccessControlResponse];
+    NSURLResponse *URLResponse = [NSURLResponse rxr_noAccessControlHeaderInstanceWithResponse:response];
     [[self client] URLProtocol:self
             didReceiveResponse:URLResponse
             cacheStoragePolicy:NSURLCacheStorageNotAllowed];

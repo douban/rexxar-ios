@@ -79,7 +79,7 @@ static NSInteger sRegisterInterceptorCounter;
       }
 
       NSData *data = [containerAPI responseData];
-      NSURLResponse *response = [NSURLResponse rxr_defaultResponseForRequest:self.request];
+      NSURLResponse *response = [NSURLResponse rxr_noAccessControlHeaderInstanceForRequest:self.request];
       [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
       [self.client URLProtocol:self didLoadData:data];
       [self.client URLProtocolDidFinishLoading:self];

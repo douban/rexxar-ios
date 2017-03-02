@@ -144,7 +144,7 @@ didReceiveResponse:(NSURLResponse *)response
     self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.responseDataFilePath];
   }
 
-  NSURLResponse *URLResponse = [response rxr_noAccessControlResponse];
+  NSURLResponse *URLResponse = [NSURLResponse rxr_noAccessControlHeaderInstanceWithResponse:response];
   [self.client URLProtocol:self didReceiveResponse:URLResponse cacheStoragePolicy:NSURLCacheStorageNotAllowed];
   completionHandler(NSURLSessionResponseAllow);
 }
@@ -192,6 +192,7 @@ didCompleteWithError:(nullable NSError *)error
   self = [super initWithRequest:request cachedResponse:cachedResponse client:client];
   if (self != nil) {
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfiguration.protocolClasses = @[[self class]];
 
     NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
     delegateQueue.maxConcurrentOperationCount = 1;

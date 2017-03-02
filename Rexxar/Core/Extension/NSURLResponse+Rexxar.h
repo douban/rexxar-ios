@@ -12,9 +12,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSURLResponse (Rexxar)
 
-+ (instancetype)rxr_defaultResponseForRequest:(NSURLRequest *)request;
+/**
+ Returns a new http response with header-field `Access-Control-Allow-Origin`
+ setting to `*`.
+ */
++ (instancetype)rxr_noAccessControlHeaderInstanceForRequest:(NSURLRequest *)request;
 
-- (instancetype)rxr_noAccessControlResponse;
++ (instancetype)rxr_noAccessControlHeaderInstanceWithResponse:(NSURLResponse *)response;
 
 @end
 

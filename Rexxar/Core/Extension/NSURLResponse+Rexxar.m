@@ -12,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSURLResponse (Rexxar)
 
-+ (NSDictionary<NSString *, NSString *> *)_rxr_noAccessControlHeaderFields
++ (NSDictionary *)_rxr_noAccessControlHeaderFields
 {
-  static NSDictionary<NSString *, NSString *> *headerFields = nil;
+  static NSDictionary *headerFields = nil;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     headerFields = @{@"Access-Control-Allow-Headers": @"Origin, X-Requested-With, Content-Type",
@@ -23,34 +23,33 @@ NS_ASSUME_NONNULL_BEGIN
   return headerFields;
 }
 
-+ (instancetype)rxr_defaultResponseForRequest:(NSURLRequest *)request
++ (instancetype)rxr_noAccessControlHeaderInstanceForRequest:(NSURLRequest *)request
 {
   NSDictionary *headerFields = [[self class] _rxr_noAccessControlHeaderFields];
-  return [[[self class] alloc] initWithURL:request.URL
-                                statusCode:200
-                               HTTPVersion:@"HTTP/1.1"
-                              headerFields:headerFields];
+  return [[NSHTTPURLResponse alloc] initWithURL:request.URL
+                                     statusCode:200
+                                    HTTPVersion:@"HTTP/1.1"
+                                   headerFields:headerFields];
 }
 
-- (instancetype)rxr_noAccessControlResponse
++ (instancetype)rxr_noAccessControlHeaderInstanceWithResponse:(NSURLResponse *)response
 {
-  if (![self isKindOfClass:[NSHTTPURLResponse class]]) {
-    return self;
+  if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+    NSHTTPURLResponse *URLResponse = (NSHTTPURLResponse *)response;
+    NSDictionary *headerFields = [[self class] _rxr_noAccessControlHeaderFields];
+    if ([URLResponse.allHeaderFields count] > 0) {
+      NSMutableDictionary *mutableHeaderFields = [URLResponse.allHeaderFields mutableCopy];
+      [mutableHeaderFields addEntriesFromDictionary:headerFields];
+      headerFields = mutableHeaderFields;
+    }
+
+    return [[NSHTTPURLResponse alloc] initWithURL:URLResponse.URL
+                                       statusCode:URLResponse.statusCode
+                                      HTTPVersion:@"HTTP/1.1"
+                                     headerFields:headerFields];
   }
 
-  NSHTTPURLResponse *URLResponse = (NSHTTPURLResponse *)self;
-  NSDictionary *headerFields = [[self class] _rxr_noAccessControlHeaderFields];
-
-  if ([URLResponse.allHeaderFields count] > 0) {
-    NSMutableDictionary *mutableHeaderFields = [URLResponse.allHeaderFields mutableCopy];
-    [mutableHeaderFields addEntriesFromDictionary:headerFields];
-    headerFields = mutableHeaderFields;
-  }
-
-  return [[[self class] alloc] initWithURL:URLResponse.URL
-                                statusCode:URLResponse.statusCode
-                               HTTPVersion:@"HTTP/1.1"
-                              headerFields:headerFields];
+  return response;
 }
 
 @end
