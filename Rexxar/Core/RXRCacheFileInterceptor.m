@@ -7,6 +7,7 @@
 //
 
 #import "RXRCacheFileInterceptor.h"
+#import "NSURLResponse+Rexxar.h"
 #import "RXRRouteFileCache.h"
 #import "RXRLogging.h"
 #import "NSURL+Rexxar.h"
@@ -143,7 +144,8 @@ didReceiveResponse:(NSURLResponse *)response
     self.fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.responseDataFilePath];
   }
 
-  [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+  NSURLResponse *URLResponse = [response rxr_noAccessControlResponse];
+  [self.client URLProtocol:self didReceiveResponse:URLResponse cacheStoragePolicy:NSURLCacheStorageNotAllowed];
   completionHandler(NSURLSessionResponseAllow);
 }
 

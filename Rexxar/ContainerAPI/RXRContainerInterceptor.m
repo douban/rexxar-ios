@@ -7,6 +7,7 @@
 //
 
 #import "RXRContainerInterceptor.h"
+#import "NSURLResponse+Rexxar.h"
 #import "RXRContainerAPI.h"
 
 static NSArray<id<RXRContainerAPI>> *sContainerAPIs;
@@ -78,7 +79,7 @@ static NSInteger sRegisterInterceptorCounter;
       }
 
       NSData *data = [containerAPI responseData];
-      NSURLResponse *response = [containerAPI responseWithRequest:self.request];
+      NSURLResponse *response = [NSURLResponse rxr_defaultResponseForRequest:self.request];
       [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
       [self.client URLProtocol:self didLoadData:data];
       [self.client URLProtocolDidFinishLoading:self];
