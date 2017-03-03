@@ -5,7 +5,6 @@
 //  Created by GUO Lin on 8/19/16.
 //  Copyright © 2016 Douban.Inc. All rights reserved.
 //
-#import <Rexxar/RXRContainerAPI.h>
 
 #import "RXRGeoContainerAPI.h"
 
@@ -25,13 +24,8 @@
 
 - (NSURLResponse *)responseWithRequest:(NSURLRequest *)request
 {
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:request.URL
-                                                            statusCode:200
-                                                           HTTPVersion:@"HTTP/1.1"
-                                                          headerFields:nil];
-  return response;
+  return [NSHTTPURLResponse rxr_responseWithURL:request.URL statusCode:200 headerFields:nil noAccessControl:YES];
 }
-
 
 - (NSData *)responseData
 {

@@ -22,6 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)shouldInterceptRequest:(NSURLRequest *)request;
 
 /**
+ * 模拟请求的返回，返回 NSURLResponse 对象。
+ */
+- (NSURLResponse *)responseWithRequest:(NSURLRequest *)request;
+
+/**
  * 模拟请求返回的内容，返回二进制数据。
  */
 - (nullable NSData *)responseData;

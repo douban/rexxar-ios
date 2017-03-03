@@ -25,11 +25,7 @@
 
 - (NSURLResponse *)responseWithRequest:(NSURLRequest *)request
 {
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:request.URL
-                                                            statusCode:200
-                                                           HTTPVersion:@"HTTP/1.1"
-                                                          headerFields:nil];
-  return response;
+  return [NSHTTPURLResponse rxr_responseWithURL:request.URL statusCode:200 headerFields:nil noAccessControl:YES];
 }
 
 
