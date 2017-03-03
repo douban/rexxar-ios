@@ -7,7 +7,7 @@
 //
 
 #import "RXRNSURLProtocol.h"
-#import "NSURLResponse+Rexxar.h"
+#import "NSHTTPURLResponse+Rexxar.h"
 
 @implementation RXRNSURLProtocol
 
@@ -92,9 +92,17 @@ didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
 {
   if ([self client] != nil && [self dataTask] != nil && [self dataTask] == dataTask) {
-    NSURLResponse *URLResponse = [NSURLResponse rxr_noAccessControlHeaderInstanceWithResponse:response];
+    NSHTTPURLResponse *URLResponse = nil;
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+      URLResponse = (NSHTTPURLResponse *)response;
+      URLResponse = [NSHTTPURLResponse rxr_responseWithURL:URLResponse.URL
+                                                statusCode:URLResponse.statusCode
+                                              headerFields:URLResponse.allHeaderFields
+                                           noAccessControl:YES];
+    }
+
     [[self client] URLProtocol:self
-            didReceiveResponse:URLResponse
+            didReceiveResponse:URLResponse ?: response
             cacheStoragePolicy:NSURLCacheStorageNotAllowed];
     completionHandler(NSURLSessionResponseAllow);
   }

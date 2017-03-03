@@ -26,6 +26,7 @@
 #import "NSURL+Rexxar.h"
 #import "NSDictionary+RXRMultipleItems.h"
 #import "NSString+RXRURLEscape.h"
+#import "NSHTTPURLResponse+Rexxar.h"
 
 #if DSK_WIDGET
 #import "RXRModel.h"

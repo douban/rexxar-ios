@@ -12,8 +12,8 @@
 		987FA5221BFC78310096ED5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B47B141BF1E0F20087735C /* AppDelegate.swift */; };
 		98B47B071BF1E0E00087735C /* Rexxar.h in Headers */ = {isa = PBXBuildFile; fileRef = 98B47B061BF1E0E00087735C /* Rexxar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		98B47B1F1BF1E0F20087735C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98B47B1D1BF1E0F20087735C /* LaunchScreen.storyboard */; };
-		98B7E2631E67D75500B2AE79 /* NSURLResponse+Rexxar.h in Headers */ = {isa = PBXBuildFile; fileRef = 98B7E2611E67D75500B2AE79 /* NSURLResponse+Rexxar.h */; };
-		98B7E2641E67D75500B2AE79 /* NSURLResponse+Rexxar.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B7E2621E67D75500B2AE79 /* NSURLResponse+Rexxar.m */; };
+		98BCCFB81E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h in Headers */ = {isa = PBXBuildFile; fileRef = 98BCCFB61E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98BCCFB91E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.m in Sources */ = {isa = PBXBuildFile; fileRef = 98BCCFB71E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.m */; };
 		A3249A0C1D66EF27006CCCCB /* FRDToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A081D66EF27006CCCCB /* FRDToast.swift */; };
 		A3249A0D1D66EF27006CCCCB /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A091D66EF27006CCCCB /* LoadingView.swift */; };
 		A3249A0E1D66EF27006CCCCB /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A0A1D66EF27006CCCCB /* ToastView.swift */; };
@@ -114,8 +114,8 @@
 		98B47B1E1BF1E0F20087735C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98B47B201BF1E0F20087735C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98B47B391BF1E2BD0087735C /* Bridge-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridge-Header.h"; sourceTree = "<group>"; };
-		98B7E2611E67D75500B2AE79 /* NSURLResponse+Rexxar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLResponse+Rexxar.h"; sourceTree = "<group>"; };
-		98B7E2621E67D75500B2AE79 /* NSURLResponse+Rexxar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLResponse+Rexxar.m"; sourceTree = "<group>"; };
+		98BCCFB61E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSHTTPURLResponse+Rexxar.h"; sourceTree = "<group>"; };
+		98BCCFB71E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSHTTPURLResponse+Rexxar.m"; sourceTree = "<group>"; };
 		9AD2C999156315D603AC712D /* Pods-RexxarDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RexxarDemo.release.xcconfig"; path = "../Pods/Target Support Files/Pods-RexxarDemo/Pods-RexxarDemo.release.xcconfig"; sourceTree = "<group>"; };
 		A3249A081D66EF27006CCCCB /* FRDToast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRDToast.swift; sourceTree = "<group>"; };
 		A3249A091D66EF27006CCCCB /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
@@ -349,6 +349,8 @@
 		A35E720A1D7FCB0B00D38BC0 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				98BCCFB61E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h */,
+				98BCCFB71E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.m */,
 				A35E720B1D7FCB0B00D38BC0 /* NSData+RXRDigest.h */,
 				A35E720C1D7FCB0B00D38BC0 /* NSData+RXRDigest.m */,
 				A35E720D1D7FCB0B00D38BC0 /* NSDictionary+RXRMultipleItems.h */,
@@ -363,8 +365,6 @@
 				A35E72161D7FCB0B00D38BC0 /* UIColor+Rexxar.m */,
 				719255571DE6E055009F0687 /* RXRURLRequestSerialization.h */,
 				719255581DE6E055009F0687 /* RXRURLRequestSerialization.m */,
-				98B7E2611E67D75500B2AE79 /* NSURLResponse+Rexxar.h */,
-				98B7E2621E67D75500B2AE79 /* NSURLResponse+Rexxar.m */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -503,10 +503,10 @@
 				A35E72031D7FCA0200D38BC0 /* RXRWidget.h in Headers */,
 				A35E71F51D7FCA0200D38BC0 /* RXRConfig.h in Headers */,
 				A35E72401D7FCBF900D38BC0 /* RXRDecorator.h in Headers */,
-				98B7E2631E67D75500B2AE79 /* NSURLResponse+Rexxar.h in Headers */,
 				A35E72451D7FCBF900D38BC0 /* RXRContainerAPI.h in Headers */,
 				A35E71E01D7FC86000D38BC0 /* RXRPullRefreshWidget.h in Headers */,
 				A35D15A21D66AE2B009B24DC /* RXRAlertDialogWidget.h in Headers */,
+				98BCCFB81E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h in Headers */,
 				A398DC321D222CC1006D4817 /* RXRModel.h in Headers */,
 				A35E71FE1D7FCA0200D38BC0 /* RXRRouteManager.h in Headers */,
 				A35E72261D7FCB0B00D38BC0 /* NSMutableDictionary+RXRMultipleItems.h in Headers */,
@@ -654,7 +654,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A35E71FD1D7FCA0200D38BC0 /* RXRRouteFileCache.m in Sources */,
-				98B7E2641E67D75500B2AE79 /* NSURLResponse+Rexxar.m in Sources */,
 				A35E71FF1D7FCA0200D38BC0 /* RXRRouteManager.m in Sources */,
 				A35E722B1D7FCB0B00D38BC0 /* NSURL+Rexxar.m in Sources */,
 				A398DC331D222CC1006D4817 /* RXRModel.m in Sources */,
@@ -675,6 +674,7 @@
 				A398DC2E1D221BA4006D4817 /* RXRNavTitleWidget.m in Sources */,
 				A35E72291D7FCB0B00D38BC0 /* NSString+RXRURLEscape.m in Sources */,
 				7192555A1DE6E055009F0687 /* RXRURLRequestSerialization.m in Sources */,
+				98BCCFB91E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.m in Sources */,
 				A35E72231D7FCB0B00D38BC0 /* NSData+RXRDigest.m in Sources */,
 				A35E722D1D7FCB0B00D38BC0 /* UIColor+Rexxar.m in Sources */,
 			);
