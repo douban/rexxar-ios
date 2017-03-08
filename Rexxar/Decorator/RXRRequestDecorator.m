@@ -45,11 +45,17 @@
 
 - (BOOL)shouldInterceptRequest:(NSURLRequest *)request
 {
-  if ([request.URL rxr_isHttpOrHttps]) {
-    return YES;
+  // 只处理 Http 和 https 请求
+  if (![request.URL rxr_isHttpOrHttps]) {
+    return NO;
   }
 
-  return NO;
+  // 不处理静态资源文件
+  if ([[self class] _rxr_isStaticResourceRequest:request]) {
+    return NO;
+  }
+
+  return YES;
 }
 
 - (NSURLRequest *)decoratedRequestFromOriginalRequest:(NSURLRequest *)originalRequest
@@ -79,6 +85,8 @@
                                                    error:nil];
 }
 
+#pragma mark - Private methods
+
 - (void)_rxr_addQuery:(NSString *)query toParameters:(NSMutableDictionary *)parameters
 {
   if (!parameters) {
@@ -96,6 +104,18 @@
       parameters[key] = [keyValuePair[1] stringByRemovingPercentEncoding];
     }
   }
+}
+
+
++ (BOOL)_rxr_isStaticResourceRequest:(NSURLRequest *)request
+{
+  NSString *extension = request.URL.pathExtension;
+  if ([extension isEqualToString:@"js"] ||
+      [extension isEqualToString:@"css"] ||
+      [extension isEqualToString:@"html"]) {
+    return YES;
+  }
+  return NO;
 }
 
 @end

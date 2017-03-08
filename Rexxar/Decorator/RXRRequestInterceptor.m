@@ -84,16 +84,12 @@ static NSInteger sRegisterInterceptorCounter;
   return NO;
 }
 
-- (void)startLoading
-{
-  NSParameterAssert([self dataTask] == nil);
-  NSParameterAssert([[self class] canInitWithRequest:self.request]);
-
-  __block NSMutableURLRequest *request = nil;
-  if ([self.request isKindOfClass:[NSMutableURLRequest class]]) {
-    request = (NSMutableURLRequest *)self.request;
++ (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
+  NSMutableURLRequest *newRequest = nil;
+  if ([request isKindOfClass:[NSMutableURLRequest class]]) {
+    newRequest = (NSMutableURLRequest *)request;
   } else {
-    request = [self.request mutableCopy];
+    newRequest = [request mutableCopy];
   }
 
   for (id<RXRDecorator> decorator in sDecorators) {
@@ -101,13 +97,20 @@ static NSInteger sRegisterInterceptorCounter;
       if ([decorator respondsToSelector:@selector(prepareWithRequest:)]) {
         [decorator prepareWithRequest:request];
       }
-      request = [[decorator decoratedRequestFromOriginalRequest:request] mutableCopy];
+      newRequest = [[decorator decoratedRequestFromOriginalRequest:newRequest] mutableCopy];
     }
   }
 
-  [[self class] markRequestAsIgnored:request];
+  [self markRequestAsIgnored:newRequest];
 
-  NSURLSessionTask *dataTask = [[self URLSession] dataTaskWithRequest:request];
+  return newRequest;
+}
+
+- (void)startLoading
+{
+  NSParameterAssert([self dataTask] == nil);
+
+  NSURLSessionTask *dataTask = [[self URLSession] dataTaskWithRequest:self.request];
   [dataTask resume];
   [self setDataTask:dataTask];
 }

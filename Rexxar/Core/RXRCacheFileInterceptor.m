@@ -91,31 +91,29 @@ static NSInteger sRegisterInterceptorCounter;
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request
 {
-  return request;
+  RXRDebugLog(@"Intercept <%@> within <%@>", request.URL, request.mainDocumentURL);
+
+  NSMutableURLRequest *newRequest = nil;
+  if ([request isKindOfClass:[NSMutableURLRequest class]]) {
+    newRequest = (NSMutableURLRequest *)request;
+  } else {
+    newRequest = [request mutableCopy];
+  }
+
+  NSURL *localURL = [self _rxr_localFileURL:request.URL];
+  if (localURL) {
+    newRequest.URL = localURL;
+  }
+
+  [self markRequestAsIgnored:newRequest];
+  return newRequest;
 }
 
 - (void)startLoading
 {
   NSParameterAssert(self.dataTask == nil);
-  NSParameterAssert([[self class] canInitWithRequest:self.request]);
 
-  RXRDebugLog(@"Intercept <%@> within <%@>", self.request.URL, self.request.mainDocumentURL);
-
-  __block NSMutableURLRequest *request = nil;
-  if ([self.request isKindOfClass:[NSMutableURLRequest class]]) {
-    request = (NSMutableURLRequest *)self.request;
-  } else {
-    request = [self.request mutableCopy];
-  }
-
-  NSURL *localURL = [self _rxr_localFileURL:request.URL];
-  if (localURL) {
-    request.URL = localURL;
-  }
-
-  [[self class] markRequestAsIgnored:request];
-
-  NSURLSessionTask *dataTask = [self.session dataTaskWithRequest:request];
+  NSURLSessionTask *dataTask = [self.session dataTaskWithRequest:self.request];
   [dataTask resume];
   [self setDataTask:dataTask];
 }
@@ -231,7 +229,8 @@ didCompleteWithError:(nullable NSError *)error
 {
   NSString *extension = request.URL.pathExtension;
   if ([extension isEqualToString:@"js"] ||
-      [extension isEqualToString:@"css"]) {
+      [extension isEqualToString:@"css"] ||
+      [extension isEqualToString:@"html"]) {
     return YES;
   }
   return NO;
@@ -252,7 +251,7 @@ didCompleteWithError:(nullable NSError *)error
 
 #pragma mark - Private methods
 
-- (NSURL *)_rxr_localFileURL:(NSURL *)remoteURL
++ (NSURL *)_rxr_localFileURL:(NSURL *)remoteURL
 {
   NSURL *URL = [[NSURL alloc] initWithScheme:[remoteURL scheme]
                                         host:[remoteURL host]
@@ -264,7 +263,7 @@ didCompleteWithError:(nullable NSError *)error
 + (BOOL)_rxr_isCacheableResponse:(NSURLResponse *)response
 {
   NSSet *cacheableTypes = [NSSet setWithObjects:@"application/javascript", @"application/x-javascript",
-                           @"text/javascript", @"text/css", nil];
+                           @"text/javascript", @"text/css", @"text/html", nil];
   return [cacheableTypes containsObject:response.MIMEType];
 }
 

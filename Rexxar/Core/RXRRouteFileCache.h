@@ -12,14 +12,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * `RXRRouteCache` 提供对 Route files 的读取。
- * Route files 包括用于渲染 rexxar 页面的静态文件，例如 html, css, js, image。
+ * Route files 包括用于渲染 rexxar 页面的静态 html 文件。
  * 为何我们会自己实现一个缓存，而不使用 NSURLCache?
- * 因为获取 Route 信息有两个来源，要么从本地缓存（上线后发布，下载的资源会有本地缓存），要么资源文件夹（上线时打入的）。这和 NSURLCache 缓存机制不同。
+ * 因为获取 Route 信息有两个来源，要么从本地缓存（上线后发布，下载的资源会有本地缓存）; 要么资源文件夹（上线时打入的）。这和 NSURLCache 缓存机制不同。
  * 1. 本地缓存；
  * 2. 资源：应用打包的资源文件中有一份, 这部分资源不会改变。
  *
  * `RXRRouteCache` offer the access method of Route files.
- * Route files include rexxar page 's static file like html, css, js, image.
+ * Route files include rexxar page 's static html file.
  * Why we write this cache instead of using NSURLCache?
  * It's because that there are two sources of Route files，local cache (create and save the downloaded resources in cache after app release) or resource file (in the release ipa):
  * 1. local cache: disk cache；
