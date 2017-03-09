@@ -42,6 +42,8 @@
   return request;
 }
 
+#pragma mark - Public methods
+
 + (void)markRequestAsIgnored:(NSMutableURLRequest *)request
 {
   NSString *key = NSStringFromClass([self class]);

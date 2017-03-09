@@ -22,6 +22,7 @@ class FullRXRViewController: RXRViewController {
     let navMenuWidget = RXRNavMenuWidget()
     widgets = [titleWidget, alertDialogWidget, pullRefreshWidget, toastWidget, navMenuWidget]
 
+
     // ContainerAPIs
     let geoContainerAPI = RXRGeoContainerAPI()
     let logContainerAPI = RXRLogContainerAPI()
@@ -33,7 +34,6 @@ class FullRXRViewController: RXRViewController {
     let parameters = ["apikey": "apikey value"]
     let requestDecorator = RXRRequestDecorator(headers: headers, parameters: parameters)
     RXRRequestInterceptor.setDecorators([requestDecorator])
-    URLProtocol.registerClass(RXRRequestInterceptor.self)
     let _ = RXRRequestInterceptor.register()
   }
 
