@@ -10,52 +10,18 @@
 #import "NSHTTPURLResponse+Rexxar.h"
 #import "RXRContainerAPI.h"
 
-static NSArray<id<RXRContainerAPI>> *sContainerAPIs;
-static NSInteger sRegisterInterceptorCounter;
+static NSArray<id<RXRContainerAPI>> *_containerAPIs;
 
 @implementation RXRContainerInterceptor
 
-+ (void)setContainerAPIs:(NSArray<id<RXRContainerAPI>> *)mockers
++ (void)setContainerAPIs:(NSArray<id<RXRContainerAPI>> *)containerAPIs
 {
-  sContainerAPIs = mockers;
+  _containerAPIs = [containerAPIs copy];
 }
 
 + (NSArray<id<RXRContainerAPI>> *)containerAPIs
 {
-  return sContainerAPIs;
-}
-
-+ (BOOL)registerInterceptor
-{
-  __block BOOL result;
-  dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-  dispatch_barrier_sync(globalQueue, ^{
-    if (sRegisterInterceptorCounter <= 0) {
-      result = [NSURLProtocol registerClass:[self class]];
-      if (result) {
-        sRegisterInterceptorCounter = 1;
-      }
-    } else {
-      sRegisterInterceptorCounter++;
-      result = YES;
-    }
-  });
-  return result;
-}
-
-+ (void)unregisterInterceptor
-{
-  dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-  dispatch_barrier_async(globalQueue, ^{
-    sRegisterInterceptorCounter--;
-    if (sRegisterInterceptorCounter < 0) {
-      sRegisterInterceptorCounter = 0;
-    }
-
-    if (sRegisterInterceptorCounter == 0) {
-      [NSURLProtocol unregisterClass:[self class]];
-    }
-  });
+  return _containerAPIs;
 }
 
 #pragma mark - Implement NSURLProtocol methods
@@ -67,7 +33,7 @@ static NSInteger sRegisterInterceptorCounter;
     return NO;
   }
 
-  for (id<RXRContainerAPI> containerAPI in sContainerAPIs) {
+  for (id<RXRContainerAPI> containerAPI in _containerAPIs) {
     if ([containerAPI shouldInterceptRequest:request]) {
       return YES;
     }
@@ -78,7 +44,7 @@ static NSInteger sRegisterInterceptorCounter;
 
 - (void)startLoading
 {
-  for (id<RXRContainerAPI> containerAPI in sContainerAPIs) {
+  for (id<RXRContainerAPI> containerAPI in _containerAPIs) {
     if ([containerAPI shouldInterceptRequest:self.request]) {
 
       if ([containerAPI respondsToSelector:@selector(prepareWithRequest:)]) {

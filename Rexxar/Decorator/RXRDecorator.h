@@ -31,7 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSURLRequest *)decoratedRequestFromOriginalRequest:(NSURLRequest *)originalRequest;
 
-
 @optional
 
 /**
