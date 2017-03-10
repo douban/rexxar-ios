@@ -26,19 +26,19 @@ class FullRXRViewController: RXRViewController {
     // ContainerAPIs
     let geoContainerAPI = RXRGeoContainerAPI()
     let logContainerAPI = RXRLogContainerAPI()
-    RXRContainerInterceptor.setContainerAPIs([geoContainerAPI, logContainerAPI])
-    let _  = RXRContainerInterceptor.register()
+    RXRContainerInterceptor.containerAPIs = [geoContainerAPI, logContainerAPI]
+    let _  = RXRNSURLProtocol.registerRXRProtocolClass(RXRContainerInterceptor.self)
 
     // Decorators
     let headers = ["Customer-Authorization": "Bearer token"]
     let parameters = ["apikey": "apikey value"]
     let requestDecorator = RXRRequestDecorator(headers: headers, parameters: parameters)
-    RXRRequestInterceptor.setDecorators([requestDecorator])
-    let _ = RXRRequestInterceptor.register()
+    RXRRequestInterceptor.decorators = [requestDecorator]
+    let _ = RXRNSURLProtocol.registerRXRProtocolClass(RXRRequestInterceptor.self)
   }
 
   deinit {
-    RXRContainerInterceptor.unregisterInterceptor()
-    RXRRequestInterceptor.unregisterInterceptor()
+    RXRNSURLProtocol.unregisterRXRProtocolClass(RXRContainerInterceptor.self)
+    RXRNSURLProtocol.unregisterRXRProtocolClass(RXRRequestInterceptor.self)
   }
 }

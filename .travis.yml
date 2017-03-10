@@ -6,4 +6,5 @@ script:
       -project Rexxar.xcodeproj \
       -scheme RexxarTests \
       -sdk iphonesimulator \
+      -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.1' \
       ONLY_ACTIVE_ARCH=NO
