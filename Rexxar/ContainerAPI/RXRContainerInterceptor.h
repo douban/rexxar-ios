@@ -23,26 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RXRContainerInterceptor : RXRNSURLProtocol
 
 /**
- * 设置这个侦听器所有的请求模仿器数组，该数组成员是符合 `RXRContainerAPI` 协议的对象，即一组请求模仿器。
- *
- * @param mockers 模仿器数组
+ 这个侦听器所有的请求模仿器数组，该数组成员是符合 `RXRContainerAPI` 协议的对象，即一组请求模仿器。
  */
-+ (void)setContainerAPIs:(NSArray<id<RXRContainerAPI>> *)containerAPIs;
-
-/**
- * 这个侦听器所有的请求模仿器，该数组成员是符合 `RXRContainerAPI` 协议的对象，即一组请求模仿器。
- */
-+ (nullable NSArray<id<RXRContainerAPI>> *)containerAPIs;
-
-/**
- * 注册一个侦听器。
- */
-+ (BOOL)registerInterceptor;
-
-/**
- * 注销一个侦听器。
- */
-+ (void)unregisterInterceptor;
+@property (class, nonatomic, copy, nullable) NSArray<id<RXRContainerAPI>> *containerAPIs;
 
 @end
 

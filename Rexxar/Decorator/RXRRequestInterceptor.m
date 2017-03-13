@@ -2,67 +2,29 @@
 //  RXRRequestInterceptor.m
 //  Rexxar
 //
-//  Created by GUO Lin on 5/17/16.
-//  Copyright © 2016 Douban Inc. All rights reserved.
+//  Created by bigyelow on 09/03/2017.
+//  Copyright © 2017 Douban.Inc. All rights reserved.
 //
 
 #import "RXRRequestInterceptor.h"
 
-#import "RXRDecorator.h"
-
-static NSArray<id<RXRDecorator>> *sDecorators;
-static NSInteger sRegisterInterceptorCounter;
+static NSArray<id<RXRDecorator>> *_decorators;
 
 @implementation RXRRequestInterceptor
 
+#pragma mark - Properties
+
+- (NSArray<id<RXRDecorator>> *)decorators
+{
+  return _decorators;
+}
+
 + (void)setDecorators:(NSArray<id<RXRDecorator>> *)decorators
 {
-  sDecorators = decorators;
+  _decorators = [decorators copy];
 }
 
-+ (NSArray<id<RXRDecorator>> *)decorators
-{
-  return sDecorators;
-}
-
-+ (BOOL)registerInterceptor
-{
-  __block BOOL result;
-  dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-  dispatch_barrier_sync(globalQueue, ^{
-
-    if (sRegisterInterceptorCounter <= 0) {
-      result = [NSURLProtocol registerClass:[self class]];
-      if (result) {
-        sRegisterInterceptorCounter = 1;
-      }
-    } else {
-      sRegisterInterceptorCounter++;
-      result = YES;
-    }
-
-  });
-
-  return result;
-}
-
-+ (void)unregisterInterceptor
-{
-  dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-  dispatch_barrier_async(globalQueue, ^{
-
-    sRegisterInterceptorCounter--;
-    if (sRegisterInterceptorCounter < 0) {
-      sRegisterInterceptorCounter = 0;
-    }
-
-    if (sRegisterInterceptorCounter == 0) {
-      [NSURLProtocol unregisterClass:[self class]];
-    }
-  });
-}
-
-#pragma mark - Implement NSURLProtocol methods
+#pragma mark - Superclass methods
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request
 {
@@ -75,7 +37,7 @@ static NSInteger sRegisterInterceptorCounter;
     return NO;
   }
 
-  for (id<RXRDecorator> decorator in sDecorators) {
+  for (id<RXRDecorator> decorator in _decorators) {
     if ([decorator shouldInterceptRequest:request]){
       return YES;
     }
@@ -92,7 +54,7 @@ static NSInteger sRegisterInterceptorCounter;
     newRequest = [request mutableCopy];
   }
 
-  for (id<RXRDecorator> decorator in sDecorators) {
+  for (id<RXRDecorator> decorator in _decorators) {
     if ([decorator shouldInterceptRequest:request]) {
       if ([decorator respondsToSelector:@selector(prepareWithRequest:)]) {
         [decorator prepareWithRequest:request];
@@ -104,15 +66,6 @@ static NSInteger sRegisterInterceptorCounter;
   [self markRequestAsIgnored:newRequest];
 
   return newRequest;
-}
-
-- (void)startLoading
-{
-  NSParameterAssert([self dataTask] == nil);
-
-  NSURLSessionTask *dataTask = [[self URLSession] dataTaskWithRequest:self.request];
-  [dataTask resume];
-  [self setDataTask:dataTask];
 }
 
 @end

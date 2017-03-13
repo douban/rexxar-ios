@@ -2,17 +2,12 @@
 //  RXRRequestInterceptor.h
 //  Rexxar
 //
-//  Created by GUO Lin on 5/17/16.
-//  Copyright © 2016 Douban Inc. All rights reserved.
+//  Created by bigyelow on 09/03/2017.
+//  Copyright © 2017 Douban.Inc. All rights reserved.
 //
 
-@import Foundation;
-
 #import "RXRNSURLProtocol.h"
-
-@protocol RXRDecorator;
-
-NS_ASSUME_NONNULL_BEGIN
+#import "RXRDecorator.h"
 
 /**
  * `RXRRequestInterceptor` 是一个 Rexxar-Container 的请求侦听器。
@@ -21,28 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface RXRRequestInterceptor : RXRNSURLProtocol
 
-/**
- * 设置这个侦听器所有的请求装修器数组，该数组成员是符合 `RXRDecorator` 协议的对象，即一组请求装修器。
- * 
- * @param decorators 装修器数组
- */
-+ (void)setDecorators:(NSArray<id<RXRDecorator>> *)decorators;
-
-/**
- * 获得对应的请求装修器数组，该数组成员是符合 `RXRDecorator` 协议的对象，即一组请求装修器。
- */
-+ (nullable NSArray<id<RXRDecorator>> *)decorators;
-
-/**
- * 注册一个侦听器。
- */
-+ (BOOL)registerInterceptor;
-
-/**
- * 注销一个侦听器。
- */
-+ (void)unregisterInterceptor;
+@property (class, nonatomic, copy, nullable) NSArray<id<RXRDecorator>> *decorators;
 
 @end
-
-NS_ASSUME_NONNULL_END
