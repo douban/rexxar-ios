@@ -14,7 +14,7 @@ static NSArray<id<RXRDecorator>> *_decorators;
 
 #pragma mark - Properties
 
-- (NSArray<id<RXRDecorator>> *)decorators
++ (NSArray<id<RXRDecorator>> *)decorators
 {
   return _decorators;
 }
