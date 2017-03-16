@@ -152,8 +152,13 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
  completionHandler:(void (^)(NSURLRequest *_Nullable))completionHandler
 {
   if ([self client] != nil && [self dataTask] == task) {
-    [[self client] URLProtocol:self wasRedirectedToRequest:request redirectResponse:response];
-    completionHandler(request);
+    NSMutableURLRequest *mutableRequest = [request mutableCopy];
+    [[self class] unmarkRequestAsIgnored:mutableRequest];
+    [[self client] URLProtocol:self wasRedirectedToRequest:mutableRequest redirectResponse:response];
+
+    NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
+    [self.dataTask cancel];
+    [self.client URLProtocol:self didFailWithError:error];
   }
 }
 
@@ -161,9 +166,11 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
               task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error
 {
-  if ([self client] != nil && [self dataTask] == task) {
+  if ([self client] != nil && (_dataTask == nil || _dataTask == task)) {
     if (error == nil) {
       [[self client] URLProtocolDidFinishLoading:self];
+    } else if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
+      // Do nothing.
     } else {
       [[self client] URLProtocol:self didFailWithError:error];
     }
