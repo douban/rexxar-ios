@@ -213,12 +213,16 @@ didCompleteWithError:(nullable NSError *)error
   self = [super initWithRequest:request cachedResponse:cachedResponse client:client];
   if (self != nil) {
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    sessionConfiguration.protocolClasses = @[[self class]];
-
     NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
+
+    NSString *sessionName = [NSString stringWithFormat:@"%@.%@.%p.URLSession", [[NSBundle mainBundle] bundleIdentifier], NSStringFromClass([self class]), self];
+    NSString *queueName = [NSString stringWithFormat:@"%@.delegateQueue", sessionName];
+
     delegateQueue.maxConcurrentOperationCount = 1;
+    delegateQueue.name = queueName;
 
     _session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:delegateQueue];
+    _session.sessionDescription = sessionName;
   }
   return self;
 }
@@ -239,6 +243,11 @@ didCompleteWithError:(nullable NSError *)error
 + (void)markRequestAsIgnored:(NSMutableURLRequest *)request
 {
   [NSURLProtocol setProperty:@YES forKey:RXRCacheFileIntercepterHandledKey inRequest:request];
+}
+
++ (void)unmarkRequestAsIgnored:(NSMutableURLRequest *)request
+{
+  [NSURLProtocol removePropertyForKey:RXRCacheFileIntercepterHandledKey inRequest:request];
 }
 
 + (BOOL)isRequestIgnored:(NSURLRequest *)request
