@@ -13,14 +13,21 @@
 @property (nonatomic, readonly) NSURLSession *URLSession;
 @property (nonatomic, strong) NSURLSessionTask *dataTask;
 
-
 #pragma mark - Public methods, do not override
+
 /**
  * 将该请求标记为可以忽略
  *
  * @param request
  */
 + (void)markRequestAsIgnored:(NSMutableURLRequest *)request;
+
+/**
+ * 将该请求标记为不可忽略
+ *
+ * @param request
+ */
++ (void)unmarkRequestAsIgnored:(NSMutableURLRequest *)request;
 
 /**
  * 判断该请求是否是被忽略的
@@ -33,7 +40,6 @@
  @param clazz a subclass of `RXRURLProtocol`
  */
 + (BOOL)registerRXRProtocolClass:(Class)clazz;
-
 
 /**
  @param clazz a subclass of `RXRURLProtocol`

@@ -135,8 +135,13 @@ willPerformHTTPRedirection:(nonnull NSHTTPURLResponse *)response
  completionHandler:(nonnull void (^)(NSURLRequest * _Nullable))completionHandler
 {
   if (self.client != nil && self.dataTask == task) {
-    [self.client URLProtocol:self wasRedirectedToRequest:request redirectResponse:response];
-    completionHandler(request);
+    NSMutableURLRequest *mutableRequest = [request mutableCopy];
+    [[self class] unmarkRequestAsIgnored:mutableRequest];
+    [self.client URLProtocol:self wasRedirectedToRequest:mutableRequest redirectResponse:response];
+
+    NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
+    [self.dataTask cancel];
+    [self.client URLProtocol:self didFailWithError:error];
   }
 }
 
@@ -184,7 +189,7 @@ didReceiveResponse:(NSURLResponse *)response
               task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error
 {
-  if (self.client != nil && self.dataTask == task) {
+  if (self.client != nil && (_dataTask == nil || _dataTask == task)) {
     if (error == nil) {
       if ([[self class] shouldInterceptRequest:task.currentRequest] && self.fileHandle) {
         [self.fileHandle closeFile];
@@ -199,7 +204,12 @@ didCompleteWithError:(nullable NSError *)error
         self.fileHandle = nil;
         [[NSFileManager defaultManager] removeItemAtPath:self.responseDataFilePath error:nil];
       }
-      [self.client URLProtocol:self didFailWithError:error];
+
+      if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
+        // Do nothing.
+      } else {
+        [self.client URLProtocol:self didFailWithError:error];
+      }
     }
   }
 }
@@ -213,12 +223,16 @@ didCompleteWithError:(nullable NSError *)error
   self = [super initWithRequest:request cachedResponse:cachedResponse client:client];
   if (self != nil) {
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    sessionConfiguration.protocolClasses = @[[self class]];
-
     NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
+
+    NSString *sessionName = [NSString stringWithFormat:@"%@.%@.%p.URLSession", [[NSBundle mainBundle] bundleIdentifier], NSStringFromClass([self class]), self];
+    NSString *queueName = [NSString stringWithFormat:@"%@.delegateQueue", sessionName];
+
     delegateQueue.maxConcurrentOperationCount = 1;
+    delegateQueue.name = queueName;
 
     _session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:delegateQueue];
+    _session.sessionDescription = sessionName;
   }
   return self;
 }
@@ -239,6 +253,11 @@ didCompleteWithError:(nullable NSError *)error
 + (void)markRequestAsIgnored:(NSMutableURLRequest *)request
 {
   [NSURLProtocol setProperty:@YES forKey:RXRCacheFileIntercepterHandledKey inRequest:request];
+}
+
++ (void)unmarkRequestAsIgnored:(NSMutableURLRequest *)request
+{
+  [NSURLProtocol removePropertyForKey:RXRCacheFileIntercepterHandledKey inRequest:request];
 }
 
 + (BOOL)isRequestIgnored:(NSURLRequest *)request
