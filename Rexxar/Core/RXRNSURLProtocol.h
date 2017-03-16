@@ -23,7 +23,7 @@
 + (void)markRequestAsIgnored:(NSMutableURLRequest *)request;
 
 /**
- * 将该请求标记为不可忽略
+ * 清除该请求 `可忽略` 标识
  *
  * @param request
  */
