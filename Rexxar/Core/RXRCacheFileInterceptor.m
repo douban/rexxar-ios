@@ -91,29 +91,30 @@ static NSInteger sRegisterInterceptorCounter;
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request
 {
-  RXRDebugLog(@"Intercept <%@> within <%@>", request.URL, request.mainDocumentURL);
-
-  NSMutableURLRequest *newRequest = nil;
-  if ([request isKindOfClass:[NSMutableURLRequest class]]) {
-    newRequest = (NSMutableURLRequest *)request;
-  } else {
-    newRequest = [request mutableCopy];
-  }
-
-  NSURL *localURL = [self _rxr_localFileURL:request.URL];
-  if (localURL) {
-    newRequest.URL = localURL;
-  }
-
-  [self markRequestAsIgnored:newRequest];
-  return newRequest;
+  return request;
 }
 
 - (void)startLoading
 {
   NSParameterAssert(self.dataTask == nil);
 
-  NSURLSessionTask *dataTask = [self.session dataTaskWithRequest:self.request];
+  RXRDebugLog(@"Intercept <%@> within <%@>", self.request.URL, self.request.mainDocumentURL);
+
+  NSMutableURLRequest *newRequest = nil;
+  if ([self.request isKindOfClass:[NSMutableURLRequest class]]) {
+    newRequest = (NSMutableURLRequest *)self.request;
+  } else {
+    newRequest = [self.request mutableCopy];
+  }
+
+  NSURL *localURL = [[self class] _rxr_localFileURL:self.request.URL];
+  if (localURL) {
+    newRequest.URL = localURL;
+  }
+
+  [[self class] markRequestAsIgnored:newRequest];
+
+  NSURLSessionTask *dataTask = [self.session dataTaskWithRequest:newRequest];
   [dataTask resume];
   [self setDataTask:dataTask];
 }
