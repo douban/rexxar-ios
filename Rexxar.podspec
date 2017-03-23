@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Rexxar"
-  s.version      = "0.2.1"
+  s.version      = "0.2.3"
   s.license      = { :type => 'MIT', :text => 'LICENSE' }
 
   s.summary      = "Rexxar Hybrid Framework"
