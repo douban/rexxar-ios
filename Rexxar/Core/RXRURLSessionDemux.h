@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ 实现 url protocol session 共享，确保每个 url protocol client 触发和回调在同一个线程里。
+ */
 @interface RXRURLSessionDemux : NSObject
 
 - (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration *)sessionConfiguration;

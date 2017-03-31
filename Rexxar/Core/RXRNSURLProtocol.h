@@ -48,6 +48,12 @@
  */
 + (void)unregisterRXRProtocolClass:(Class)clazz;
 
+
+/**
+ 实现 URLSession 共享和 URLProtocol client 回调的分发
+
+ @return 共享的复用解析器
+ */
 + (RXRURLSessionDemux *)sharedDemux;
 
 @end
