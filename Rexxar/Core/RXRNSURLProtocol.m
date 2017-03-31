@@ -7,39 +7,29 @@
 //
 
 #import "RXRNSURLProtocol.h"
+#import "RXRURLSessionDemux.h"
 #import "NSHTTPURLResponse+Rexxar.h"
 
 static NSDictionary *sRegisteredClassCounter;
 
 @implementation RXRNSURLProtocol
 
-- (instancetype)initWithRequest:(NSURLRequest *)request
-                 cachedResponse:(nullable NSCachedURLResponse *)cachedResponse
-                         client:(nullable id <NSURLProtocolClient>)client
++ (RXRURLSessionDemux *)sharedDemux
 {
-  self = [super initWithRequest:request cachedResponse:cachedResponse client:client];
-  if (self != nil) {
-    NSURLSessionConfiguration *URLSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
+  static dispatch_once_t onceToken;
+  static RXRURLSessionDemux *demux;
 
-    NSString *sessionName = [NSString stringWithFormat:@"%@.%@.%p.URLSession", [[NSBundle mainBundle] bundleIdentifier], NSStringFromClass([self class]), self];
-    NSString *queueName = [NSString stringWithFormat:@"%@.delegateQueue", sessionName];
+  dispatch_once(&onceToken, ^{
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    demux = [[RXRURLSessionDemux alloc] initWithSessionConfiguration:sessionConfiguration];
+  });
 
-    [delegateQueue setMaxConcurrentOperationCount:1];
-    [delegateQueue setName:queueName];
-
-    _URLSession = [NSURLSession sessionWithConfiguration:URLSessionConfiguration delegate:self delegateQueue:delegateQueue];
-    [_URLSession setSessionDescription:sessionName];
-  }
-
-  return self;
+  return demux;
 }
 
 - (void)startLoading
 {
-  NSURLSessionTask *dataTask = [[self URLSession] dataTaskWithRequest:self.request];
-  [dataTask resume];
-  [self setDataTask:dataTask];
+  NSAssert(NO, @"Implement this method in a subclass.");
 }
 
 - (void)stopLoading

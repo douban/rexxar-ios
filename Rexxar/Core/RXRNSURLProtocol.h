@@ -8,10 +8,12 @@
 
 @import Foundation;
 
+@class RXRURLSessionDemux;
+
 @interface RXRNSURLProtocol : NSURLProtocol <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
-@property (nonatomic, readonly) NSURLSession *URLSession;
 @property (nonatomic, strong) NSURLSessionTask *dataTask;
+@property (nonatomic, copy) NSArray *modes;
 
 #pragma mark - Public methods, do not override
 
@@ -45,5 +47,7 @@
  @param clazz a subclass of `RXRURLProtocol`
  */
 + (void)unregisterRXRProtocolClass:(Class)clazz;
+
++ (RXRURLSessionDemux *)sharedDemux;
 
 @end

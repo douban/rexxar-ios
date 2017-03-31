@@ -65,14 +65,14 @@ private let animationDuration: TimeInterval = 2.4
 
     let centerPoint = CGPoint(x: bounds.width/2, y: bounds.height/2)
     let radius = bounds.width/2 - lineWidth
-    let path = UIBezierPath(arcCenter: centerPoint, radius: radius, startAngle:CGFloat(-M_PI), endAngle: CGFloat(M_PI * 0.6), clockwise: true)
+    let path = UIBezierPath(arcCenter: centerPoint, radius: radius, startAngle:CGFloat(-Double.pi), endAngle: CGFloat(Double.pi * 0.6), clockwise: true)
 
     ringLayer.lineWidth = lineWidth
     ringLayer.path = path.cgPath
     ringLayer.frame = bounds
 
-    let x = bounds.width/2 - CGFloat(sin(M_PI * 50.0/180.0)) * radius
-    let y = bounds.height/2 - CGFloat(sin(M_PI * 40.0/180.0)) * radius
+    let x = bounds.width/2 - CGFloat(sin(Double.pi * 50.0/180.0)) * radius
+    let y = bounds.height/2 - CGFloat(sin(Double.pi * 40.0/180.0)) * radius
     let rightPoint = CGPoint(x: bounds.width - x, y: y)
     let leftPoint = CGPoint(x: x, y: y)
 
@@ -103,7 +103,7 @@ private let animationDuration: TimeInterval = 2.4
     let pointKeyAnimation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
     pointKeyAnimation.duration = animationDuration
     pointKeyAnimation.repeatCount = Float.infinity
-    pointKeyAnimation.values = [0, (2 * M_PI * 0.375 + 2 * M_PI), (4 * M_PI), (4 * M_PI), (4 * M_PI + 0.3 * M_PI)]
+    pointKeyAnimation.values = [0, (2 * Double.pi * 0.375 + 2 * Double.pi), (4 * Double.pi), (4 * Double.pi), (4 * Double.pi + 0.3 * Double.pi)]
     pointKeyAnimation.keyTimes = keyTimes
     pointSuperLayer.add(pointKeyAnimation, forKey: nil)
 
@@ -112,7 +112,7 @@ private let animationDuration: TimeInterval = 2.4
     let ringAnimationGroup = CAAnimationGroup()
 
     let ringKeyRotationAnimation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
-    ringKeyRotationAnimation.values = [0, (2 * M_PI), (M_PI/2 + 2 * M_PI), (M_PI/2 + 2 * M_PI), (4 * M_PI)]
+    ringKeyRotationAnimation.values = [0, (2 * Double.pi), (Double.pi/2 + 2 * Double.pi), (Double.pi/2 + 2 * Double.pi), (4 * Double.pi)]
     ringKeyRotationAnimation.keyTimes = keyTimes
     ringAnimationGroup.animations = [ringKeyRotationAnimation]
 

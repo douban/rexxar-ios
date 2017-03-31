@@ -8,6 +8,7 @@
 
 #import "RXRCacheFileInterceptor.h"
 #import "NSHTTPURLResponse+Rexxar.h"
+#import "RXRURLSessionDemux.h"
 #import "RXRRouteFileCache.h"
 #import "RXRLogging.h"
 #import "NSURL+Rexxar.h"
@@ -17,8 +18,8 @@ static NSInteger sRegisterInterceptorCounter;
 
 @interface RXRCacheFileInterceptor () <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
-@property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong) NSURLSessionTask *dataTask;
+@property (nonatomic, copy) NSArray *modes;
 @property (nonatomic, strong) NSFileHandle *fileHandle;
 @property (nonatomic, strong) NSString *responseDataFilePath;
 
@@ -26,6 +27,19 @@ static NSInteger sRegisterInterceptorCounter;
 
 
 @implementation RXRCacheFileInterceptor
+
++ (RXRURLSessionDemux *)sharedDemux
+{
+  static dispatch_once_t onceToken;
+  static RXRURLSessionDemux *demux;
+
+  dispatch_once(&onceToken, ^{
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    demux = [[RXRURLSessionDemux alloc] initWithSessionConfiguration:sessionConfiguration];
+  });
+
+  return demux;
+}
 
 + (BOOL)registerInterceptor
 {
@@ -114,7 +128,16 @@ static NSInteger sRegisterInterceptorCounter;
 
   [[self class] markRequestAsIgnored:newRequest];
 
-  NSURLSessionTask *dataTask = [self.session dataTaskWithRequest:newRequest];
+  NSMutableArray *modes = [NSMutableArray array];
+  [modes addObject:NSDefaultRunLoopMode];
+
+  NSString *currentMode = [[NSRunLoop currentRunLoop] currentMode];
+  if (currentMode != nil && ![currentMode isEqualToString:NSDefaultRunLoopMode]) {
+    [modes addObject:currentMode];
+  }
+  [self setModes:modes];
+
+  NSURLSessionTask *dataTask = [[[self class] sharedDemux] dataTaskWithRequest:newRequest delegate:self modes:self.modes];
   [dataTask resume];
   [self setDataTask:dataTask];
 }
@@ -213,29 +236,6 @@ didCompleteWithError:(nullable NSError *)error
       }
     }
   }
-}
-
-#pragma mark - Init
-
-- (instancetype)initWithRequest:(NSURLRequest *)request
-                 cachedResponse:(nullable NSCachedURLResponse *)cachedResponse
-                         client:(nullable id <NSURLProtocolClient>)client
-{
-  self = [super initWithRequest:request cachedResponse:cachedResponse client:client];
-  if (self != nil) {
-    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSOperationQueue *delegateQueue = [[NSOperationQueue alloc] init];
-
-    NSString *sessionName = [NSString stringWithFormat:@"%@.%@.%p.URLSession", [[NSBundle mainBundle] bundleIdentifier], NSStringFromClass([self class]), self];
-    NSString *queueName = [NSString stringWithFormat:@"%@.delegateQueue", sessionName];
-
-    delegateQueue.maxConcurrentOperationCount = 1;
-    delegateQueue.name = queueName;
-
-    _session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:delegateQueue];
-    _session.sessionDescription = sessionName;
-  }
-  return self;
 }
 
 #pragma mark - Public methods
