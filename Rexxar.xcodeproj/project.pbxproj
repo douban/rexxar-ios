@@ -11,6 +11,8 @@
 		7132597D1E713C4500A6D7EA /* RXRRequestInterceptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 7132597B1E713C4500A6D7EA /* RXRRequestInterceptor.m */; };
 		719255591DE6E055009F0687 /* RXRURLRequestSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 719255571DE6E055009F0687 /* RXRURLRequestSerialization.h */; };
 		7192555A1DE6E055009F0687 /* RXRURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 719255581DE6E055009F0687 /* RXRURLRequestSerialization.m */; };
+		9875E7D71E8DFA9B00EA6A76 /* RXRURLSessionDemux.h in Headers */ = {isa = PBXBuildFile; fileRef = 9875E7D51E8DFA9B00EA6A76 /* RXRURLSessionDemux.h */; };
+		9875E7D81E8DFA9B00EA6A76 /* RXRURLSessionDemux.m in Sources */ = {isa = PBXBuildFile; fileRef = 9875E7D61E8DFA9B00EA6A76 /* RXRURLSessionDemux.m */; };
 		987FA5221BFC78310096ED5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B47B141BF1E0F20087735C /* AppDelegate.swift */; };
 		98B47B071BF1E0E00087735C /* Rexxar.h in Headers */ = {isa = PBXBuildFile; fileRef = 98B47B061BF1E0E00087735C /* Rexxar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		98B47B1F1BF1E0F20087735C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98B47B1D1BF1E0F20087735C /* LaunchScreen.storyboard */; };
@@ -104,6 +106,8 @@
 		719255571DE6E055009F0687 /* RXRURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRURLRequestSerialization.h; sourceTree = "<group>"; };
 		719255581DE6E055009F0687 /* RXRURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRURLRequestSerialization.m; sourceTree = "<group>"; };
 		77BB1328573CD94C05F4665D /* libPods-Rexxar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rexxar.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9875E7D51E8DFA9B00EA6A76 /* RXRURLSessionDemux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRURLSessionDemux.h; sourceTree = "<group>"; };
+		9875E7D61E8DFA9B00EA6A76 /* RXRURLSessionDemux.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRURLSessionDemux.m; sourceTree = "<group>"; };
 		98B47B031BF1E0E00087735C /* Rexxar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rexxar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		98B47B061BF1E0E00087735C /* Rexxar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Rexxar.h; sourceTree = "<group>"; };
 		98B47B081BF1E0E00087735C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -322,6 +326,8 @@
 				A35E71F01D7FCA0200D38BC0 /* RXRViewController.h */,
 				A35E71F11D7FCA0200D38BC0 /* RXRViewController.m */,
 				A35E71F21D7FCA0200D38BC0 /* RXRWidget.h */,
+				9875E7D51E8DFA9B00EA6A76 /* RXRURLSessionDemux.h */,
+				9875E7D61E8DFA9B00EA6A76 /* RXRURLSessionDemux.m */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -474,6 +480,7 @@
 				719255591DE6E055009F0687 /* RXRURLRequestSerialization.h in Headers */,
 				A35E72281D7FCB0B00D38BC0 /* NSString+RXRURLEscape.h in Headers */,
 				A35E72011D7FCA0200D38BC0 /* RXRViewController.h in Headers */,
+				9875E7D71E8DFA9B00EA6A76 /* RXRURLSessionDemux.h in Headers */,
 				A35E72241D7FCB0B00D38BC0 /* NSDictionary+RXRMultipleItems.h in Headers */,
 				A35E722A1D7FCB0B00D38BC0 /* NSURL+Rexxar.h in Headers */,
 				A35E72411D7FCBF900D38BC0 /* RXRRequestDecorator.h in Headers */,
@@ -567,7 +574,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0800;
-				ORGANIZATIONNAME = Douban.Inc;
+				ORGANIZATIONNAME = "Douban Inc";
 				TargetAttributes = {
 					98B47B021BF1E0E00087735C = {
 						CreatedOnToolsVersion = 7.1;
@@ -648,6 +655,7 @@
 				A35E72021D7FCA0200D38BC0 /* RXRViewController.m in Sources */,
 				A35E71F41D7FCA0200D38BC0 /* RXRCacheFileInterceptor.m in Sources */,
 				A35E72471D7FCBF900D38BC0 /* RXRContainerInterceptor.m in Sources */,
+				9875E7D81E8DFA9B00EA6A76 /* RXRURLSessionDemux.m in Sources */,
 				A35E72271D7FCB0B00D38BC0 /* NSMutableDictionary+RXRMultipleItems.m in Sources */,
 				A35E72001D7FCA0200D38BC0 /* RXRViewController+Router.m in Sources */,
 				A35E71DF1D7FC86000D38BC0 /* RXRPullRefreshWidget.m in Sources */,
