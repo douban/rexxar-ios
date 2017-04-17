@@ -210,8 +210,6 @@
   if (!htmlFileURL) {
     // 没有设置 htmlFileURL，则使用本地 html 文件或者服务器读取 html 文件。
 
-    htmlFileURL = [[RXRRouteManager sharedInstance] remoteHtmlURLForURI:self.uri];
-
     if ([RXRConfig isCacheEnable]) {
      // 如果缓存启用，尝试读取本地文件。如果没有本地文件（本地文件包括缓存，和资源文件夹），则从服务器读取。
       NSURL *localHtmlURL = [[RXRRouteManager sharedInstance] localHtmlURLForURI:self.uri];
@@ -219,7 +217,9 @@
         htmlFileURL = localHtmlURL;
       }
     }
-
+    else {
+      htmlFileURL = [[RXRRouteManager sharedInstance] remoteHtmlURLForURI:self.uri];
+    }
   }
 
 
