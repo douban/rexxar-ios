@@ -134,7 +134,16 @@
   } else {
     jsCall = [NSString stringWithFormat:@"%@()", function];
   }
-  NSString *result = [_webView stringByEvaluatingJavaScriptFromString:jsCall];
+
+  // call UIKit method in main thread
+  NSString *__block result = nil;
+  if ([NSThread isMainThread]) {
+    result = [_webView stringByEvaluatingJavaScriptFromString:jsCall];
+  } else {
+    dispatch_sync(dispatch_get_main_queue(), ^{
+      result = [_webView stringByEvaluatingJavaScriptFromString:jsCall];
+    });
+  }
   RXRDebugLog(@"jsCall: function:%@, parameter %@, result: %@", function, jsonParameter, result);
   return result;
 }
