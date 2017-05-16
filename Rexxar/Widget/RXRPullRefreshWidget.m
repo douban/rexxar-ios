@@ -57,7 +57,7 @@
 
 #pragma mark - Private
 
-- (UIRefreshControl *)_rxr_refreshControllerWithScrollView:(UIWebView *)webView
+- (UIRefreshControl *)_rxr_refreshControllerWithScrollView:(WKWebView *)webView
 {
   UIScrollView *scrollView = webView.scrollView;
   UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];

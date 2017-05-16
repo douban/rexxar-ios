@@ -6,7 +6,7 @@
 //  Copyright © 2015 Douban Inc. All rights reserved.
 //
 
-@import UIKit;
+#import <Rexxar/RXRWebViewController.h>
 
 @protocol RXRWidget;
 
@@ -16,17 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
  * `RXRViewController` 是一个 Rexxar Container。
  * 它提供了一个使用 web 技术 html, css, javascript 开发 UI 界面的容器。
  */
-@interface RXRViewController : UIViewController <UIWebViewDelegate>
+@interface RXRViewController : RXRWebViewController
 
 /**
  * 对应的 uri。
  */
 @property (nonatomic, copy, readonly) NSURL *uri;
-
-/**
- * 内置的 WebView。
- */
-@property (nonatomic, strong, readonly) UIWebView *webView;
 
 /**
  * activities 代表该 Rexxar Container 可以响应的协议。
@@ -52,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion 会根据 uri 从 Route Map File 中选择对应本地 html 文件加载。如果无本地 html 文件，则从服务器加载 html 资源。
  * 在 UIWebView 中，远程 URL 需要注意跨域问题。
  */
-- (instancetype)initWithURI:(NSURL *)uri htmlFileURL:(NSURL *)htmlFileURL;
+- (instancetype)initWithURI:(NSURL *)uri htmlFileURL:(nullable NSURL *)htmlFileURL NS_DESIGNATED_INITIALIZER;
 
 /**
  * 重新加载 WebView。 
@@ -75,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param function 调用的函数。
  * @param jsonParameter 传递的参数，json 串。
  */
-- (nullable NSString *)callJavaScript:(NSString *)function jsonParameter:(nullable NSString *)jsonParameter;
+- (void)callJavaScript:(NSString *)function jsonParameter:(nullable NSString *)jsonParameter;
 
 @end
 

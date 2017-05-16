@@ -21,8 +21,6 @@
 
 @interface RXRViewController ()
 
-@property (nonatomic, copy) NSURL *requestURL;
-
 @property (nonatomic, copy) NSURL *htmlFileURL;
 
 @end
@@ -34,7 +32,7 @@
 
 - (instancetype)initWithURI:(NSURL *)uri htmlFileURL:(NSURL *)htmlFileURL
 {
-  self = [super initWithNibName:nil bundle:nil];
+  self = [super initWithWebConfiguration:nil];
   if (self) {
     _uri = [uri copy];
     _htmlFileURL = [htmlFileURL copy] ;
@@ -44,33 +42,14 @@
 
 - (instancetype)initWithURI:(NSURL *)uri
 {
-  self = [super initWithNibName:nil bundle:nil];
-  if (self) {
-    _uri = [uri copy];
-  }
-  return self;
-}
-
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-  NSAssert(NO, @"Should use initWithURI: instead.");
-  return nil;
+  return [self initWithURI:uri htmlFileURL:nil];
 }
 
 - (void)viewDidLoad
 {
   [super viewDidLoad];
 
-  _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
-  _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-  _webView.scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
-  _webView.dataDetectorTypes = UIDataDetectorTypeLink;
-  _webView.scalesPageToFit = YES;
-  _webView.delegate = self;
-  [self.view addSubview:_webView];
-
   [self reloadWebView];
-
   [RXRCacheFileInterceptor registerInterceptor];
 }
 
@@ -96,11 +75,11 @@
 - (void)reloadWebView
 {
   if (!self.requestURL) {
-    _requestURL = [self _rxr_htmlURLWithUri:self.uri htmlFileURL:self.htmlFileURL];
+    self.requestURL = [self _rxr_htmlURLWithUri:self.uri htmlFileURL:self.htmlFileURL];
   }
 
   if (self.requestURL) {
-    [_webView loadRequest:[NSURLRequest requestWithURL:self.requestURL]];
+    [self loadRequest:[NSURLRequest requestWithURL:self.requestURL]];
   }
 }
 
@@ -118,7 +97,7 @@
   [self callJavaScript:@"window.Rexxar.Lifecycle.onPageInvisible" jsonParameter:nil];
 }
 
-- (NSString *)callJavaScript:(NSString *)function jsonParameter:(NSString *)jsonParameter
+- (void)callJavaScript:(NSString *)function jsonParameter:(NSString *)jsonParameter
 {
   NSString *jsCall;
   if (jsonParameter) {
@@ -136,23 +115,22 @@
   }
 
   // call UIKit method in main thread
-  NSString *__block result = nil;
   if ([NSThread isMainThread]) {
-    result = [_webView stringByEvaluatingJavaScriptFromString:jsCall];
+    [self.webView evaluateJavaScript:jsCall completionHandler:nil];
   } else {
     dispatch_sync(dispatch_get_main_queue(), ^{
-      result = [_webView stringByEvaluatingJavaScriptFromString:jsCall];
+      [self.webView evaluateJavaScript:jsCall completionHandler:nil];
     });
   }
-  RXRDebugLog(@"jsCall: function:%@, parameter %@, result: %@", function, jsonParameter, result);
-  return result;
+
+  RXRDebugLog(@"jsCall: function:%@, parameter %@", function, jsonParameter);
 }
 
 #pragma mark - UIWebViewDelegate's method
 
-- (BOOL)webView:(UIWebView *)webView
+- (BOOL)webView:(WKWebView *)webView
     shouldStartLoadWithRequest:(NSURLRequest *)request
-    navigationType:(UIWebViewNavigationType)navigationType
+    navigationType:(WKNavigationType)navigationType
 {
   NSURL *reqURL = request.URL;
 
@@ -185,22 +163,7 @@
     RXRDebugLog(@"Rexxar callback can not handle: %@", URL);
   }
 
-  return YES;
-}
-
-- (void)webViewDidStartLoad:(UIWebView *)webView
-{
-  [self _rxr_resetControllerAppearance];
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
-  [self _rxr_resetControllerAppearance];
-}
-
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
-  [self _rxr_resetControllerAppearance];
+  return [super webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
 }
 
 #pragma mark - Private Methods
@@ -236,15 +199,6 @@
   uriText = [uriText stringByAddingPercentEncodingWithAllowedCharacters:set];
 
   return  [NSURL URLWithString:[NSString stringWithFormat:@"%@?uri=%@", htmlFileURL.absoluteString, uriText]];
-}
-
-- (void)_rxr_resetControllerAppearance
-{
-  self.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-
-  NSString *bgColor = [self.webView stringByEvaluatingJavaScriptFromString:
-                       @"window.getComputedStyle(document.getElementsByTagName('body')[0]).backgroundColor"];
-  self.webView.backgroundColor = [UIColor rxr_colorWithComponent:bgColor] ?: [UIColor whiteColor];
 }
 
 - (BOOL)_rxr_openWebPage:(NSURL *)url
