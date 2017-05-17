@@ -47,10 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion 会根据 uri 从 Route Map File 中选择对应本地 html 文件加载。如果无本地 html 文件，则从服务器加载 html 资源。
  * 在 UIWebView 中，远程 URL 需要注意跨域问题。
  */
-- (instancetype)initWithURI:(NSURL *)uri htmlFileURL:(nullable NSURL *)htmlFileURL NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithURI:(NSURL *)uri htmlFileURL:(nullable NSURL *)htmlFileURL;
 
 /**
- * 重新加载 WebView。 
+ * 重新加载 WebView。
  */
 - (void)reloadWebView;
 

@@ -43,6 +43,9 @@
   _webView.UIDelegate = self;
   _webView.scrollView.delegate = self;
   [self.view addSubview:_webView];
+
+  // 只会注册一次，不用担心重复执行
+  [self _rxr_registerWebViewCustomSchemes];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -86,7 +89,7 @@
 {
   _requestURL = request.URL;
 
-  if ([request.URL isFileURL]) {
+  if ([request.URL isFileURL] && [_webView respondsToSelector:@selector(loadFileURL:allowingReadAccessToURL:)]) {
     [_webView loadFileURL:request.URL allowingReadAccessToURL:[request.URL URLByDeletingLastPathComponent]];
   } else {
     [_webView loadRequest:request];
@@ -108,9 +111,31 @@
              }];
 }
 
+#pragma mark - NSURLProtocol
+
+/**
+ 解决 WKWebView 不支持 URLProtocol 的问题
+ http://stackoverflow.com/questions/24208229/wkwebview-and-nsurlprotocol-not-working
+ */
+- (void)_rxr_registerWebViewCustomSchemes
+{
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    Class klass = [[_webView valueForKey:@"browsingContextController"] class];
+    SEL sel = NSSelectorFromString(@"registerSchemeForCustomProtocol:");
+    if ([(id)klass respondsToSelector:sel]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+      [(id)klass performSelector:sel withObject:@"https"];
+      [(id)klass performSelector:sel withObject:@"http"];
+#pragma clang diagnostic pop
+    }
+  });
+}
+
 #pragma mark - Private Methods
 
-- (NSString *)_frd_titleForURL:(NSURL *)URL
+- (NSString *)_rxr_titleForURL:(NSURL *)URL
 {
   if ([URL.host hasSuffix:@".douban.com"]) {
     return @"豆瓣";
@@ -184,7 +209,7 @@
     return;
   }
 
-  NSString *title = [self _frd_titleForURL:frame.request.URL];
+  NSString *title = [self _rxr_titleForURL:frame.request.URL];
   UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
   UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
     completionHandler();
@@ -205,7 +230,7 @@
     return;
   }
 
-  NSString *title = [self _frd_titleForURL:frame.request.URL];
+  NSString *title = [self _rxr_titleForURL:frame.request.URL];
   UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
   UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
     completionHandler(NO);
@@ -225,7 +250,7 @@
 
 - (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * _Nullable))completionHandler
 {
-  NSString *title = [self _frd_titleForURL:frame.request.URL];
+  NSString *title = [self _rxr_titleForURL:frame.request.URL];
   UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:prompt preferredStyle:UIAlertControllerStyleAlert];
   UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
     completionHandler(nil);

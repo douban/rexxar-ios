@@ -42,7 +42,11 @@
 
 - (instancetype)initWithURI:(NSURL *)uri
 {
-  return [self initWithURI:uri htmlFileURL:nil];
+  self = [super initWithWebConfiguration:nil];
+  if (self) {
+    _uri = [uri copy];
+  }
+  return self;
 }
 
 - (void)viewDidLoad
@@ -176,7 +180,7 @@
     htmlFileURL = [[RXRRouteManager sharedInstance] remoteHtmlURLForURI:self.uri];
 
     if ([RXRConfig isCacheEnable]) {
-     // 如果缓存启用，尝试读取本地文件。如果没有本地文件（本地文件包括缓存，和资源文件夹），则从服务器读取。
+      // 如果缓存启用，尝试读取本地文件。如果没有本地文件（本地文件包括缓存，和资源文件夹），则从服务器读取。
       NSURL *localHtmlURL = [[RXRRouteManager sharedInstance] localHtmlURLForURI:self.uri];
       if (localHtmlURL) {
         htmlFileURL = localHtmlURL;
