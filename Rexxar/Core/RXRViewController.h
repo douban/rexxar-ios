@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param uri 该页面对应的 uri。
  *
  * @discussion 会根据 uri 从 Route Map File 中选择对应本地 html 文件加载。如果无本地 html 文件，则从服务器加载 html 资源。
- * 在 UIWebView 中，远程 URL 需要注意跨域问题。
+ * 在 WKWebView 中，远程 URL 需要注意跨域问题。
  */
 - (instancetype)initWithURI:(NSURL *)uri;
 
@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param htmlFileURL 该页面对应的 html file url。
  *
  * @discussion 会根据 uri 从 Route Map File 中选择对应本地 html 文件加载。如果无本地 html 文件，则从服务器加载 html 资源。
- * 在 UIWebView 中，远程 URL 需要注意跨域问题。
+ * 在 WKWebView 中，远程 URL 需要注意跨域问题。
  */
 - (instancetype)initWithURI:(NSURL *)uri htmlFileURL:(nullable NSURL *)htmlFileURL;
 

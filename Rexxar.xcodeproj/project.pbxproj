@@ -80,7 +80,6 @@
 		A39994651CEDB0280084DCD6 /* PartialRXRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39994641CEDB0280084DCD6 /* PartialRXRViewController.swift */; };
 		B9E27ED01C049A9900C12DAF /* RXRRouteManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */; };
 		B9E27ED41C054A7A00C12DAF /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E27ED31C054A7A00C12DAF /* RoutesViewController.swift */; };
-		B9EF27D21C03315B00C7E2E9 /* URITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF27D11C03315B00C7E2E9 /* URITests.m */; };
 		B9EF27D81C033C5300C7E2E9 /* www in Resources */ = {isa = PBXBuildFile; fileRef = B9EF27D71C033C5300C7E2E9 /* www */; };
 /* End PBXBuildFile section */
 
@@ -189,7 +188,6 @@
 		B90EBEC01BFEAA830055D477 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRRouteManagerTests.m; sourceTree = "<group>"; };
 		B9E27ED31C054A7A00C12DAF /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesViewController.swift; sourceTree = "<group>"; };
-		B9EF27D11C03315B00C7E2E9 /* URITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URITests.m; sourceTree = "<group>"; };
 		B9EF27D71C033C5300C7E2E9 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -461,7 +459,6 @@
 			children = (
 				B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */,
 				A35925251CE487870032B1E6 /* RXRRouteFileCacheTests.m */,
-				B9EF27D11C03315B00C7E2E9 /* URITests.m */,
 				B90EBEC01BFEAA830055D477 /* Info.plist */,
 				B9EF27D71C033C5300C7E2E9 /* www */,
 			);
@@ -700,7 +697,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9EF27D21C03315B00C7E2E9 /* URITests.m in Sources */,
 				A35925261CE487870032B1E6 /* RXRRouteFileCacheTests.m in Sources */,
 				B9E27ED01C049A9900C12DAF /* RXRRouteManagerTests.m in Sources */,
 			);

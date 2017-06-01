@@ -102,12 +102,16 @@
 
   [_webView evaluateJavaScript:@"document.title"
              completionHandler:^(NSString *title, NSError *error) {
-               weakSelf.title = title;
+               if ([title length] > 0 && error == nil) {
+                 weakSelf.title = title;
+               }
              }];
 
   [_webView evaluateJavaScript:@"window.getComputedStyle(document.getElementsByTagName('body')[0]).backgroundColor"
              completionHandler:^(NSString *bgColor, NSError *error) {
-               weakSelf.webView.backgroundColor = [UIColor rxr_colorWithComponent:bgColor] ?: [UIColor whiteColor];
+               if ([bgColor length] > 0 && error == nil) {
+                 weakSelf.webView.backgroundColor = [UIColor rxr_colorWithComponent:bgColor];
+               }
              }];
 }
 

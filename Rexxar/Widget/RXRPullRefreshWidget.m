@@ -6,7 +6,7 @@
 //  Copyright © 2016 Douban.Inc. All rights reserved.
 //
 
-@import UIKit;
+@import WebKit;
 
 #import "RXRPullRefreshWidget.h"
 #import "RXRViewController.h"
@@ -41,13 +41,11 @@
 
 - (void)performWithController:(RXRViewController *)controller
 {
-
   if ([self.action isEqualToString:@"enable"] && !self.refreshControl.isRefreshing) {
     // Web 通知该页面有下拉组件
     if (!self.refreshControl) {
       self.refreshControl = [self _rxr_refreshControllerWithScrollView:controller.webView];
     }
-
   } else if ([self.action isEqualToString:@"complete"]) {
     // Web 通知下拉动作完成
     [self.refreshControl endRefreshing];
@@ -69,10 +67,10 @@
 - (void)_rxr_refresh:(UIRefreshControl *)refreshControl
 {
   UIView *view = [[refreshControl superview] superview];
-  if ([view isKindOfClass:[UIWebView class]] && !self.onRefreshStart) {
+  if ([view isKindOfClass:[WKWebView class]] && !self.onRefreshStart) {
     self.onRefreshStart = YES;
-    UIWebView *webView = (UIWebView *)view;
-    [webView stringByEvaluatingJavaScriptFromString:@"window.Rexxar.Widget.PullToRefresh.onRefreshStart()"];
+    WKWebView *webView = (WKWebView *)view;
+    [webView evaluateJavaScript:@"window.Rexxar.Widget.PullToRefresh.onRefreshStart()" completionHandler:nil];
   }
 }
 

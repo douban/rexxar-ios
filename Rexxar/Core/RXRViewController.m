@@ -118,19 +118,12 @@
     jsCall = [NSString stringWithFormat:@"%@()", function];
   }
 
-  // call UIKit method in main thread
-  if ([NSThread isMainThread]) {
-    [self.webView evaluateJavaScript:jsCall completionHandler:nil];
-  } else {
-    dispatch_sync(dispatch_get_main_queue(), ^{
-      [self.webView evaluateJavaScript:jsCall completionHandler:nil];
-    });
-  }
+  [self.webView evaluateJavaScript:jsCall completionHandler:nil];
 
   RXRDebugLog(@"jsCall: function:%@, parameter %@", function, jsonParameter);
 }
 
-#pragma mark - UIWebViewDelegate's method
+#pragma mark - RXRWebViewDelegate
 
 - (BOOL)webView:(WKWebView *)webView
     shouldStartLoadWithRequest:(NSURLRequest *)request
@@ -143,7 +136,7 @@
   }
 
   // http:// or https:// 开头，则打开网页
-  if ([reqURL rxr_isHttpOrHttps] && navigationType == UIWebViewNavigationTypeLinkClicked) {
+  if ([reqURL rxr_isHttpOrHttps] && navigationType == WKNavigationTypeLinkActivated) {
     return ![self _rxr_openWebPage:reqURL];
   }
 
@@ -186,9 +179,7 @@
         htmlFileURL = localHtmlURL;
       }
     }
-
   }
-
 
   if (htmlFileURL.query.length != 0 && htmlFileURL.fragment.length != 0) {
     // 为了方便 escape 正确的 uri，做了下面的假设。之后放弃 iOS 7 后可以改用 `queryItem` 来实现。
