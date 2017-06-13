@@ -266,9 +266,7 @@
       completionHandler(nil);
     }
   }];
-  [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-    completionHandler(textField.text);
-  }];
+  [alert addTextFieldWithConfigurationHandler:nil];
   [alert addAction:cancelAction];
   [alert addAction:confirmAction];
 
