@@ -23,11 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RXRWebViewController : UIViewController <RXRWebViewDelegate>
 
 @property (nonatomic, readonly) WKWebView *webView;
-@property (nonatomic, copy) NSURL *requestURL;
 
 - (instancetype)initWithWebConfiguration:(nullable WKWebViewConfiguration *)webConfiguration;
 - (void)loadRequest:(NSURLRequest *)request;
-- (void)resetControllerAppearance;
 
 @end
 

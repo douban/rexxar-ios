@@ -22,6 +22,7 @@
 @interface RXRViewController ()
 
 @property (nonatomic, copy) NSURL *htmlFileURL;
+@property (nonatomic, copy) NSURL *requestURL;
 
 @end
 
@@ -78,12 +79,12 @@
 
 - (void)reloadWebView
 {
-  if (!self.requestURL) {
-    self.requestURL = [self _rxr_htmlURLWithUri:self.uri htmlFileURL:self.htmlFileURL];
+  if (!_requestURL) {
+    _requestURL = [self _rxr_htmlURLWithUri:self.uri htmlFileURL:self.htmlFileURL];
   }
 
-  if (self.requestURL) {
-    [self loadRequest:[NSURLRequest requestWithURL:self.requestURL]];
+  if (_requestURL) {
+    [self loadRequest:[NSURLRequest requestWithURL:_requestURL]];
   }
 }
 
@@ -131,7 +132,7 @@
 {
   NSURL *reqURL = request.URL;
 
-  if ([reqURL isEqual:self.requestURL]) {
+  if ([reqURL isEqual:_requestURL]) {
     return YES;
   }
 

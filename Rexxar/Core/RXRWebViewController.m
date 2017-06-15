@@ -83,36 +83,13 @@
   });
 }
 
-#pragma mark - Public Methods
-
 - (void)loadRequest:(NSURLRequest *)request
 {
-  _requestURL = request.URL;
-
   if ([request.URL isFileURL] && [_webView respondsToSelector:@selector(loadFileURL:allowingReadAccessToURL:)]) {
     [_webView loadFileURL:request.URL allowingReadAccessToURL:[request.URL URLByDeletingLastPathComponent]];
   } else {
     [_webView loadRequest:request];
   }
-}
-
-- (void)resetControllerAppearance
-{
-  __weak typeof(self) weakSelf = self;
-
-  [_webView evaluateJavaScript:@"document.title"
-             completionHandler:^(NSString *title, NSError *error) {
-               if ([title length] > 0 && error == nil) {
-                 weakSelf.title = title;
-               }
-             }];
-
-  [_webView evaluateJavaScript:@"window.getComputedStyle(document.getElementsByTagName('body')[0]).backgroundColor"
-             completionHandler:^(NSString *bgColor, NSError *error) {
-               if ([bgColor length] > 0 && error == nil) {
-                 weakSelf.webView.backgroundColor = [UIColor rxr_colorWithComponent:bgColor];
-               }
-             }];
 }
 
 #pragma mark - NSURLProtocol
@@ -138,6 +115,25 @@
 }
 
 #pragma mark - Private Methods
+
+- (void)_rxr_resetControllerAppearance
+{
+  __weak typeof(self) weakSelf = self;
+
+  [_webView evaluateJavaScript:@"document.title"
+             completionHandler:^(NSString *title, NSError *error) {
+               if ([title length] > 0 && error == nil) {
+                 weakSelf.title = title;
+               }
+             }];
+
+  [_webView evaluateJavaScript:@"window.getComputedStyle(document.getElementsByTagName('body')[0]).backgroundColor"
+             completionHandler:^(NSString *bgColor, NSError *error) {
+               if ([bgColor length] > 0 && error == nil) {
+                 weakSelf.webView.backgroundColor = [UIColor rxr_colorWithComponent:bgColor];
+               }
+             }];
+}
 
 - (NSString *)_rxr_titleForURL:(NSURL *)URL
 {
@@ -302,17 +298,17 @@
 
 - (void)webViewDidStartLoad:(WKWebView *)webView
 {
-  [self resetControllerAppearance];
+  [self _rxr_resetControllerAppearance];
 }
 
 - (void)webViewDidFinishLoad:(WKWebView *)webView
 {
-  [self resetControllerAppearance];
+  [self _rxr_resetControllerAppearance];
 }
 
 - (void)webView:(WKWebView *)webView didFailLoadWithError:(NSError *)error
 {
-  [self resetControllerAppearance];
+  [self _rxr_resetControllerAppearance];
 }
 
 @end
