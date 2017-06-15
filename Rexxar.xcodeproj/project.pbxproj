@@ -18,6 +18,8 @@
 		98B47B1F1BF1E0F20087735C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98B47B1D1BF1E0F20087735C /* LaunchScreen.storyboard */; };
 		98BCCFB81E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h in Headers */ = {isa = PBXBuildFile; fileRef = 98BCCFB61E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		98BCCFB91E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.m in Sources */ = {isa = PBXBuildFile; fileRef = 98BCCFB71E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.m */; };
+		98C3ED701EC9B7D5008E1BA6 /* RXRWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 98C3ED6E1EC9B7D5008E1BA6 /* RXRWebViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98C3ED711EC9B7D5008E1BA6 /* RXRWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C3ED6F1EC9B7D5008E1BA6 /* RXRWebViewController.m */; };
 		A3249A0C1D66EF27006CCCCB /* FRDToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A081D66EF27006CCCCB /* FRDToast.swift */; };
 		A3249A0D1D66EF27006CCCCB /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A091D66EF27006CCCCB /* LoadingView.swift */; };
 		A3249A0E1D66EF27006CCCCB /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A0A1D66EF27006CCCCB /* ToastView.swift */; };
@@ -78,7 +80,6 @@
 		A39994651CEDB0280084DCD6 /* PartialRXRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39994641CEDB0280084DCD6 /* PartialRXRViewController.swift */; };
 		B9E27ED01C049A9900C12DAF /* RXRRouteManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */; };
 		B9E27ED41C054A7A00C12DAF /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E27ED31C054A7A00C12DAF /* RoutesViewController.swift */; };
-		B9EF27D21C03315B00C7E2E9 /* URITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF27D11C03315B00C7E2E9 /* URITests.m */; };
 		B9EF27D81C033C5300C7E2E9 /* www in Resources */ = {isa = PBXBuildFile; fileRef = B9EF27D71C033C5300C7E2E9 /* www */; };
 /* End PBXBuildFile section */
 
@@ -118,6 +119,8 @@
 		98B47B391BF1E2BD0087735C /* Bridge-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridge-Header.h"; sourceTree = "<group>"; };
 		98BCCFB61E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSHTTPURLResponse+Rexxar.h"; sourceTree = "<group>"; };
 		98BCCFB71E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSHTTPURLResponse+Rexxar.m"; sourceTree = "<group>"; };
+		98C3ED6E1EC9B7D5008E1BA6 /* RXRWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRWebViewController.h; sourceTree = "<group>"; };
+		98C3ED6F1EC9B7D5008E1BA6 /* RXRWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRWebViewController.m; sourceTree = "<group>"; };
 		A3249A081D66EF27006CCCCB /* FRDToast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRDToast.swift; sourceTree = "<group>"; };
 		A3249A091D66EF27006CCCCB /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		A3249A0A1D66EF27006CCCCB /* ToastView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
@@ -185,7 +188,6 @@
 		B90EBEC01BFEAA830055D477 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRRouteManagerTests.m; sourceTree = "<group>"; };
 		B9E27ED31C054A7A00C12DAF /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesViewController.swift; sourceTree = "<group>"; };
-		B9EF27D11C03315B00C7E2E9 /* URITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URITests.m; sourceTree = "<group>"; };
 		B9EF27D71C033C5300C7E2E9 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -328,6 +330,8 @@
 				A35E71F21D7FCA0200D38BC0 /* RXRWidget.h */,
 				9875E7D51E8DFA9B00EA6A76 /* RXRURLSessionDemux.h */,
 				9875E7D61E8DFA9B00EA6A76 /* RXRURLSessionDemux.m */,
+				98C3ED6E1EC9B7D5008E1BA6 /* RXRWebViewController.h */,
+				98C3ED6F1EC9B7D5008E1BA6 /* RXRWebViewController.m */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -455,7 +459,6 @@
 			children = (
 				B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */,
 				A35925251CE487870032B1E6 /* RXRRouteFileCacheTests.m */,
-				B9EF27D11C03315B00C7E2E9 /* URITests.m */,
 				B90EBEC01BFEAA830055D477 /* Info.plist */,
 				B9EF27D71C033C5300C7E2E9 /* www */,
 			);
@@ -478,6 +481,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				719255591DE6E055009F0687 /* RXRURLRequestSerialization.h in Headers */,
+				98C3ED701EC9B7D5008E1BA6 /* RXRWebViewController.h in Headers */,
 				A35E72281D7FCB0B00D38BC0 /* NSString+RXRURLEscape.h in Headers */,
 				A35E72011D7FCA0200D38BC0 /* RXRViewController.h in Headers */,
 				9875E7D71E8DFA9B00EA6A76 /* RXRURLSessionDemux.h in Headers */,
@@ -640,6 +644,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98C3ED711EC9B7D5008E1BA6 /* RXRWebViewController.m in Sources */,
 				A35E71FD1D7FCA0200D38BC0 /* RXRRouteFileCache.m in Sources */,
 				A35E71FF1D7FCA0200D38BC0 /* RXRRouteManager.m in Sources */,
 				A35E722B1D7FCB0B00D38BC0 /* NSURL+Rexxar.m in Sources */,
@@ -692,7 +697,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9EF27D21C03315B00C7E2E9 /* URITests.m in Sources */,
 				A35925261CE487870032B1E6 /* RXRRouteFileCacheTests.m in Sources */,
 				B9E27ED01C049A9900C12DAF /* RXRRouteManagerTests.m in Sources */,
 			);

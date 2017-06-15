@@ -21,9 +21,8 @@
 
 @interface RXRViewController ()
 
-@property (nonatomic, copy) NSURL *requestURL;
-
 @property (nonatomic, copy) NSURL *htmlFileURL;
+@property (nonatomic, copy) NSURL *requestURL;
 
 @end
 
@@ -34,7 +33,7 @@
 
 - (instancetype)initWithURI:(NSURL *)uri htmlFileURL:(NSURL *)htmlFileURL
 {
-  self = [super initWithNibName:nil bundle:nil];
+  self = [super initWithWebConfiguration:nil];
   if (self) {
     _uri = [uri copy];
     _htmlFileURL = [htmlFileURL copy] ;
@@ -44,33 +43,18 @@
 
 - (instancetype)initWithURI:(NSURL *)uri
 {
-  self = [super initWithNibName:nil bundle:nil];
+  self = [super initWithWebConfiguration:nil];
   if (self) {
     _uri = [uri copy];
   }
   return self;
 }
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-  NSAssert(NO, @"Should use initWithURI: instead.");
-  return nil;
-}
-
 - (void)viewDidLoad
 {
   [super viewDidLoad];
 
-  _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
-  _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-  _webView.scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
-  _webView.dataDetectorTypes = UIDataDetectorTypeLink;
-  _webView.scalesPageToFit = YES;
-  _webView.delegate = self;
-  [self.view addSubview:_webView];
-
   [self reloadWebView];
-
   [RXRCacheFileInterceptor registerInterceptor];
 }
 
@@ -95,12 +79,12 @@
 
 - (void)reloadWebView
 {
-  if (!self.requestURL) {
+  if (!_requestURL) {
     _requestURL = [self _rxr_htmlURLWithUri:self.uri htmlFileURL:self.htmlFileURL];
   }
 
-  if (self.requestURL) {
-    [_webView loadRequest:[NSURLRequest requestWithURL:self.requestURL]];
+  if (_requestURL) {
+    [self loadRequest:[NSURLRequest requestWithURL:_requestURL]];
   }
 }
 
@@ -118,7 +102,7 @@
   [self callJavaScript:@"window.Rexxar.Lifecycle.onPageInvisible" jsonParameter:nil];
 }
 
-- (NSString *)callJavaScript:(NSString *)function jsonParameter:(NSString *)jsonParameter
+- (void)callJavaScript:(NSString *)function jsonParameter:(NSString *)jsonParameter
 {
   NSString *jsCall;
   if (jsonParameter) {
@@ -135,33 +119,25 @@
     jsCall = [NSString stringWithFormat:@"%@()", function];
   }
 
-  // call UIKit method in main thread
-  NSString *__block result = nil;
-  if ([NSThread isMainThread]) {
-    result = [_webView stringByEvaluatingJavaScriptFromString:jsCall];
-  } else {
-    dispatch_sync(dispatch_get_main_queue(), ^{
-      result = [_webView stringByEvaluatingJavaScriptFromString:jsCall];
-    });
-  }
-  RXRDebugLog(@"jsCall: function:%@, parameter %@, result: %@", function, jsonParameter, result);
-  return result;
+  [self.webView evaluateJavaScript:jsCall completionHandler:nil];
+
+  RXRDebugLog(@"jsCall: function:%@, parameter %@", function, jsonParameter);
 }
 
-#pragma mark - UIWebViewDelegate's method
+#pragma mark - RXRWebViewDelegate
 
-- (BOOL)webView:(UIWebView *)webView
+- (BOOL)webView:(WKWebView *)webView
     shouldStartLoadWithRequest:(NSURLRequest *)request
-    navigationType:(UIWebViewNavigationType)navigationType
+    navigationType:(WKNavigationType)navigationType
 {
   NSURL *reqURL = request.URL;
 
-  if ([reqURL isEqual:self.requestURL]) {
+  if ([reqURL isEqual:_requestURL]) {
     return YES;
   }
 
   // http:// or https:// 开头，则打开网页
-  if ([reqURL rxr_isHttpOrHttps] && navigationType == UIWebViewNavigationTypeLinkClicked) {
+  if ([reqURL rxr_isHttpOrHttps] && navigationType == WKNavigationTypeLinkActivated) {
     return ![self _rxr_openWebPage:reqURL];
   }
 
@@ -185,22 +161,7 @@
     RXRDebugLog(@"Rexxar callback can not handle: %@", URL);
   }
 
-  return YES;
-}
-
-- (void)webViewDidStartLoad:(UIWebView *)webView
-{
-  [self _rxr_resetControllerAppearance];
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
-  [self _rxr_resetControllerAppearance];
-}
-
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
-  [self _rxr_resetControllerAppearance];
+  return [super webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
 }
 
 #pragma mark - Private Methods
@@ -213,15 +174,13 @@
     htmlFileURL = [[RXRRouteManager sharedInstance] remoteHtmlURLForURI:self.uri];
 
     if ([RXRConfig isCacheEnable]) {
-     // 如果缓存启用，尝试读取本地文件。如果没有本地文件（本地文件包括缓存，和资源文件夹），则从服务器读取。
+      // 如果缓存启用，尝试读取本地文件。如果没有本地文件（本地文件包括缓存，和资源文件夹），则从服务器读取。
       NSURL *localHtmlURL = [[RXRRouteManager sharedInstance] localHtmlURLForURI:self.uri];
       if (localHtmlURL) {
         htmlFileURL = localHtmlURL;
       }
     }
-
   }
-
 
   if (htmlFileURL.query.length != 0 && htmlFileURL.fragment.length != 0) {
     // 为了方便 escape 正确的 uri，做了下面的假设。之后放弃 iOS 7 后可以改用 `queryItem` 来实现。
@@ -236,15 +195,6 @@
   uriText = [uriText stringByAddingPercentEncodingWithAllowedCharacters:set];
 
   return  [NSURL URLWithString:[NSString stringWithFormat:@"%@?uri=%@", htmlFileURL.absoluteString, uriText]];
-}
-
-- (void)_rxr_resetControllerAppearance
-{
-  self.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-
-  NSString *bgColor = [self.webView stringByEvaluatingJavaScriptFromString:
-                       @"window.getComputedStyle(document.getElementsByTagName('body')[0]).backgroundColor"];
-  self.webView.backgroundColor = [UIColor rxr_colorWithComponent:bgColor] ?: [UIColor whiteColor];
 }
 
 - (BOOL)_rxr_openWebPage:(NSURL *)url
