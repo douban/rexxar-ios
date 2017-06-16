@@ -32,13 +32,6 @@
     _headers = [headers copy];
     _parameters = [parameters copy];
     _requestSerializer = [[RXRHTTPRequestSerializer alloc] init];
-
-    // Do not encode queries to HTTP body for POST method.
-    if (![_requestSerializer.HTTPMethodsEncodingParametersInURI containsObject:@"POST"]) {
-      NSMutableSet *set = [_requestSerializer.HTTPMethodsEncodingParametersInURI mutableCopy];
-      [set addObject:@"POST"];
-      _requestSerializer.HTTPMethodsEncodingParametersInURI = [set copy];
-    }
   }
   return self;
 }
