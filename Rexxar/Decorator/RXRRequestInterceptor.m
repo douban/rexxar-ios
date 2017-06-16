@@ -57,9 +57,9 @@ static NSArray<id<RXRDecorator>> *_decorators;
   }
 
   for (id<RXRDecorator> decorator in _decorators) {
-    if ([decorator shouldInterceptRequest:self.request]) {
+    if ([decorator shouldInterceptRequest:newRequest]) {
       if ([decorator respondsToSelector:@selector(prepareWithRequest:)]) {
-        [decorator prepareWithRequest:self.request];
+        [decorator prepareWithRequest:newRequest];
       }
       newRequest = [[decorator decoratedRequestFromOriginalRequest:newRequest] mutableCopy];
     }
