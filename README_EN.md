@@ -208,10 +208,9 @@ Check out class `PartialRexxarViewController` in RexxarDemo for example.
   - `NSDictionary+RXRMultipleItem`
 
 
-## Optimisation in future
+## Changelog
 
-Replacing UIWebView by WKWebView is our long-term goal. WKWebView is better on speed and memory than UIWebView. But WKWebView doesn't support all features of UIWebView. The most import absence for Rexxar is the support of NSURLProtocol. We can not intercept the request from Rexxar Container with WKWebView. Anyway we will do our best to bring WKWebView to Rexxar in future.
-
+- 0.3.0   Replace UIWebView with WKWebView. NSURLProtocol is not supported in WKWebView. The body of the POST request will be clean when intercepted by NSURLProtocol. So you need to take care of that.
 
 ## Unit Test
 
