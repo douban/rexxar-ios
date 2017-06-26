@@ -19,16 +19,15 @@
 @implementation RXRWebViewController
 @synthesize webView = _webView;
 
-- (instancetype)initWithWebConfiguration:(WKWebViewConfiguration *)webConfiguration
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
   self = [super initWithNibName:nil bundle:nil];
   if (self != nil) {
-    if (webConfiguration == nil) {
-      webConfiguration = [[WKWebViewConfiguration alloc] init];
-      webConfiguration.mediaPlaybackRequiresUserAction = YES;
-    }
-
+    WKWebViewConfiguration *webConfiguration = [[WKWebViewConfiguration alloc] init];
+    webConfiguration.mediaPlaybackRequiresUserAction = YES;
+    webConfiguration.processPool = [self _rxr_sharedProcessPool];
     _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
+    _webView.allowsBackForwardNavigationGestures = NO;
   }
   return self;
 }
@@ -90,6 +89,20 @@
   } else {
     [_webView loadRequest:request];
   }
+}
+
+#pragma mark - Private Methods
+
+- (WKProcessPool *)_rxr_sharedProcessPool
+{
+  static dispatch_once_t onceToken;
+  static WKProcessPool *instance;
+
+  dispatch_once(&onceToken, ^{
+    instance = [[WKProcessPool alloc] init];
+  });
+
+  return instance;
 }
 
 #pragma mark - NSURLProtocol
@@ -287,6 +300,11 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
   scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+  return nil;
 }
 
 #pragma mark - DOUWebViewDelegate

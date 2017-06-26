@@ -24,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) WKWebView *webView;
 
-- (instancetype)initWithWebConfiguration:(nullable WKWebViewConfiguration *)webConfiguration;
 - (void)loadRequest:(NSURLRequest *)request;
 
 @end

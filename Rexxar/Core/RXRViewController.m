@@ -33,21 +33,17 @@
 
 - (instancetype)initWithURI:(NSURL *)uri htmlFileURL:(NSURL *)htmlFileURL
 {
-  self = [super initWithWebConfiguration:nil];
+  self = [super initWithNibName:nil bundle:nil];
   if (self) {
     _uri = [uri copy];
-    _htmlFileURL = [htmlFileURL copy] ;
+    _htmlFileURL = htmlFileURL ? [htmlFileURL copy] : nil;
   }
   return self;
 }
 
 - (instancetype)initWithURI:(NSURL *)uri
 {
-  self = [super initWithWebConfiguration:nil];
-  if (self) {
-    _uri = [uri copy];
-  }
-  return self;
+  return [self initWithURI:uri htmlFileURL:nil];
 }
 
 - (void)viewDidLoad
