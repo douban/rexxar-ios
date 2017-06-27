@@ -264,10 +264,9 @@ Demo 中的 PartialRexxarViewController 给出了一个示例。
   - `NSDictionary+RXRMultipleItem`
 
 
-## 未来可能的改进
+## Changelog
 
-使用 WKWebView 替代 UIWebView 是一个长远的目标。WKWebView 在速度和内存消耗上都优于 UIWebView。但是，WKWebView 并不完善。对于 Rexxar iOS Container 而言，最重要的缺陷是不支持使用 NSURLProtocol 截获 WKWebView 中发出的网络请求。所以在现有的 Rexxar 的实现中，并没有使用 WKWebView。但是，我们会持续努力，以寻找切换至 WKWebView 的可能性。
-
+- 0.3.0   使用 WKWebView 替换 UIWebView, 由于 WKWebView 对 NSURLProtocol 支持不够友好，你需要特别关心一下 NSURLProtocol 截获 Post 请求时 Body 被清空的问题。
 
 ## Unit Test
 
