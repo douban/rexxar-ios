@@ -27,7 +27,6 @@
     webConfiguration.mediaPlaybackRequiresUserAction = YES;
     webConfiguration.processPool = [self _rxr_sharedProcessPool];
     _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
-    _webView.allowsBackForwardNavigationGestures = NO;
   }
   return self;
 }
@@ -300,11 +299,6 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
   scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
-}
-
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
-{
-  return nil;
 }
 
 #pragma mark - DOUWebViewDelegate
