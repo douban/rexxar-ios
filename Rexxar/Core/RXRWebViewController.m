@@ -45,6 +45,12 @@
   [self _rxr_registerWebViewCustomSchemes];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+  [super viewWillAppear:animated];
+  [self _rxr_registerWebViewCustomSchemes];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
   [super viewDidAppear:animated];
