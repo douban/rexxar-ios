@@ -36,14 +36,18 @@
   self = [super initWithNibName:nil bundle:nil];
   if (self) {
     _uri = [uri copy];
-    _htmlFileURL = htmlFileURL ? [htmlFileURL copy] : nil;
+    _htmlFileURL = [htmlFileURL copy];
   }
   return self;
 }
 
 - (instancetype)initWithURI:(NSURL *)uri
 {
-  return [self initWithURI:uri htmlFileURL:nil];
+  self = [super initWithNibName:nil bundle:nil];
+  if (self) {
+    _uri = [uri copy];
+  }
+  return self;
 }
 
 - (void)viewDidLoad

@@ -42,7 +42,6 @@
   _webView.scrollView.delegate = self;
   [self.view addSubview:_webView];
 
-  // 只会注册一次，不用担心重复执行
   [self _rxr_registerWebViewCustomSchemes];
 }
 
@@ -112,18 +111,15 @@
  */
 - (void)_rxr_registerWebViewCustomSchemes
 {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    Class klass = [[_webView valueForKey:@"browsingContextController"] class];
-    SEL sel = NSSelectorFromString(@"registerSchemeForCustomProtocol:");
-    if ([(id)klass respondsToSelector:sel]) {
+  Class klass = [[_webView valueForKey:@"browsingContextController"] class];
+  SEL sel = NSSelectorFromString(@"registerSchemeForCustomProtocol:");
+  if ([(id)klass respondsToSelector:sel]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-      [(id)klass performSelector:sel withObject:@"https"];
-      [(id)klass performSelector:sel withObject:@"http"];
+    [(id)klass performSelector:sel withObject:@"https"];
+    [(id)klass performSelector:sel withObject:@"http"];
 #pragma clang diagnostic pop
-    }
-  });
+  }
 }
 
 #pragma mark - Private Methods
