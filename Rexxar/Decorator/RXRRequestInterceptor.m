@@ -6,6 +6,8 @@
 //  Copyright © 2017 Douban.Inc. All rights reserved.
 //
 
+@import UIKit;
+
 #import "RXRRequestInterceptor.h"
 #import "RXRURLSessionDemux.h"
 
@@ -63,6 +65,12 @@ static NSArray<id<RXRDecorator>> *_decorators;
       }
       newRequest = [[decorator decoratedRequestFromOriginalRequest:newRequest] mutableCopy];
     }
+  }
+
+  // 由于在 iOS9 及一下版本对 WKWebView 缓存支持不好，所有的请求不使用缓存
+  if ([[[UIDevice currentDevice] systemVersion] compare:@"10.0" options:NSNumericSearch] == NSOrderedAscending) {
+    [newRequest setValue:nil forHTTPHeaderField:@"If-None-Match"];
+    [newRequest setValue:nil forHTTPHeaderField:@"If-Modified-Since"];
   }
 
   [[self class] markRequestAsIgnored:newRequest];
