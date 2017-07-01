@@ -229,6 +229,11 @@
   }
 }
 
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
+{
+  [webView reload];
+}
+
 - (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
 {
   // 如果页面 push 或者 present 动画还没有完成，弹窗出不来，导致 completionHandler 不能执行
