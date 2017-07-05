@@ -26,6 +26,17 @@
     WKWebViewConfiguration *webConfiguration = [[WKWebViewConfiguration alloc] init];
     webConfiguration.mediaPlaybackRequiresUserAction = YES;
     webConfiguration.processPool = [self _rxr_sharedProcessPool];
+
+    // iOS9
+    if ([webConfiguration respondsToSelector:@selector(websiteDataStore)]) {
+      webConfiguration.websiteDataStore = [WKWebsiteDataStore defaultDataStore];
+    }
+
+    // iOS10
+    if ([webConfiguration respondsToSelector:@selector(dataDetectorTypes)]) {
+      webConfiguration.dataDetectorTypes = WKDataDetectorTypeLink | WKDataDetectorTypePhoneNumber;
+    }
+
     _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
   }
   return self;
