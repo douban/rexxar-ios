@@ -62,7 +62,7 @@
 {
   [super viewWillAppear:animated];
 
-  if ([[self.webView.URL absoluteString] isEqualToString:@"about:blank"]) {
+  if (!self.webView.URL || [self.webView.URL isEqual:[NSURL URLWithString:@"about:blank"]]) {
     [self reloadWebView];
   }
 
