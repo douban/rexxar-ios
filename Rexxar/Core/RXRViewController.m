@@ -61,6 +61,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
+
+  if ([[self.webView.URL absoluteString] isEqualToString:@"about:blank"]) {
+    [self reloadWebView];
+  }
+
   [self onPageVisible];
 }
 
