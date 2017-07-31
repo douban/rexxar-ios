@@ -111,10 +111,17 @@
   NSString *externalUserAgent = [RXRConfig externalUserAgent];
   if (externalUserAgent) {
     NSString *userAgent = [request.allHTTPHeaderFields objectForKey:@"User-Agent"];
-    NSString *newUserAgent = externalUserAgent;
+    NSMutableArray *components = [NSMutableArray array];
     if (userAgent) {
-      newUserAgent = [@[userAgent, externalUserAgent] componentsJoinedByString:@" "];
+      [components addObject:userAgent];
     }
+    NSArray *externalUAItems = [externalUserAgent componentsSeparatedByString:@" "];
+    for (NSString *item in externalUAItems) {
+      if (![userAgent containsString:item]) {
+        [components addObject:item];
+      }
+    }
+    NSString *newUserAgent = [components componentsJoinedByString:@" "];
     [request setValue:newUserAgent forHTTPHeaderField:@"User-Agent"];
   }
 
