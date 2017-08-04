@@ -10,7 +10,7 @@
 #import "RXRURLSessionDemux.h"
 #import "NSHTTPURLResponse+Rexxar.h"
 
-static NSDictionary *sRegisteredClassCounter;
+static NSMutableDictionary *sRegisteredClassCounter;
 
 @implementation RXRNSURLProtocol
 
@@ -98,10 +98,7 @@ static NSDictionary *sRegisteredClassCounter;
   dispatch_barrier_async(globalQueue, ^{
 
     NSInteger countForClass = [self _frd_countForRegisteredClass:clazz] - 1;
-    if (countForClass < 0) {
-      return;
-    }
-    if (countForClass == 0) {
+    if (countForClass <= 0) {
       [NSURLProtocol unregisterClass:clazz];
     }
     [self _frd_setCount:countForClass forRegisteredClass:clazz];
@@ -116,20 +113,19 @@ static NSDictionary *sRegisteredClassCounter;
   if (key && sRegisteredClassCounter && sRegisteredClassCounter[key]) {
     return [sRegisteredClassCounter[key] integerValue];
   }
-  else {
-    return 0;
-  }
+
+  return 0;
 }
 
 + (void)_frd_setCount:(NSInteger)count forRegisteredClass:(Class)clazz
 {
+  if (!sRegisteredClassCounter) {
+    sRegisteredClassCounter = [NSMutableDictionary dictionary];
+  }
+
   NSString *key = NSStringFromClass(clazz);
-  NSMutableDictionary *mutDict = [sRegisteredClassCounter mutableCopy];
   if (key) {
-    if (!mutDict) {
-      mutDict = [NSMutableDictionary dictionary];
-    }
-    mutDict[key] = @(count);
+    sRegisteredClassCounter[key] = @(count);
   }
 }
 
