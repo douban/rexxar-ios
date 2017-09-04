@@ -71,7 +71,7 @@
 
   [self reloadWebView];
 
-  [RXRCacheFileInterceptor registerInterceptor];
+  //[RXRCacheFileInterceptor registerInterceptor];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -230,18 +230,30 @@
     RXRWarnLog(@"local html 's format is not right! Url has query and fragment.");
   }
 
-  // `absoluteString` 返回的是已经 escape 过的文本，这里先转换为原始文本。
-  NSString *uriText = uri.absoluteString.stringByRemovingPercentEncoding;
-  // 把 uri 的原始文本所有内容全部 escape。
-  NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@""];
-  uriText = [uriText stringByAddingPercentEncodingWithAllowedCharacters:set];
-
-  return  [NSURL URLWithString:[NSString stringWithFormat:@"%@?uri=%@", htmlFileURL.absoluteString, uriText]];
+    // `absoluteString` 返回的是已经 escape 过的文本，这里先转换为原始文本。
+    NSString *uriText = uri.absoluteString.stringByRemovingPercentEncoding;
+    // 把 uri 的原始文本所有内容全部 escape。
+    NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@""];
+    uriText = [uriText stringByAddingPercentEncodingWithAllowedCharacters:set];
+    NSString *url = @"";
+    if (htmlFileURL.port) {
+        url = [NSString stringWithFormat:@"%@://%@:%@%@",htmlFileURL.scheme,htmlFileURL.host,htmlFileURL.port ? htmlFileURL.port:@"",htmlFileURL.path];
+    }else{
+        url = [NSString stringWithFormat:@"%@://%@%@",htmlFileURL.scheme,htmlFileURL.host,htmlFileURL.path];
+    }
+    url = [url stringByAppendingFormat:@"?uri=%@",uriText];
+    if (uri.query!=nil) {
+        url = [url stringByAppendingFormat:@"&%@",uri.query];
+    }
+    if (htmlFileURL.query!=nil) {
+        url = [url stringByAppendingFormat:@"&%@",htmlFileURL.query];
+    }
+    return  [NSURL URLWithString:url];
 }
 
 - (void)_rxr_resetControllerAppearance
 {
-  self.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+//  self.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 
   NSString *bgColor = [self.webView stringByEvaluatingJavaScriptFromString:
                        @"window.getComputedStyle(document.getElementsByTagName('body')[0]).backgroundColor"];
