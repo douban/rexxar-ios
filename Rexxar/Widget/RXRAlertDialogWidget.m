@@ -46,65 +46,22 @@
     return;
   }
 
-  NSString *title = self.alertDialogData.title;
-  NSString *message = self.alertDialogData.message;
-  NSArray<RXRAlertDialogButton *> *buttons = self.alertDialogData.buttons;
+  __weak typeof(self) weakSelf = self;
 
-  if (NSClassFromString(@"UIAlertController")) {
-    [self _rxr_alertWithTitle:title message:message buttons:buttons];
-  } else {
-    [self _rxr_ios7_alertWithTitle:title message:message buttons:buttons];
-  }
-}
+  UIAlertController *alert = [UIAlertController alertControllerWithTitle:self.alertDialogData.title
+                                                                 message:self.alertDialogData.message
+                                                          preferredStyle:UIAlertControllerStyleAlert];
 
-#pragma mark - Private methods
-
-- (void)_rxr_alertWithTitle:(NSString *)title
-                    message:(NSString *)message
-                    buttons:(NSArray<RXRAlertDialogButton *> *)buttons
-{
-  UIAlertController *alertView = [UIAlertController alertControllerWithTitle:title
-                                                                     message:message
-                                                              preferredStyle:UIAlertControllerStyleAlert];
-
-  for (RXRAlertDialogButton *button in buttons) {
+  for (RXRAlertDialogButton *button in [self.alertDialogData buttons]) {
     UIAlertAction *action = [UIAlertAction actionWithTitle:button.text
                                                      style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction *alertAction)
-                             {
-                               [self.rexxarViewController.webView stringByEvaluatingJavaScriptFromString:button.action];
-                             }];
-
-    [alertView addAction:action];
+                                                   handler:^(UIAlertAction *alertAction) {
+                                                     [weakSelf.rexxarViewController.webView evaluateJavaScript:button.action completionHandler:nil];
+                                                   }];
+    [alert addAction:action];
   }
 
-  [self.rexxarViewController presentViewController:alertView animated:YES completion:nil];
-}
-
-- (void)_rxr_ios7_alertWithTitle:(NSString *)title
-                         message:(NSString *)message
-                         buttons:(NSArray<RXRAlertDialogButton *> *)buttons
-{
-  UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                      message:message
-                                                     delegate:self
-                                            cancelButtonTitle:nil
-                                            otherButtonTitles:nil, nil];
-
-  for (RXRAlertDialogButton *button in buttons) {
-    [alertView addButtonWithTitle:button.text];
-  }
-
-  [alertView show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-  NSArray<RXRAlertDialogButton *> *buttons = self.alertDialogData.buttons;
-  if (buttons.count < buttonIndex) {
-    RXRAlertDialogButton *button = buttons[buttonIndex];
-    [self.rexxarViewController.webView stringByEvaluatingJavaScriptFromString:button.action];
-  }
+  [self.rexxarViewController presentViewController:alert animated:YES completion:nil];
 }
 
 @end
