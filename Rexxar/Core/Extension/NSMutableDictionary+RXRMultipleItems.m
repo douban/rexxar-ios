@@ -10,11 +10,11 @@
 
 @implementation NSMutableDictionary (RXRMultipleItems)
 
-- (void)rxr_addItem:(id)item forKey:(id<NSCopying>)aKey {
+- (void)rxr_addItem:(id)item forKey:(id<NSCopying>)key {
   if (item == nil) {
     return;
   }
-  id obj = [self objectForKey:aKey];
+  id obj = [self objectForKey:key];
   NSMutableArray *array = nil;
   if ([obj isKindOfClass:[NSArray class]]) {
     array = [NSMutableArray arrayWithArray:obj];
@@ -22,7 +22,7 @@
     array = obj ? [NSMutableArray arrayWithObject:obj] : [NSMutableArray array];
   }
   [array addObject:item];
-  [self setObject:[array copy] forKey:aKey];
+  [self setObject:[array copy] forKey:key];
 }
 
 @end

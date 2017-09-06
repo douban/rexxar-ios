@@ -14,7 +14,7 @@
  * 在字典以关键字添加一个元素。
  *
  * @param item 待添加的元素
- * @param aKey 关键字
+ * @param key 关键字
  */
 - (void)rxr_addItem:(id)item forKey:(id<NSCopying>)key;
 
