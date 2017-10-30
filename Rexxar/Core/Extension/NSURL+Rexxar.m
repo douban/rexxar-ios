@@ -36,30 +36,15 @@
 }
 
 - (NSDictionary *)rxr_queryDictionary {
-  NSString *query = [self query];
-  if ([query length] == 0) {
-    return nil;
-  }
-
-  // Replace '+' with space
-  query = [query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
-
-  NSCharacterSet *delimiterSet = [NSCharacterSet characterSetWithCharactersInString:@"&;"];
-  NSMutableDictionary *pairs = [NSMutableDictionary dictionary];
-
-  NSScanner *scanner = [[NSScanner alloc] initWithString:query];
-  while (![scanner isAtEnd]) {
-    NSString *pairString = nil;
-    [scanner scanUpToCharactersFromSet:delimiterSet intoString:&pairString];
-    [scanner scanCharactersFromSet:delimiterSet intoString:NULL];
-    NSArray *kvPair = [pairString componentsSeparatedByString:@"="];
-    if (kvPair.count == 2) {
-      [pairs rxr_addItem:[[kvPair objectAtIndex:1] rxr_decodingStringUsingURLEscape]
-                  forKey:[[kvPair objectAtIndex:0] rxr_decodingStringUsingURLEscape]];
+  NSArray *queryItems = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:YES].queryItems;
+  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+  for (NSURLQueryItem *item in queryItems) {
+    if (item.name && item.value) {
+      [dict rxr_addItem:item.value forKey:item.name];
     }
   }
 
-  return [pairs copy];
+  return dict;
 }
 
 @end
