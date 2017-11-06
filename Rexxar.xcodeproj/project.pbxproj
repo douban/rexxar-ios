@@ -106,6 +106,7 @@
 		7132597B1E713C4500A6D7EA /* RXRRequestInterceptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRRequestInterceptor.m; sourceTree = "<group>"; };
 		719255571DE6E055009F0687 /* RXRURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRURLRequestSerialization.h; sourceTree = "<group>"; };
 		719255581DE6E055009F0687 /* RXRURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRURLRequestSerialization.m; sourceTree = "<group>"; };
+		7196C5EC1FB06C6800E2B57C /* RXRDataValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RXRDataValidator.h; sourceTree = "<group>"; };
 		77BB1328573CD94C05F4665D /* libPods-Rexxar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rexxar.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9875E7D51E8DFA9B00EA6A76 /* RXRURLSessionDemux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRURLSessionDemux.h; sourceTree = "<group>"; };
 		9875E7D61E8DFA9B00EA6A76 /* RXRURLSessionDemux.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRURLSessionDemux.m; sourceTree = "<group>"; };
@@ -332,6 +333,7 @@
 				9875E7D61E8DFA9B00EA6A76 /* RXRURLSessionDemux.m */,
 				98C3ED6E1EC9B7D5008E1BA6 /* RXRWebViewController.h */,
 				98C3ED6F1EC9B7D5008E1BA6 /* RXRWebViewController.m */,
+				7196C5EC1FB06C6800E2B57C /* RXRDataValidator.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";

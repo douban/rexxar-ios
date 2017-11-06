@@ -8,6 +8,8 @@
 
 @import Foundation;
 
+@protocol RXRDataValidator;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -102,6 +104,8 @@ NS_ASSUME_NONNULL_BEGIN
  * 读取 Rexxar Container 是否使用缓存的全局配置。该缺省是打开的。Rexxar Container 会使用缓存保存 html 文件。
  */
 + (BOOL)isCacheEnable;
+
++ (void)setHTMLFileDataValidator:(id<RXRDataValidator>)dataValidator;
 
 @end
 

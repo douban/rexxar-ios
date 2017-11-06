@@ -144,4 +144,9 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
   return sIsCacheEnable;
 }
 
++ (void)setHTMLFileDataValidator:(id<RXRDataValidator>)dataValidator
+{
+  [RXRRouteManager sharedInstance].dataValidator = dataValidator;
+}
+
 @end

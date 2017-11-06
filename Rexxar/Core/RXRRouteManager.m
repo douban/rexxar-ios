@@ -18,7 +18,7 @@
 
 @property (nonatomic, strong) NSURLSession *session;
 
-@property (nonatomic, strong) NSArray<RXRRoute *> *routes;
+@property (nonatomic, copy) NSArray<RXRRoute *> *routes;
 @property (nonatomic, assign) BOOL updatingRoutes;
 @property (nonatomic, strong) NSMutableArray *updateRoutesCompletions;
 
@@ -246,6 +246,25 @@
       }
 
       NSData *data = [NSData dataWithContentsOfURL:location];
+
+      // Validate data
+      if (_dataValidator
+          && [_dataValidator respondsToSelector:@selector(validateRemoteHTMLFile:fileData:)]
+          && ![_dataValidator validateRemoteHTMLFile:route.remoteHTML fileData:data]) {
+
+        // TODO: Log
+        //
+
+        if ([_dataValidator respondsToSelector:@selector(stopDownloadingIfValidationFailed)]
+            && [_dataValidator stopDownloadingIfValidationFailed]) {
+          success = NO;
+          if (downloadGroup) {
+            dispatch_group_leave(downloadGroup);
+          }
+          return;
+        }
+      }
+
       [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:response.URL];
 
       if (downloadGroup) { dispatch_group_leave(downloadGroup); }
