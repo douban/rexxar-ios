@@ -11,7 +11,7 @@
 
 @protocol RXRDataValidator<NSObject>
 
-/// Downloading HTML fils related validation.
+/// Downloading HTML files related validation.
 - (BOOL)validateRemoteHTMLFile:(nullable NSURL *)fileURL fileData:(nullable NSData *)fileData;
 - (BOOL)stopDownloadingIfValidationFailed;
 

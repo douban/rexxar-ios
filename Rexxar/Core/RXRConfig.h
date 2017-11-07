@@ -9,6 +9,7 @@
 @import Foundation;
 
 @protocol RXRDataValidator;
+@protocol RXRLogger;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
  * `RXRConfig` 提供对 Rexxar 的全局配置接口。
  */
 @interface RXRConfig : NSObject
+
+@property (nullable, class, nonatomic, weak) id<RXRLogger> logger;
 
 /**
  * 设置 rxrProtocolScheme。

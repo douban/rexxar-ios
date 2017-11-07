@@ -20,10 +20,20 @@ static NSURL *sRoutesMapURL;
 static NSString *sRoutesCachePath;
 static NSString *sRoutesResourcePath;
 static BOOL sIsCacheEnable = YES;
+static id<RXRLogger> sLogger;
 
 static NSString * const DefaultRXRScheme = @"douban";
 static NSString * const DefaultRXRHost = @"rexxar-container";
 
++ (id<RXRLogger>)logger
+{
+  return sLogger;
+}
+
++ (void)setLogger:(id<RXRLogger>)logger
+{
+  sLogger = logger;
+}
 
 + (void)setRXRProtocolScheme:(NSString *)scheme
 {
