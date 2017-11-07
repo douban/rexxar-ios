@@ -18,6 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface RXRConfig : NSObject
 
+
+/**
+ 设置 `RXRLogger`，调用者需要实现 `rexxarDidLogWithLogObject:` 方法。
+ */
 @property (nullable, class, nonatomic, weak) id<RXRLogger> logger;
 
 /**
@@ -108,6 +112,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (BOOL)isCacheEnable;
 
+/**
+ 设置 `RXRDataValidator`。设置后，将会在下载 HTML file 时验证文件合法性（可用来做完整性检验）。
+ */
 + (void)setHTMLFileDataValidator:(id<RXRDataValidator>)dataValidator;
 
 @end
