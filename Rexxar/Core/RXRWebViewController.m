@@ -8,6 +8,8 @@
 
 #import "RXRWebViewController.h"
 #import "UIColor+Rexxar.h"
+#import "RXRLogger.h"
+#import "RXRConfig.h"
 
 @interface RXRWebViewController () <WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate>
 
@@ -352,6 +354,16 @@
 
 - (void)webView:(WKWebView *)webView didFailLoadWithError:(NSError *)error
 {
+  // Log
+  if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoadingError
+                                                           error:error
+                                                      requestURL:webView.URL
+                                                   localFilePath:nil
+                                                otherInformation:nil];
+    [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+  }
+
   [self _rxr_resetControllerAppearance];
 }
 

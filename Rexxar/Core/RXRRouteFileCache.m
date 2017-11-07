@@ -9,8 +9,9 @@
 #import "RXRRouteFileCache.h"
 #import "RXRConfig.h"
 
-#import "RXRLogging.h"
+#import "RXRLogger.h"
 #import "NSData+RXRDigest.h"
+#import "RXRLogger.h"
 
 static NSString * const RoutesMapFile = @"routes.json";
 
@@ -61,6 +62,15 @@ static NSString * const RoutesMapFile = @"routes.json";
                                                   error:&error];
   if (error) {
     RXRDebugLog(@"Failed to create directory: %@", _cachePath);
+
+    if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeFailedToCreateCacheDirectoryError
+                                                             error:error
+                                                        requestURL:nil
+                                                     localFilePath:_cachePath
+                                                  otherInformation:nil];
+      [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+    }
   }
 }
 

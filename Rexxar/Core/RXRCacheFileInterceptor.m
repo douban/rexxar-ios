@@ -10,7 +10,7 @@
 #import "NSHTTPURLResponse+Rexxar.h"
 #import "RXRURLSessionDemux.h"
 #import "RXRRouteFileCache.h"
-#import "RXRLogging.h"
+#import "RXRLogger.h"
 #import "NSURL+Rexxar.h"
 
 static NSString * const RXRCacheFileIntercepterHandledKey = @"RXRCacheFileIntercepterHandledKey";

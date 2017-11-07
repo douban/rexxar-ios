@@ -11,7 +11,7 @@
 #import "RXRViewController.h"
 #import "RXRCacheFileInterceptor.h"
 #import "RXRRouteManager.h"
-#import "RXRLogging.h"
+#import "RXRLogger.h"
 #import "RXRConfig.h"
 #import "RXRWidget.h"
 

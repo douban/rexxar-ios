@@ -8,12 +8,21 @@
 
 @import Foundation;
 
+@protocol RXRDataValidator;
+@protocol RXRLogger;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  * `RXRConfig` 提供对 Rexxar 的全局配置接口。
  */
 @interface RXRConfig : NSObject
+
+
+/**
+ 设置 `RXRLogger`，调用者需要实现 `rexxarDidLogWithLogObject:` 方法。
+ */
+@property (nullable, class, nonatomic, weak) id<RXRLogger> logger;
 
 /**
  * 设置 rxrProtocolScheme。
@@ -102,6 +111,11 @@ NS_ASSUME_NONNULL_BEGIN
  * 读取 Rexxar Container 是否使用缓存的全局配置。该缺省是打开的。Rexxar Container 会使用缓存保存 html 文件。
  */
 + (BOOL)isCacheEnable;
+
+/**
+ 设置 `RXRDataValidator`。设置后，将会在下载 HTML file 时验证文件合法性（可用来做完整性检验）。
+ */
++ (void)setHTMLFileDataValidator:(id<RXRDataValidator>)dataValidator;
 
 @end
 
