@@ -10,6 +10,7 @@
 #import "UIColor+Rexxar.h"
 #import "RXRLogger.h"
 #import "RXRConfig.h"
+#import "RXRRouteManager.h"
 
 @interface RXRWebViewController () <WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate>
 
@@ -356,11 +357,15 @@
 {
   // Log
   if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+    NSDictionary *otherInfo;
+    if (RXRRouteManager.sharedInstance.routesDeployTime) {
+      otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
+    }
     RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoadingError
                                                            error:error
                                                       requestURL:webView.URL
                                                    localFilePath:nil
-                                                otherInformation:nil];
+                                                otherInformation:otherInfo];
     [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
   }
 

@@ -179,11 +179,36 @@
 
     htmlFileURL = [[RXRRouteManager sharedInstance] remoteHtmlURLForURI:self.uri];
 
+    if (!htmlFileURL && RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+      NSDictionary *otherInfo;
+      if (RXRRouteManager.sharedInstance.routesDeployTime) {
+        otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
+      }
+      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeNoRemoteHTMLForURI
+                                                             error:nil
+                                                        requestURL:self.uri
+                                                     localFilePath:nil
+                                                  otherInformation:otherInfo];
+      [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+    }
+
     if ([RXRConfig isCacheEnable]) {
       // 如果缓存启用，尝试读取本地文件。如果没有本地文件（本地文件包括缓存，和资源文件夹），则从服务器读取。
       NSURL *localHtmlURL = [[RXRRouteManager sharedInstance] localHtmlURLForURI:self.uri];
       if (localHtmlURL) {
         htmlFileURL = localHtmlURL;
+      }
+      else if (!localHtmlURL && RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+        NSDictionary *otherInfo;
+        if (RXRRouteManager.sharedInstance.routesDeployTime) {
+          otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
+        }
+        RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeNoLocalHTMLForURI
+                                                               error:nil
+                                                          requestURL:self.uri
+                                                       localFilePath:nil
+                                                    otherInformation:otherInfo];
+        [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
       }
     }
   }

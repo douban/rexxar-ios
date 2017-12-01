@@ -19,7 +19,6 @@
 @import Foundation;
 @class RXRLogObject;
 
-
 typedef enum : NSUInteger {
   RXRLogTypeNoRoutesMapURLError,  // 没有设置 RoutesMap 地址
   RXRLogTypeDownloadingRoutesError, // 下载 Routes 失败
@@ -27,15 +26,15 @@ typedef enum : NSUInteger {
   RXRLogTypeValidatingHTMLFileError,  // 验证下载的 HTML file 失败（需要提供 `RXRDataValidator`）
   RXRLogTypeFailedToCreateCacheDirectoryError,  // 创建 cache 目录失败
   RXRLogTypeWebViewLoadingError,  // WebView 加载失败
+  RXRLogTypeNoRemoteHTMLForURI, // 在内存中的 route 列表里找不到 uri 对应的项（没有对应的 html 文件名）
+  RXRLogTypeNoLocalHTMLForURI,  // 在内存中的 route 列表里找不到 uri 对应的本地 html 文件
   RXRLogTypeUnknown,
 } RXRLogType;
-
 
 /**
  可在 `RXRConfig` 中设置，`Rexar` 不提供默认实现。如果设置了 `RXRLogger`，将会提供 `RXRLogType` 中所包含类型的记录。
  */
 @protocol RXRLogger <NSObject>
-
 
 /**
  `RXRLogger` 目前只提供这一个方法，需要调用者实现。调用者获取到 `logObject` 后自己处理具体的 log 逻辑。
@@ -46,7 +45,8 @@ typedef enum : NSUInteger {
 
 @end
 
-FOUNDATION_EXPORT NSString * _Nonnull logOtherInfoStatusCodeKey;
+FOUNDATION_EXPORT const NSString * _Nonnull logOtherInfoStatusCodeKey;
+FOUNDATION_EXPORT const NSString * _Nonnull logOtherInfoRoutesDepolyTimeKey;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface RXRLogObject : NSObject
