@@ -27,6 +27,7 @@ typedef enum : NSUInteger {
   RXRLogTypeValidatingHTMLFileError,  // 验证下载的 HTML file 失败（需要提供 `RXRDataValidator`）
   RXRLogTypeFailedToCreateCacheDirectoryError,  // 创建 cache 目录失败
   RXRLogTypeWebViewLoadingError,  // WebView 加载失败
+  RXRLogTypeNoRemoteHTMLForURI, // route 文件中找不到 uri 对应的远程 html 文件名
   RXRLogTypeUnknown,
 } RXRLogType;
 

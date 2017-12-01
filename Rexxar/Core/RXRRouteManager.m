@@ -225,6 +225,11 @@
     [items addObject:[[RXRRoute alloc] initWithDictionary:item]];
   }
 
+  NSString *routesDepolyTime = JSON[@"depoly_time"];
+  if (routesDepolyTime) {
+    _routesDeployTime = [routesDepolyTime copy];
+  }
+
   return items;
 }
 
