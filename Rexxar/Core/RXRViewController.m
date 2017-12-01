@@ -198,6 +198,18 @@
       if (localHtmlURL) {
         htmlFileURL = localHtmlURL;
       }
+      else if (!localHtmlURL && RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+        NSDictionary *otherInfo;
+        if (RXRRouteManager.sharedInstance.routesDeployTime) {
+          otherInfo = @{@"routes_deploy_time": RXRRouteManager.sharedInstance.routesDeployTime};
+        }
+        RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeNoLocalHTMLForURI
+                                                               error:nil
+                                                          requestURL:self.uri
+                                                       localFilePath:nil
+                                                    otherInformation:otherInfo];
+        [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+      }
     }
   }
 
