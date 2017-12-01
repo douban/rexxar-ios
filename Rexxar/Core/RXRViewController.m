@@ -182,7 +182,7 @@
     if (!htmlFileURL && RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
       NSDictionary *otherInfo;
       if (RXRRouteManager.sharedInstance.routesDeployTime) {
-        otherInfo = @{@"routes_deploy_time": RXRRouteManager.sharedInstance.routesDeployTime};
+        otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
       }
       RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeNoRemoteHTMLForURI
                                                              error:nil
@@ -201,7 +201,7 @@
       else if (!localHtmlURL && RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
         NSDictionary *otherInfo;
         if (RXRRouteManager.sharedInstance.routesDeployTime) {
-          otherInfo = @{@"routes_deploy_time": RXRRouteManager.sharedInstance.routesDeployTime};
+          otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
         }
         RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeNoLocalHTMLForURI
                                                                error:nil

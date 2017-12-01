@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, nullable) NSArray<RXRRoute *> *routes;
 
 /**
- 当前 routes 的生效时间，可用作 routes 的版本号。
+ 当前 routes 的生效时间，可用来区分 routes 版本。
  */
 @property (nonatomic, readonly) NSString *routesDeployTime;
 

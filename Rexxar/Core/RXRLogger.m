@@ -9,27 +9,34 @@
 #import "RXRLogger.h"
 
 const NSString *logOtherInfoStatusCodeKey = @"logOtherInfoStatusCodeKey";
+const NSString *logOtherInfoRoutesDepolyTimeKey = @"logOtherInfoRoutesDepolyTimeKey";
 
 static NSString *descriptionFromLogType(RXRLogType type)
 {
   switch (type) {
     case RXRLogTypeNoRoutesMapURLError:
-      return @"No RoutesMapURL";
+      return @"no_routes_map_url";
 
     case RXRLogTypeDownloadingRoutesError:
-      return @"Downloading routes error";
+      return @"downloading_routes_error";
 
     case RXRLogTypeDownloadingHTMLFileError:
-      return @"Downloading HTML file error";
+      return @"downloading_HTML_file_error";
 
     case RXRLogTypeValidatingHTMLFileError:
-      return @"Validating HTML file error";
+      return @"validating_HTML_file_error";
 
     case RXRLogTypeFailedToCreateCacheDirectoryError:
-      return @"Failed to create cache directory error";
+      return @"failed_to_create_cache_directory_error";
 
     case RXRLogTypeWebViewLoadingError:
-      return @"WebView loading error";
+      return @"webView_loading_error";
+
+    case RXRLogTypeNoLocalHTMLForURI:
+      return @"no_local_html_for_uri";
+
+    case RXRLogTypeNoRemoteHTMLForURI:
+      return @"no_remote_html_for_uri";
 
     default:
       return @"Unknow rexxar error";

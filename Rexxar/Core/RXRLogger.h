@@ -19,7 +19,6 @@
 @import Foundation;
 @class RXRLogObject;
 
-
 typedef enum : NSUInteger {
   RXRLogTypeNoRoutesMapURLError,  // 没有设置 RoutesMap 地址
   RXRLogTypeDownloadingRoutesError, // 下载 Routes 失败
@@ -32,12 +31,10 @@ typedef enum : NSUInteger {
   RXRLogTypeUnknown,
 } RXRLogType;
 
-
 /**
  可在 `RXRConfig` 中设置，`Rexar` 不提供默认实现。如果设置了 `RXRLogger`，将会提供 `RXRLogType` 中所包含类型的记录。
  */
 @protocol RXRLogger <NSObject>
-
 
 /**
  `RXRLogger` 目前只提供这一个方法，需要调用者实现。调用者获取到 `logObject` 后自己处理具体的 log 逻辑。
@@ -48,7 +45,8 @@ typedef enum : NSUInteger {
 
 @end
 
-FOUNDATION_EXPORT NSString * _Nonnull logOtherInfoStatusCodeKey;
+FOUNDATION_EXPORT const NSString * _Nonnull logOtherInfoStatusCodeKey;
+FOUNDATION_EXPORT const NSString * _Nonnull logOtherInfoRoutesDepolyTimeKey;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface RXRLogObject : NSObject

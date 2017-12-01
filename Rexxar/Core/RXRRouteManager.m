@@ -229,6 +229,9 @@
   if (routesDepolyTime) {
     _routesDeployTime = [routesDepolyTime copy];
   }
+  else {
+    _routesDeployTime = nil;
+  }
 
   return items;
 }
@@ -290,11 +293,15 @@
 
         // Log
         if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+          NSDictionary *otherInfo;
+          if (RXRRouteManager.sharedInstance.routesDeployTime) {
+            otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
+          }
           RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeValidatingHTMLFileError
                                                                  error:nil
                                                             requestURL:route.remoteHTML
                                                          localFilePath:nil
-                                                      otherInformation:nil];
+                                                      otherInformation:otherInfo];
           [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
         }
 
