@@ -180,7 +180,21 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
     return;
   }
 
+  // Log when not 200 and not 404
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)navigationResponse.response;
+  if (httpResponse.statusCode != 200
+      && httpResponse.statusCode != 404
+      && RXRConfig.logger
+      && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoadNot200
+                                                           error:nil
+                                                      requestURL:httpResponse.URL
+                                                   localFilePath:nil
+                                                otherInformation:@{logOtherInfoStatusCodeKey: @(httpResponse.statusCode)}];
+    [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+  }
+
+  // Deal with 404
   if (httpResponse.statusCode != 404 || !httpResponse.URL.absoluteString) {
     decisionHandler(WKNavigationResponsePolicyAllow);
     return;
@@ -192,7 +206,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 
     // Log
     if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
-      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogType404
+      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoad404
                                                              error:nil
                                                         requestURL:httpResponse.URL
                                                      localFilePath:nil

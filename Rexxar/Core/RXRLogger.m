@@ -38,8 +38,11 @@ static NSString *descriptionFromLogType(RXRLogType type)
     case RXRLogTypeNoRemoteHTMLForURI:
       return @"no_remote_html_for_uri";
 
-    case RXRLogType404:
+    case RXRLogTypeWebViewLoad404:
       return @"webview_load_404";
+
+    case RXRLogTypeWebViewLoadNot200:
+      return @"webview_load_not_200";
 
     default:
       return @"Unknow rexxar error";
