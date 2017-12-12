@@ -25,6 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, class, nonatomic, weak) id<RXRLogger> logger;
 
 /**
+ 设置当遇到远程 html 文件找不到(http:// 地址对应的文件) 时重新加载 webview 的次数，默认为2次。
+
+ - Note: 每一次 reload 会调用 `updateRoutesWithCompletion:` 方法更新路由及本地文件。
+ */
+@property (class, nonatomic) NSInteger reloadLimitWhen404;
+
+/**
  * 设置 rxrProtocolScheme。
  *
  * @discussion Rexxar-Container 实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。

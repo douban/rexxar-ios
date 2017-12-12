@@ -21,6 +21,7 @@ static NSString *sRoutesCachePath;
 static NSString *sRoutesResourcePath;
 static BOOL sIsCacheEnable = YES;
 static id<RXRLogger> sLogger;
+static NSInteger sReloadLimitWhen404 = 2;
 
 static NSString * const DefaultRXRScheme = @"douban";
 static NSString * const DefaultRXRHost = @"rexxar-container";
@@ -33,6 +34,16 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
 + (void)setLogger:(id<RXRLogger>)logger
 {
   sLogger = logger;
+}
+
++ (NSInteger)reloadLimitWhen404
+{
+  return sReloadLimitWhen404;
+}
+
++ (void)setReloadLimitWhen404:(NSInteger)reloadLimitWhen404
+{
+  sReloadLimitWhen404 = reloadLimitWhen404;
 }
 
 + (void)setRXRProtocolScheme:(NSString *)scheme

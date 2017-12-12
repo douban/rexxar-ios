@@ -24,6 +24,8 @@
 @property (nonatomic, copy) NSURL *htmlFileURL;
 @property (nonatomic, copy) NSURL *requestURL;
 
+@property (nonatomic, strong) NSMutableDictionary *reloadRecord;
+
 @end
 
 
@@ -37,17 +39,15 @@
   if (self) {
     _uri = [uri copy];
     _htmlFileURL = [htmlFileURL copy];
+
+    _reloadRecord = [NSMutableDictionary dictionary];
   }
   return self;
 }
 
 - (instancetype)initWithURI:(NSURL *)uri
 {
-  self = [super initWithNibName:nil bundle:nil];
-  if (self) {
-    _uri = [uri copy];
-  }
-  return self;
+  return [self initWithURI:uri htmlFileURL:nil];
 }
 
 - (void)viewDidLoad
@@ -168,6 +168,64 @@
   }
 
   return [super webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
+}
+
+- (void)webView:(WKWebView *)webView
+decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse
+decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
+{
+
+  if (![navigationResponse.response isKindOfClass:[NSHTTPURLResponse class]]) {
+    decisionHandler(WKNavigationResponsePolicyAllow);
+    return;
+  }
+
+  // Log when not 200 and not 404
+  NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)navigationResponse.response;
+  if (httpResponse.statusCode != 200
+      && httpResponse.statusCode != 404
+      && RXRConfig.logger
+      && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoadNot200
+                                                           error:nil
+                                                      requestURL:httpResponse.URL
+                                                   localFilePath:nil
+                                                otherInformation:@{logOtherInfoStatusCodeKey: @(httpResponse.statusCode)}];
+    [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+  }
+
+  // Deal with 404
+  if (!httpResponse.URL.absoluteString) {
+    decisionHandler(WKNavigationResponsePolicyAllow);
+    return;
+  }
+  NSInteger reloadCount = [_reloadRecord[httpResponse.URL.absoluteString] integerValue];
+
+  if (httpResponse.statusCode == 404 && reloadCount < RXRConfig.reloadLimitWhen404) {
+    decisionHandler(WKNavigationResponsePolicyCancel);
+
+    _reloadRecord[httpResponse.URL.absoluteString] = @(++reloadCount);
+    [[RXRRouteManager sharedInstance] updateRoutesWithCompletion:^(BOOL success) {
+      if (success) {
+        self.requestURL = nil;
+        [self reloadWebView];
+      }
+    }];
+
+    return;
+  }
+  else if (httpResponse.statusCode == 404 // Log 404 error when reload not work
+           && RXRConfig.logger
+           && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoad404
+                                                           error:nil
+                                                      requestURL:httpResponse.URL
+                                                   localFilePath:nil
+                                                otherInformation:nil];
+    [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+  }
+
+  decisionHandler(WKNavigationResponsePolicyAllow);
 }
 
 #pragma mark - Private Methods
