@@ -28,6 +28,7 @@ typedef enum : NSUInteger {
   RXRLogTypeWebViewLoadingError,  // WebView 加载失败
   RXRLogTypeNoRemoteHTMLForURI, // 在内存中的 route 列表里找不到 uri 对应的项（没有对应的 html 文件名）
   RXRLogTypeNoLocalHTMLForURI,  // 在内存中的 route 列表里找不到 uri 对应的本地 html 文件
+  RXRLogType404,  // 没有本地 html 时，webview 加载远程 html 出现 404
   RXRLogTypeUnknown,
 } RXRLogType;
 
