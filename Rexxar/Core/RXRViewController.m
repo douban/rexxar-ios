@@ -195,36 +195,37 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
   }
 
   // Deal with 404
-  if (httpResponse.statusCode != 404 || !httpResponse.URL.absoluteString) {
+  if (!httpResponse.URL.absoluteString) {
     decisionHandler(WKNavigationResponsePolicyAllow);
     return;
   }
-
   NSInteger reloadCount = [_reloadRecord[httpResponse.URL.absoluteString] integerValue];
-  if (reloadCount >= RXRConfig.reloadLimitWhen404) {
-    decisionHandler(WKNavigationResponsePolicyAllow);
 
-    // Log
-    if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
-      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoad404
-                                                             error:nil
-                                                        requestURL:httpResponse.URL
-                                                     localFilePath:nil
-                                                  otherInformation:nil];
-      [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
-    }
-    
+  if (httpResponse.statusCode == 404 && reloadCount < RXRConfig.reloadLimitWhen404) {
+    decisionHandler(WKNavigationResponsePolicyCancel);
+
+    _reloadRecord[httpResponse.URL.absoluteString] = @(++reloadCount);
+    [[RXRRouteManager sharedInstance] updateRoutesWithCompletion:^(BOOL success) {
+      if (success) {
+        self.requestURL = nil;
+        [self reloadWebView];
+      }
+    }];
+
     return;
   }
+  else if (httpResponse.statusCode == 404 // Log 404 error when reload not work
+           && RXRConfig.logger
+           && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoad404
+                                                           error:nil
+                                                      requestURL:httpResponse.URL
+                                                   localFilePath:nil
+                                                otherInformation:nil];
+    [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+  }
 
-  decisionHandler(WKNavigationResponsePolicyCancel);
-  _reloadRecord[httpResponse.URL.absoluteString] = @(++reloadCount);
-  [[RXRRouteManager sharedInstance] updateRoutesWithCompletion:^(BOOL success) {
-    if (success) {
-      self.requestURL = nil;
-      [self reloadWebView];
-    }
-  }];
+  decisionHandler(WKNavigationResponsePolicyAllow);
 }
 
 #pragma mark - Private Methods
