@@ -13,11 +13,11 @@
 #import "RXRRouteManager.h"
 #import "RXRLogger.h"
 #import "RXRConfig.h"
+#import "RXRConfig+Rexxar.h"
 #import "RXRWidget.h"
-
 #import "UIColor+Rexxar.h"
 #import "NSURL+Rexxar.h"
-
+#import "RXRErrorHandler.h"
 
 @interface RXRViewController ()
 
@@ -184,14 +184,13 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)navigationResponse.response;
   if (httpResponse.statusCode != 200
       && httpResponse.statusCode != 404
-      && RXRConfig.logger
-      && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+      && [RXRConfig rxr_canLog]) {
     RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoadNot200
                                                            error:nil
                                                       requestURL:httpResponse.URL
                                                    localFilePath:nil
                                                 otherInformation:@{logOtherInfoStatusCodeKey: @(httpResponse.statusCode)}];
-    [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+    [RXRConfig rxr_logWithLogObject:logObj];
   }
 
   // Deal with 404
@@ -214,15 +213,24 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 
     return;
   }
-  else if (httpResponse.statusCode == 404 // Log 404 error when reload not work
-           && RXRConfig.logger
-           && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
-    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoad404
-                                                           error:nil
-                                                      requestURL:httpResponse.URL
-                                                   localFilePath:nil
-                                                otherInformation:nil];
-    [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+  else if (httpResponse.statusCode == 404) {
+    decisionHandler(WKNavigationResponsePolicyCancel);
+
+    if ([RXRConfig rxr_canLog]) { // Log 404 error when reload not work
+      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoad404
+                                                             error:nil
+                                                        requestURL:httpResponse.URL
+                                                     localFilePath:nil
+                                                  otherInformation:nil];
+      [RXRConfig rxr_logWithLogObject:logObj];
+    }
+    if ([RXRConfig rxr_canHandleError]) {
+      NSDictionary *userInfo = httpResponse.URL ? @{errorUserInfoURLKey: httpResponse.URL} : nil;
+      NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:404 userInfo:userInfo];
+      [RXRConfig rxr_handleError:error fromReporter:self];
+    }
+
+    return;
   }
 
   decisionHandler(WKNavigationResponsePolicyAllow);
@@ -237,7 +245,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 
     htmlFileURL = [[RXRRouteManager sharedInstance] remoteHtmlURLForURI:self.uri];
 
-    if (!htmlFileURL && RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+    if (!htmlFileURL && [RXRConfig rxr_canLog]) {
       NSDictionary *otherInfo;
       if (RXRRouteManager.sharedInstance.routesDeployTime) {
         otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
@@ -247,7 +255,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
                                                         requestURL:self.uri
                                                      localFilePath:nil
                                                   otherInformation:otherInfo];
-      [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+      [RXRConfig rxr_logWithLogObject:logObj];
     }
 
     if ([RXRConfig isCacheEnable]) {
@@ -256,7 +264,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
       if (localHtmlURL) {
         htmlFileURL = localHtmlURL;
       }
-      else if (!localHtmlURL && RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+      else if (!localHtmlURL && [RXRConfig rxr_canLog]) {
         NSDictionary *otherInfo;
         if (RXRRouteManager.sharedInstance.routesDeployTime) {
           otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
@@ -266,7 +274,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
                                                           requestURL:self.uri
                                                        localFilePath:nil
                                                     otherInformation:otherInfo];
-        [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+        [RXRConfig rxr_logWithLogObject:logObj];
       }
     }
   }

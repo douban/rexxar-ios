@@ -11,8 +11,8 @@
 #import "RXRRouteManager.h"
 #import "RXRRouteFileCache.h"
 #import "RXRConfig.h"
+#import "RXRConfig+Rexxar.h"
 #import "RXRRoute.h"
-#import "RXRLogger.h"
 #import "RXRLogger.h"
 
 @interface RXRRouteManager ()
@@ -82,13 +82,13 @@
   if (self.routesMapURL == nil) {
     RXRDebugLog(@"[Warning] `routesRemoteURL` not set.");
 
-    if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+    if ([RXRConfig rxr_canLog]) {
       RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeNoRoutesMapURLError
                                                              error:nil
                                                         requestURL:nil
                                                      localFilePath:nil
                                                   otherInformation:nil];
-      [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+      [RXRConfig rxr_logWithLogObject:logObj];
     }
 
     return;
@@ -142,14 +142,14 @@
 
     if (((NSHTTPURLResponse *)response).statusCode != 200) {
       APICompletion(NO);
-      if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+      if ([RXRConfig rxr_canLog]) {
 
         RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeDownloadingRoutesError
                                                                error:error
                                                           requestURL:request.URL
                                                        localFilePath:nil
                                                     otherInformation:@{logOtherInfoStatusCodeKey: @(((NSHTTPURLResponse *)response).statusCode)}];
-        [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+        [RXRConfig rxr_logWithLogObject:logObj];
       }
 
       return;
@@ -268,13 +268,13 @@
 
       if (error || ((NSHTTPURLResponse *)response).statusCode != 200) {
         // Log
-        if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+        if ([RXRConfig rxr_canLog]) {
           RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeDownloadingHTMLFileError
                                                                  error:error
                                                             requestURL:request.URL
                                                          localFilePath:nil
                                                       otherInformation:@{logOtherInfoStatusCodeKey: @(((NSHTTPURLResponse *)response).statusCode)}];
-          [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+          [RXRConfig rxr_logWithLogObject:logObj];
         }
 
         success = NO;
@@ -292,7 +292,7 @@
           && ![_dataValidator validateRemoteHTMLFile:route.remoteHTML fileData:data]) {
 
         // Log
-        if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+        if ([RXRConfig rxr_canLog]) {
           NSDictionary *otherInfo;
           if (RXRRouteManager.sharedInstance.routesDeployTime) {
             otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
@@ -302,7 +302,7 @@
                                                             requestURL:route.remoteHTML
                                                          localFilePath:nil
                                                       otherInformation:otherInfo];
-          [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+          [RXRConfig rxr_logWithLogObject:logObj];
         }
 
         if ([_dataValidator respondsToSelector:@selector(stopDownloadingIfValidationFailed)]

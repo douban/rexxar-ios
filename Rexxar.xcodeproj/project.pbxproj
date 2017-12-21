@@ -13,6 +13,10 @@
 		7192555A1DE6E055009F0687 /* RXRURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 719255581DE6E055009F0687 /* RXRURLRequestSerialization.m */; };
 		7196C5EE1FB152D400E2B57C /* RXRLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 7196C5ED1FB152D400E2B57C /* RXRLogger.h */; };
 		7196C5F01FB1551700E2B57C /* RXRLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 7196C5EF1FB1551700E2B57C /* RXRLogger.m */; };
+		71F7C3481FEB8F4E00243719 /* RXRErrorHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 71F7C3461FEB8F4E00243719 /* RXRErrorHandler.h */; };
+		71F7C3491FEB8F4E00243719 /* RXRErrorHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 71F7C3471FEB8F4E00243719 /* RXRErrorHandler.m */; };
+		71F7C34C1FEB919100243719 /* RXRConfig+Rexxar.h in Headers */ = {isa = PBXBuildFile; fileRef = 71F7C34A1FEB919100243719 /* RXRConfig+Rexxar.h */; };
+		71F7C34D1FEB919100243719 /* RXRConfig+Rexxar.m in Sources */ = {isa = PBXBuildFile; fileRef = 71F7C34B1FEB919100243719 /* RXRConfig+Rexxar.m */; };
 		9875E7D71E8DFA9B00EA6A76 /* RXRURLSessionDemux.h in Headers */ = {isa = PBXBuildFile; fileRef = 9875E7D51E8DFA9B00EA6A76 /* RXRURLSessionDemux.h */; };
 		9875E7D81E8DFA9B00EA6A76 /* RXRURLSessionDemux.m in Sources */ = {isa = PBXBuildFile; fileRef = 9875E7D61E8DFA9B00EA6A76 /* RXRURLSessionDemux.m */; };
 		987FA5221BFC78310096ED5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B47B141BF1E0F20087735C /* AppDelegate.swift */; };
@@ -110,6 +114,10 @@
 		7196C5EC1FB06C6800E2B57C /* RXRDataValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RXRDataValidator.h; sourceTree = "<group>"; };
 		7196C5ED1FB152D400E2B57C /* RXRLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RXRLogger.h; sourceTree = "<group>"; };
 		7196C5EF1FB1551700E2B57C /* RXRLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RXRLogger.m; sourceTree = "<group>"; };
+		71F7C3461FEB8F4E00243719 /* RXRErrorHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RXRErrorHandler.h; sourceTree = "<group>"; };
+		71F7C3471FEB8F4E00243719 /* RXRErrorHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RXRErrorHandler.m; sourceTree = "<group>"; };
+		71F7C34A1FEB919100243719 /* RXRConfig+Rexxar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RXRConfig+Rexxar.h"; sourceTree = "<group>"; };
+		71F7C34B1FEB919100243719 /* RXRConfig+Rexxar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RXRConfig+Rexxar.m"; sourceTree = "<group>"; };
 		77BB1328573CD94C05F4665D /* libPods-Rexxar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rexxar.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9875E7D51E8DFA9B00EA6A76 /* RXRURLSessionDemux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRURLSessionDemux.h; sourceTree = "<group>"; };
 		9875E7D61E8DFA9B00EA6A76 /* RXRURLSessionDemux.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRURLSessionDemux.m; sourceTree = "<group>"; };
@@ -318,6 +326,8 @@
 				A35E71E31D7FCA0200D38BC0 /* RXRCacheFileInterceptor.m */,
 				A35E71E41D7FCA0200D38BC0 /* RXRConfig.h */,
 				A35E71E51D7FCA0200D38BC0 /* RXRConfig.m */,
+				71F7C34A1FEB919100243719 /* RXRConfig+Rexxar.h */,
+				71F7C34B1FEB919100243719 /* RXRConfig+Rexxar.m */,
 				A35E71E71D7FCA0200D38BC0 /* RXRNSURLProtocol.h */,
 				A35E71E81D7FCA0200D38BC0 /* RXRNSURLProtocol.m */,
 				A35E71E91D7FCA0200D38BC0 /* RXRRoute.h */,
@@ -337,6 +347,8 @@
 				7196C5EC1FB06C6800E2B57C /* RXRDataValidator.h */,
 				7196C5ED1FB152D400E2B57C /* RXRLogger.h */,
 				7196C5EF1FB1551700E2B57C /* RXRLogger.m */,
+				71F7C3461FEB8F4E00243719 /* RXRErrorHandler.h */,
+				71F7C3471FEB8F4E00243719 /* RXRErrorHandler.m */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -489,6 +501,7 @@
 				98C3ED701EC9B7D5008E1BA6 /* RXRWebViewController.h in Headers */,
 				A35E72281D7FCB0B00D38BC0 /* NSString+RXRURLEscape.h in Headers */,
 				A35E72011D7FCA0200D38BC0 /* RXRViewController.h in Headers */,
+				71F7C3481FEB8F4E00243719 /* RXRErrorHandler.h in Headers */,
 				7196C5EE1FB152D400E2B57C /* RXRLogger.h in Headers */,
 				9875E7D71E8DFA9B00EA6A76 /* RXRURLSessionDemux.h in Headers */,
 				A35E72241D7FCB0B00D38BC0 /* NSDictionary+RXRMultipleItems.h in Headers */,
@@ -515,6 +528,7 @@
 				A35E71FA1D7FCA0200D38BC0 /* RXRRoute.h in Headers */,
 				98B47B071BF1E0E00087735C /* Rexxar.h in Headers */,
 				A35E71FC1D7FCA0200D38BC0 /* RXRRouteFileCache.h in Headers */,
+				71F7C34C1FEB919100243719 /* RXRConfig+Rexxar.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,6 +683,7 @@
 				A35E72271D7FCB0B00D38BC0 /* NSMutableDictionary+RXRMultipleItems.m in Sources */,
 				A35E72001D7FCA0200D38BC0 /* RXRViewController+Router.m in Sources */,
 				A35E71DF1D7FC86000D38BC0 /* RXRPullRefreshWidget.m in Sources */,
+				71F7C3491FEB8F4E00243719 /* RXRErrorHandler.m in Sources */,
 				A398DC2E1D221BA4006D4817 /* RXRNavTitleWidget.m in Sources */,
 				A35E72291D7FCB0B00D38BC0 /* NSString+RXRURLEscape.m in Sources */,
 				7192555A1DE6E055009F0687 /* RXRURLRequestSerialization.m in Sources */,
@@ -676,6 +691,7 @@
 				98BCCFB91E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.m in Sources */,
 				A35E72231D7FCB0B00D38BC0 /* NSData+RXRDigest.m in Sources */,
 				A35E722D1D7FCB0B00D38BC0 /* UIColor+Rexxar.m in Sources */,
+				71F7C34D1FEB919100243719 /* RXRConfig+Rexxar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

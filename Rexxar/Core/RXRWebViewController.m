@@ -11,6 +11,8 @@
 #import "RXRLogger.h"
 #import "RXRConfig.h"
 #import "RXRRouteManager.h"
+#import "RXRConfig+Rexxar.h"
+#import "RXRErrorHandler.h"
 
 @interface RXRWebViewController () <WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate>
 
@@ -356,7 +358,7 @@
 - (void)webView:(WKWebView *)webView didFailLoadWithError:(NSError *)error
 {
   // Log
-  if (RXRConfig.logger && [RXRConfig.logger respondsToSelector:@selector(rexxarDidLogWithLogObject:)]) {
+  if ([RXRConfig rxr_canLog]) {
     NSDictionary *otherInfo;
     if (RXRRouteManager.sharedInstance.routesDeployTime) {
       otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
@@ -366,7 +368,12 @@
                                                       requestURL:webView.URL
                                                    localFilePath:nil
                                                 otherInformation:otherInfo];
-    [RXRConfig.logger rexxarDidLogWithLogObject:logObj];
+    [RXRConfig rxr_logWithLogObject:logObj];
+  }
+
+  // Handle Error
+  if ([RXRConfig rxr_canHandleError]) {
+    [RXRConfig rxr_handleError:error fromReporter:self];
   }
 
   [self _rxr_resetControllerAppearance];
