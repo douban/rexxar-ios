@@ -12,6 +12,7 @@
 #import "RXRConfig.h"
 #import "RXRRouteManager.h"
 #import "RXRConfig+Rexxar.h"
+#import "RXRErrorHandler.h"
 
 @interface RXRWebViewController () <WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate>
 
@@ -368,6 +369,13 @@
                                                    localFilePath:nil
                                                 otherInformation:otherInfo];
     [RXRConfig rxr_logWithLogObject:logObj];
+  }
+
+  // Handle Error
+  if ([RXRConfig rxr_canHandleError]) {
+    NSDictionary *userInfo = webView.URL ? @{errorUserInfoURLKey: webView.URL} : nil;
+    NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:400 userInfo:userInfo];
+    [RXRConfig rxr_reporter:self handleError:error];
   }
 
   [self _rxr_resetControllerAppearance];

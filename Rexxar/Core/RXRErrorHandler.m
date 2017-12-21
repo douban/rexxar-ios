@@ -6,4 +6,6 @@
 //  Copyright © 2017 Douban Inc. All rights reserved.
 //
 
+@import Foundation;
 
+const NSString *errorUserInfoURLKey = @"errorUserInfoURLKey";

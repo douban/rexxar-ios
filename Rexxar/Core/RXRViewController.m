@@ -17,7 +17,7 @@
 #import "RXRWidget.h"
 #import "UIColor+Rexxar.h"
 #import "NSURL+Rexxar.h"
-
+#import "RXRErrorHandler.h"
 
 @interface RXRViewController ()
 
@@ -213,13 +213,22 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 
     return;
   }
-  else if (httpResponse.statusCode == 404 && [RXRConfig rxr_canLog]) {  // Log 404 error when reload not work
-    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoad404
-                                                           error:nil
-                                                      requestURL:httpResponse.URL
-                                                   localFilePath:nil
-                                                otherInformation:nil];
-    [RXRConfig rxr_logWithLogObject:logObj];
+  else if (httpResponse.statusCode == 404) {
+    decisionHandler(WKNavigationResponsePolicyCancel);
+
+    if ([RXRConfig rxr_canLog]) { // Log 404 error when reload not work
+      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoad404
+                                                             error:nil
+                                                        requestURL:httpResponse.URL
+                                                     localFilePath:nil
+                                                  otherInformation:nil];
+      [RXRConfig rxr_logWithLogObject:logObj];
+    }
+    if ([RXRConfig rxr_canHandleError]) {
+      NSDictionary *userInfo = httpResponse.URL ? @{errorUserInfoURLKey: httpResponse.URL} : nil;
+      NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:404 userInfo:userInfo];
+      [RXRConfig rxr_reporter:self handleError:error];
+    }
   }
 
   decisionHandler(WKNavigationResponsePolicyAllow);

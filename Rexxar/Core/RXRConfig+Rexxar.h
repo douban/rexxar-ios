@@ -14,7 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)rxr_canLog;
 + (void)rxr_logWithLogObject:(nullable RXRLogObject *)object;
-+ (void)rxr_handleError:(nullable NSError *)error;
+
++ (BOOL)rxr_canHandleError;
++ (void)rxr_reporter:(nullable id)reporter handleError:(nullable NSError *)error;
 
 @end
 NS_ASSUME_NONNULL_END

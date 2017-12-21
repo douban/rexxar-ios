@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+FOUNDATION_EXPORT const NSString * _Nonnull errorUserInfoURLKey;
+
 @protocol RXRErrorHandler <NSObject>
-- (void)reporter:(id)reporter didReceiveError:(NSError *)error;
+- (void)reporter:(nullable id)reporter didReceiveError:(nullable NSError *)error;
 @end
