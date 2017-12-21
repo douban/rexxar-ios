@@ -10,6 +10,7 @@
 
 @protocol RXRDataValidator;
 @protocol RXRLogger;
+@protocol RXRErrorHandler;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,11 +19,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface RXRConfig : NSObject
 
-
 /**
  设置 `RXRLogger`，调用者需要实现 `rexxarDidLogWithLogObject:` 方法。
  */
 @property (nullable, class, nonatomic, weak) id<RXRLogger> logger;
+
+/**
+ 设置 `RXRErrorHandler`，调用者需要实现 `reporter:didReceiveError:` 方法。
+ */
+@property (nullable, class, nonatomic, weak) id<RXRErrorHandler> errorHandler;
 
 /**
  设置当遇到远程 html 文件找不到(http:// 地址对应的文件) 时重新加载 webview 的次数，默认为2次。
