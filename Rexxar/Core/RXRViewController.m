@@ -227,8 +227,10 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
     if ([RXRConfig rxr_canHandleError]) {
       NSDictionary *userInfo = httpResponse.URL ? @{errorUserInfoURLKey: httpResponse.URL} : nil;
       NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:404 userInfo:userInfo];
-      [RXRConfig rxr_reporter:self handleError:error];
+      [RXRConfig rxr_handleError:error fromReporter:self];
     }
+
+    return;
   }
 
   decisionHandler(WKNavigationResponsePolicyAllow);

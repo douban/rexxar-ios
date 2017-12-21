@@ -6,7 +6,7 @@
 //  Copyright © 2017 Douban Inc. All rights reserved.
 //
 
-#import <Rexxar/Rexxar.h>
+#import "RXRConfig.h"
 @class RXRLogObject;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)rxr_logWithLogObject:(nullable RXRLogObject *)object;
 
 + (BOOL)rxr_canHandleError;
-+ (void)rxr_reporter:(nullable id)reporter handleError:(nullable NSError *)error;
++ (void)rxr_handleError:(nullable NSError *)error fromReporter:(nullable id)reporter;
 
 @end
 NS_ASSUME_NONNULL_END

@@ -26,13 +26,13 @@
 
 + (BOOL)rxr_canHandleError
 {
-  return self.errorHandler && [self.errorHandler respondsToSelector:@selector(reporter:didReceiveError:)];
+  return self.errorHandler && [self.errorHandler respondsToSelector:@selector(handleError:fromReporter:)];
 }
 
-+ (void)rxr_reporter:(id)reporter handleError:(NSError *)error
++ (void)rxr_handleError:(NSError *)error fromReporter:(id)reporter
 {
   if ([self rxr_canHandleError] && error) {
-    [self.errorHandler reporter:reporter didReceiveError:error];
+    [self.errorHandler handleError:error fromReporter:reporter];
   }
 }
 

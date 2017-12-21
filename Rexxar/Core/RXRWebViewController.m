@@ -373,9 +373,7 @@
 
   // Handle Error
   if ([RXRConfig rxr_canHandleError]) {
-    NSDictionary *userInfo = webView.URL ? @{errorUserInfoURLKey: webView.URL} : nil;
-    NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:400 userInfo:userInfo];
-    [RXRConfig rxr_reporter:self handleError:error];
+    [RXRConfig rxr_handleError:error fromReporter:self];
   }
 
   [self _rxr_resetControllerAppearance];

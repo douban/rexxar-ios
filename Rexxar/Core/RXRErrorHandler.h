@@ -11,5 +11,5 @@
 FOUNDATION_EXPORT const NSString * _Nonnull errorUserInfoURLKey;
 
 @protocol RXRErrorHandler <NSObject>
-- (void)reporter:(nullable id)reporter didReceiveError:(nullable NSError *)error;
+- (void)handleError:(nullable NSError *)error fromReporter:(nullable id)reporter;
 @end
