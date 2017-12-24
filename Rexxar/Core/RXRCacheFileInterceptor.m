@@ -21,7 +21,7 @@ static NSInteger sRegisterInterceptorCounter;
 @property (nonatomic, strong) NSURLSessionTask *dataTask;
 @property (nonatomic, copy) NSArray *modes;
 @property (nonatomic, strong) NSFileHandle *fileHandle;
-@property (nonatomic, strong) NSString *responseDataFilePath;
+@property (nonatomic, copy) NSString *responseDataFilePath;
 
 @end
 
@@ -43,38 +43,30 @@ static NSInteger sRegisterInterceptorCounter;
 
 + (BOOL)registerInterceptor
 {
-  __block BOOL result;
-  dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-  dispatch_barrier_sync(globalQueue, ^{
-
-    if (sRegisterInterceptorCounter <= 0) {
-      result = [NSURLProtocol registerClass:[self class]];
-      if (result) {
-        sRegisterInterceptorCounter = 1;
-      }
-    } else {
-      sRegisterInterceptorCounter++;
-      result = YES;
+  BOOL result = NO;
+  if (sRegisterInterceptorCounter <= 0) {
+    result = [NSURLProtocol registerClass:[self class]];
+    if (result) {
+      sRegisterInterceptorCounter = 1;
     }
-
-  });
-
+  }
+  else {
+    sRegisterInterceptorCounter++;
+    result = YES;
+  }
   return result;
 }
 
 + (void)unregisterInterceptor
 {
-  dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-  dispatch_barrier_async(globalQueue, ^{
-    sRegisterInterceptorCounter--;
-    if (sRegisterInterceptorCounter < 0) {
-      sRegisterInterceptorCounter = 0;
-    }
+  sRegisterInterceptorCounter--;
+  if (sRegisterInterceptorCounter < 0) {
+    sRegisterInterceptorCounter = 0;
+  }
 
-    if (sRegisterInterceptorCounter == 0) {
-      [NSURLProtocol unregisterClass:[self class]];
-    }
-  });
+  if (sRegisterInterceptorCounter == 0) {
+    [NSURLProtocol unregisterClass:[self class]];
+  }
 }
 
 

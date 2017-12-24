@@ -39,8 +39,9 @@
   if (self) {
     _uri = [uri copy];
     _htmlFileURL = [htmlFileURL copy];
-
     _reloadRecord = [NSMutableDictionary dictionary];
+    
+    [RXRCacheFileInterceptor registerInterceptor];
   }
   return self;
 }
@@ -55,7 +56,6 @@
   [super viewDidLoad];
 
   [self reloadWebView];
-  [RXRCacheFileInterceptor registerInterceptor];
 }
 
 - (void)viewWillAppear:(BOOL)animated
