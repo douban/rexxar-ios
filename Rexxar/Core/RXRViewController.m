@@ -33,6 +33,20 @@
 
 #pragma mark - LifeCycle
 
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+  NSAssert(NO, @"Use initWithURI:htmlFileURL:");
+
+  return [self initWithURI:[NSURL URLWithString:@"http"] htmlFileURL:nil];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+  NSAssert(NO, @"Use initWithURI:htmlFileURL:");
+
+  return [self initWithURI:[NSURL URLWithString:@"http"] htmlFileURL:nil];
+}
+
 - (instancetype)initWithURI:(NSURL *)uri htmlFileURL:(NSURL *)htmlFileURL
 {
   self = [super initWithNibName:nil bundle:nil];
