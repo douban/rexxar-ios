@@ -67,7 +67,7 @@ static NSArray<id<RXRDecorator>> *_decorators;
     }
   }
 
-  // 由于在 iOS9 及一下版本对 WKWebView 缓存支持不好，所有的请求不使用缓存
+  // 由于在 iOS9 及以下版本对 WKWebView 缓存支持不好，所有的请求不使用缓存
   if ([[[UIDevice currentDevice] systemVersion] compare:@"10.0" options:NSNumericSearch] == NSOrderedAscending) {
     [newRequest setValue:nil forHTTPHeaderField:@"If-None-Match"];
     [newRequest setValue:nil forHTTPHeaderField:@"If-Modified-Since"];
