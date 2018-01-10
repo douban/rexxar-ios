@@ -330,7 +330,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 
 - (void)_rxr_onPageDestroy
 {
-  [self callJavaScript:@"window.Rexxar.Lifecycle.onPageDestroy()" jsonParameter:nil];
+  [self callJavaScript:@"window.Rexxar.Lifecycle.onPageDestroy" jsonParameter:nil];
 }
 
 @end
