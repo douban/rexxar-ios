@@ -88,6 +88,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)cleanCache;
 
+
+/**
+ 获取缓存文件大小
+
+ @return 缓存文件大小
+ */
+- (NSUInteger)cacheFileSize;
+
 @end
 
 NS_ASSUME_NONNULL_END

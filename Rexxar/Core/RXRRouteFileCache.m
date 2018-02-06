@@ -99,6 +99,11 @@ static NSString * const RoutesMapFile = @"routes.json";
                            error:NULL];
 }
 
+- (NSUInteger)cacheFileSize
+{
+  return [self _rxr_fileSizeAtPath:self.cachePath];
+}
+
 - (void)saveRoutesMapFile:(NSData *)data
 {
   NSString *filePath = [self.cachePath stringByAppendingPathComponent:RoutesMapFile];
@@ -188,6 +193,29 @@ static NSString * const RoutesMapFile = @"routes.json";
     filename = url.path;
   }
   return [self.resourcePath stringByAppendingPathComponent:filename];
+}
+
+- (NSUInteger)_rxr_fileSizeAtPath:(NSString *)path
+{
+  NSFileManager *manager = [NSFileManager defaultManager];
+  NSUInteger totalSize = 0;
+  NSArray<NSString *> *contents = [manager contentsOfDirectoryAtPath:path error:nil];
+
+  for (NSString *name in contents) {
+    NSString *itemPath = [path stringByAppendingPathComponent:name];
+    NSDictionary<NSFileAttributeKey, id> *attrs = [manager attributesOfItemAtPath:itemPath error:nil];
+    NSFileAttributeType type = [attrs objectForKey:NSFileType];
+    if (!type) {
+      continue;
+    }
+    if ([type isEqualToString:NSFileTypeDirectory]) {
+      totalSize += [self _rxr_fileSizeAtPath:itemPath];
+    } else if ([attrs objectForKey:NSFileSize]) {
+      totalSize += [[attrs objectForKey:NSFileSize] unsignedIntegerValue];
+    }
+  }
+
+  return totalSize;
 }
 
 @end
