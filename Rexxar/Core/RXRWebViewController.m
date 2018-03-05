@@ -29,7 +29,8 @@
   self = [super initWithNibName:nil bundle:nil];
   if (self != nil) {
     WKWebViewConfiguration *webConfiguration = [[WKWebViewConfiguration alloc] init];
-    webConfiguration.mediaPlaybackRequiresUserAction = YES;
+    webConfiguration.mediaPlaybackRequiresUserAction = NO;
+    webConfiguration.allowsInlineMediaPlayback = YES;
     webConfiguration.processPool = [self _rxr_sharedProcessPool];
 
     // iOS9
