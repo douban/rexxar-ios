@@ -35,11 +35,13 @@
 
     // iOS9
     if ([webConfiguration respondsToSelector:@selector(websiteDataStore)]) {
+      webConfiguration.requiresUserActionForMediaPlayback = NO;
       webConfiguration.websiteDataStore = [WKWebsiteDataStore defaultDataStore];
     }
 
     // iOS10
     if ([webConfiguration respondsToSelector:@selector(dataDetectorTypes)]) {
+      webConfiguration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
       webConfiguration.dataDetectorTypes = WKDataDetectorTypeLink | WKDataDetectorTypePhoneNumber;
     }
 
