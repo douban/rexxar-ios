@@ -109,7 +109,10 @@
 {
   if ([request.URL isFileURL]) {
     if ([_webView respondsToSelector:@selector(loadFileURL:allowingReadAccessToURL:)]) {
-      [_webView loadFileURL:request.URL allowingReadAccessToURL:[request.URL URLByDeletingLastPathComponent]];
+      NSURLComponents *comp = [NSURLComponents componentsWithURL:request.URL resolvingAgainstBaseURL:YES];
+      comp.query = nil;
+      NSURL *allowingURL = [comp.URL URLByDeletingLastPathComponent];
+      [_webView loadFileURL:request.URL allowingReadAccessToURL:allowingURL];
     } else {
       NSFileManager *m = [NSFileManager defaultManager];
       NSURL *sourceURL = [NSURL fileURLWithPath:request.URL.path];
@@ -250,7 +253,12 @@
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
 {
-  [webView reload];
+  if ([self.delegate respondsToSelector:@selector(webViewWebContentProcessDidTerminate:)]) {
+    [self.delegate webViewWebContentProcessDidTerminate:webView];
+  }
+  else {
+    [webView reload];
+  }
 }
 
 - (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
@@ -383,3 +391,4 @@
 }
 
 @end
+
