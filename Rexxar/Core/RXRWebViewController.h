@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)webViewDidStartLoad:(WKWebView *)webView;
 - (void)webViewDidFinishLoad:(WKWebView *)webView;
 - (void)webView:(WKWebView *)webView didFailLoadWithError:(nullable NSError *)error;
-- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView;
+- (void)webViewDidTerminate:(WKWebView *)webView;
 @end
 
 @interface RXRWebViewController : UIViewController <RXRWebViewDelegate>
