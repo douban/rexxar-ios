@@ -253,8 +253,8 @@
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
 {
-  if ([self.delegate respondsToSelector:@selector(webViewWebContentProcessDidTerminate:)]) {
-    [self.delegate webViewWebContentProcessDidTerminate:webView];
+  if ([self.delegate respondsToSelector:@selector(webViewDidTerminate:)]) {
+    [self.delegate webViewDidTerminate:webView];
   }
   else {
     [webView reload];
