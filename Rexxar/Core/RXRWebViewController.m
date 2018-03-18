@@ -24,50 +24,26 @@
 @implementation RXRWebViewController
 @synthesize webView = _webView;
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-  self = [super initWithNibName:nil bundle:nil];
-  if (self != nil) {
-    WKWebViewConfiguration *webConfiguration = [[WKWebViewConfiguration alloc] init];
-    webConfiguration.mediaPlaybackRequiresUserAction = NO;
-    webConfiguration.allowsInlineMediaPlayback = YES;
-    webConfiguration.processPool = [self _rxr_sharedProcessPool];
-
-    // iOS9
-    if ([webConfiguration respondsToSelector:@selector(websiteDataStore)]) {
-      webConfiguration.requiresUserActionForMediaPlayback = NO;
-      webConfiguration.websiteDataStore = [WKWebsiteDataStore defaultDataStore];
-    }
-
-    // iOS10
-    if ([webConfiguration respondsToSelector:@selector(dataDetectorTypes)]) {
-      webConfiguration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
-      webConfiguration.dataDetectorTypes = WKDataDetectorTypeLink | WKDataDetectorTypePhoneNumber;
-    }
-
-    _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
-  }
-  return self;
-}
-
 - (void)viewDidLoad
 {
   [super viewDidLoad];
   [self setAutomaticallyAdjustsScrollViewInsets:NO];
-  [self setDelegate:self];
+  self.delegate = self;
 
-  _webView.navigationDelegate = self;
-  _webView.UIDelegate = self;
-  _webView.scrollView.delegate = self;
+  _webView = [self _frd_createWebView];
   [self.view addSubview:_webView];
-
-  [self _rxr_registerWebViewCustomSchemes];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-  [self _rxr_registerWebViewCustomSchemes];
+
+  if (_webView.URL == nil) {  // means webContentProcess is terminated
+    [_webView removeFromSuperview];
+    _webView = [self _frd_createWebView];
+    [self.view addSubview:_webView];
+    [self.view setNeedsLayout];
+  }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -131,6 +107,25 @@
   }
 }
 
+#pragma mark - NSURLProtocol
+
+/**
+ 解决 WKWebView 不支持 URLProtocol 的问题
+ http://stackoverflow.com/questions/24208229/wkwebview-and-nsurlprotocol-not-working
+ */
+- (void)_rxr_registerWebViewCustomSchemes:(WKWebView *)webView
+{
+  Class klass = [[webView valueForKey:@"browsingContextController"] class];
+  SEL sel = NSSelectorFromString(@"registerSchemeForCustomProtocol:");
+  if ([(id)klass respondsToSelector:sel]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [(id)klass performSelector:sel withObject:@"https"];
+    [(id)klass performSelector:sel withObject:@"http"];
+#pragma clang diagnostic pop
+  }
+}
+
 #pragma mark - Private Methods
 
 - (WKProcessPool *)_rxr_sharedProcessPool
@@ -145,26 +140,34 @@
   return instance;
 }
 
-#pragma mark - NSURLProtocol
-
-/**
- 解决 WKWebView 不支持 URLProtocol 的问题
- http://stackoverflow.com/questions/24208229/wkwebview-and-nsurlprotocol-not-working
- */
-- (void)_rxr_registerWebViewCustomSchemes
+- (WKWebView *)_frd_createWebView
 {
-  Class klass = [[_webView valueForKey:@"browsingContextController"] class];
-  SEL sel = NSSelectorFromString(@"registerSchemeForCustomProtocol:");
-  if ([(id)klass respondsToSelector:sel]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [(id)klass performSelector:sel withObject:@"https"];
-    [(id)klass performSelector:sel withObject:@"http"];
-#pragma clang diagnostic pop
-  }
-}
+  WKWebViewConfiguration *webConfiguration = [[WKWebViewConfiguration alloc] init];
+  webConfiguration.mediaPlaybackRequiresUserAction = NO;
+  webConfiguration.allowsInlineMediaPlayback = YES;
+  webConfiguration.processPool = [self _rxr_sharedProcessPool];
 
-#pragma mark - Private Methods
+  // iOS9
+  if ([webConfiguration respondsToSelector:@selector(websiteDataStore)]) {
+    webConfiguration.requiresUserActionForMediaPlayback = NO;
+    webConfiguration.websiteDataStore = [WKWebsiteDataStore defaultDataStore];
+  }
+
+  // iOS10
+  if ([webConfiguration respondsToSelector:@selector(dataDetectorTypes)]) {
+    webConfiguration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
+    webConfiguration.dataDetectorTypes = WKDataDetectorTypeLink | WKDataDetectorTypePhoneNumber;
+  }
+
+  WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
+  webView.navigationDelegate = self;
+  webView.UIDelegate = self;
+  webView.scrollView.delegate = self;
+
+  [self _rxr_registerWebViewCustomSchemes:webView];
+
+  return webView;
+}
 
 - (void)_rxr_resetControllerAppearance
 {
@@ -255,9 +258,6 @@
 {
   if ([self.delegate respondsToSelector:@selector(webViewDidTerminate:)]) {
     [self.delegate webViewDidTerminate:webView];
-  }
-  else {
-    [webView reload];
   }
 }
 
@@ -391,4 +391,3 @@
 }
 
 @end
-

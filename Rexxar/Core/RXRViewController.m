@@ -250,6 +250,11 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
   decisionHandler(WKNavigationResponsePolicyAllow);
 }
 
+- (void)webViewDidTerminate:(WKWebView *)webView
+{
+  [self reloadWebView];
+}
+
 #pragma mark - Private Methods
 
 - (NSURL *)_rxr_htmlURLWithUri:(NSURL *)uri htmlFileURL:(NSURL *)htmlFileURL
