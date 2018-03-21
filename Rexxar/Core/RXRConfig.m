@@ -23,6 +23,7 @@ static BOOL sIsCacheEnable = YES;
 static id<RXRLogger> sLogger;
 static id<RXRErrorHandler> sErrorHandler;
 static NSInteger sReloadLimitWhen404 = 2;
+static NSURLSessionConfiguration *sURLSessionConfiguration;
 
 static NSString * const DefaultRXRScheme = @"douban";
 static NSString * const DefaultRXRHost = @"rexxar-container";
@@ -171,7 +172,7 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
   }
 }
 
-+(BOOL)isCacheEnable
++ (BOOL)isCacheEnable
 {
   return sIsCacheEnable;
 }
@@ -179,6 +180,19 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
 + (void)setHTMLFileDataValidator:(id<RXRDataValidator>)dataValidator
 {
   [RXRRouteManager sharedInstance].dataValidator = dataValidator;
+}
+
++ (NSURLSessionConfiguration *)requestsURLSessionConfiguration
+{
+  if (!sURLSessionConfiguration) {
+    return [NSURLSessionConfiguration defaultSessionConfiguration];
+  }
+  return sURLSessionConfiguration;
+}
+
++ (void)setRequestsURLSessionConfiguration:(NSURLSessionConfiguration *)sessionConfiguration
+{
+  sURLSessionConfiguration = sessionConfiguration;
 }
 
 @end
