@@ -7,6 +7,7 @@
 //
 
 #import "RXRNSURLProtocol.h"
+#import "RXRConfig.h"
 #import "RXRURLSessionDemux.h"
 #import "NSHTTPURLResponse+Rexxar.h"
 
@@ -20,7 +21,7 @@ static NSMutableDictionary *sRegisteredClassCounter;
   static RXRURLSessionDemux *demux;
 
   dispatch_once(&onceToken, ^{
-    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSessionConfiguration *sessionConfiguration = [RXRConfig requestsURLSessionConfiguration];
     demux = [[RXRURLSessionDemux alloc] initWithSessionConfiguration:sessionConfiguration];
   });
 

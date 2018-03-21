@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * 读取 rxrProtocolHost。
- * 
+ *
  * @discussion Rexxar-Container 实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
  * `rxrProtocolHost` 是对这些特定请求的 host 的商定。如不设置，缺省为 rexxar-container。
  */
@@ -128,6 +128,16 @@ NS_ASSUME_NONNULL_BEGIN
  设置 `RXRDataValidator`。设置后，将会在下载 HTML file 时验证文件合法性（可用来做完整性检验）。
  */
 + (void)setHTMLFileDataValidator:(id<RXRDataValidator>)dataValidator;
+
+/**
+ 设置 Rexxar 所有请求的 URLSessionConfiguration
+ */
++ (void)setRequestsURLSessionConfiguration:(NSURLSessionConfiguration *)sessionConfiguration;
+
+/**
+ 获取 Rexxar 所有请求的 URLSessionConfiguration
+ */
++ (NSURLSessionConfiguration *)requestsURLSessionConfiguration;
 
 @end
 
