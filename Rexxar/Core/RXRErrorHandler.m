@@ -8,4 +8,8 @@
 
 @import Foundation;
 
-const NSString *errorUserInfoURLKey = @"errorUserInfoURLKey";
+const NSString *rxrErrorUserInfoURLKey = @"rxrErrorUserInfoURLKey";
+
+const NSString *rxrHttpErrorDomain = @"rxrHttpErrorDomain";
+const NSInteger rxrHttpResponseErrorNotFound = 404;
+

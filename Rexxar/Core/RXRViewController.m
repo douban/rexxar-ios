@@ -239,8 +239,8 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
       [RXRConfig rxr_logWithLogObject:logObj];
     }
     if ([RXRConfig rxr_canHandleError]) {
-      NSDictionary *userInfo = httpResponse.URL ? @{errorUserInfoURLKey: httpResponse.URL} : nil;
-      NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:404 userInfo:userInfo];
+      NSDictionary *userInfo = httpResponse.URL ? @{rxrErrorUserInfoURLKey: httpResponse.URL} : nil;
+      NSError *error = [NSError errorWithDomain:rxrHttpErrorDomain code:rxrHttpResponseErrorNotFound userInfo:userInfo];
       [RXRConfig rxr_handleError:error fromReporter:self];
     }
 

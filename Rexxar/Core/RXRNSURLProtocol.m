@@ -8,6 +8,7 @@
 
 #import "RXRNSURLProtocol.h"
 #import "RXRConfig.h"
+#import "RXRConfig+Rexxar.h"
 #import "RXRURLSessionDemux.h"
 #import "NSHTTPURLResponse+Rexxar.h"
 
@@ -155,7 +156,17 @@ didCompleteWithError:(nullable NSError *)error
     } else if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
       // Do nothing.
     } else {
-      [[self client] URLProtocol:self didFailWithError:error];
+      NSHTTPURLResponse *response = [NSHTTPURLResponse rxr_responseWithURL:task.currentRequest.URL
+                                                                statusCode:9000
+                                                              headerFields:nil
+                                                           noAccessControl:YES];
+
+      [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+
+      // Browser will ignore this error through the response 9000, throw this error to native.
+      if ([RXRConfig rxr_canHandleError]) {
+        [RXRConfig rxr_handleError:error fromReporter:self];
+      }
     }
   }
 }
