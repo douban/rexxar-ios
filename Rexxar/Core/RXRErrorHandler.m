@@ -8,4 +8,12 @@
 
 @import Foundation;
 
-const NSString *errorUserInfoURLKey = @"errorUserInfoURLKey";
+const NSString *rxrErrorUserInfoURLKey = @"rxrErrorUserInfoURLKey";
+
+NSErrorDomain rxrHttpErrorDomain = @"rxrHttpErrorDomain";
+const NSInteger rxrHttpResponseErrorNotFound = 404;
+
+// In order not to be conflicated with other official HTTP status code from 1xx to 5xx, we choose to use 999 to
+// indicate URLProtocol loading error.
+const NSInteger rxrHttpResponseURLProtocolError = 999;
+

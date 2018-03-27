@@ -8,8 +8,10 @@
 
 #import "RXRNSURLProtocol.h"
 #import "RXRConfig.h"
+#import "RXRConfig+Rexxar.h"
 #import "RXRURLSessionDemux.h"
 #import "NSHTTPURLResponse+Rexxar.h"
+#import "RXRErrorHandler.h"
 
 static NSMutableDictionary *sRegisteredClassCounter;
 
@@ -155,7 +157,20 @@ didCompleteWithError:(nullable NSError *)error
     } else if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
       // Do nothing.
     } else {
-      [[self client] URLProtocol:self didFailWithError:error];
+      // Here we don't call `URLProtocol:didFailWithError:` method because browser may not be able to handle `error`
+      // object correctly. Instead we return HTTP response manually and you can handle this response easily
+      // in frodo-rexxar (https://github.intra.douban.com/frodo/frodo-rexxar). In addition, we alse leave chance for
+      // native code to handle the error through `rxr_handleError:fromReporter:` method.
+      NSHTTPURLResponse *response = [NSHTTPURLResponse rxr_responseWithURL:task.currentRequest.URL
+                                                                statusCode:rxrHttpResponseURLProtocolError
+                                                              headerFields:nil
+                                                           noAccessControl:YES];
+
+      [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+
+      if ([RXRConfig rxr_canHandleError]) {
+        [RXRConfig rxr_handleError:error fromReporter:self];
+      }
     }
   }
 }
