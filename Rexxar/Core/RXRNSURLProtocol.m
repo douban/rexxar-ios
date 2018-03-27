@@ -159,7 +159,7 @@ didCompleteWithError:(nullable NSError *)error
     } else {
       // Here we don't call `URLProtocol:didFailWithError:` method because browser may not be able to handle `error`
       // object correctly. Instead we return HTTP response manually and you can handle this response easily
-      // in frodo-rexxar (https://github.intra.douban.com/frodo/frodo-rexxar). In addition, we alse leave chance for
+      // in rexxar-web (https://github.com/douban/rexxar-web). In addition, we alse leave chance for
       // native code to handle the error through `rxr_handleError:fromReporter:` method.
       NSHTTPURLResponse *response = [NSHTTPURLResponse rxr_responseWithURL:task.currentRequest.URL
                                                                 statusCode:rxrHttpResponseURLProtocolError
