@@ -18,6 +18,8 @@
 @interface RXRRouteManager ()
 
 @property (nonatomic, strong) NSURLSession *session;
+@property (nonatomic, strong) NSURLSessionConfiguration *sessionConfiguration;
+@property (nonatomic, strong) NSOperationQueue *sessionDelegateQueue;
 
 @property (nonatomic, copy) NSArray<RXRRoute *> *routes;
 @property (nonatomic, assign) BOOL updatingRoutes;
@@ -43,11 +45,14 @@
 {
   self = [super init];
   if (self) {
-    NSURLSessionConfiguration *sessionCfg = [NSURLSessionConfiguration defaultSessionConfiguration];
-    _session = [NSURLSession sessionWithConfiguration:sessionCfg
-                                             delegate:nil
-                                        delegateQueue:[[NSOperationQueue alloc] init]];
-
+    NSString *sessionName = [NSString stringWithFormat:@"%@.%@.%p.URLSession", [[NSBundle mainBundle] bundleIdentifier], NSStringFromClass([self class]), self];
+    NSString *delegateQueueName = [NSString stringWithFormat:@"%@.delegateQueue", sessionName];
+    _sessionConfiguration = [[RXRConfig requestsURLSessionConfiguration] copy];
+    _sessionDelegateQueue = [[NSOperationQueue alloc] init];
+    _sessionDelegateQueue.maxConcurrentOperationCount = 1;
+    _sessionDelegateQueue.name = delegateQueueName;
+    _session = [NSURLSession sessionWithConfiguration:_sessionConfiguration delegate:nil delegateQueue:_sessionDelegateQueue];
+    _session.sessionDescription = sessionName;
     _updateRoutesCompletions = [NSMutableArray array];
   }
   return self;
