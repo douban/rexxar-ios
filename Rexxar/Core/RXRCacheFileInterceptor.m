@@ -13,13 +13,8 @@
 #import "RXRLogger.h"
 #import "NSURL+Rexxar.h"
 
-static NSString * const RXRCacheFileIntercepterHandledKey = @"RXRCacheFileIntercepterHandledKey";
-static NSInteger sRegisterInterceptorCounter;
-
 @interface RXRCacheFileInterceptor () <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
-@property (nonatomic, strong) NSURLSessionTask *dataTask;
-@property (nonatomic, copy) NSArray *modes;
 @property (nonatomic, strong) NSFileHandle *fileHandle;
 @property (nonatomic, copy) NSString *responseDataFilePath;
 
@@ -27,50 +22,6 @@ static NSInteger sRegisterInterceptorCounter;
 
 
 @implementation RXRCacheFileInterceptor
-
-+ (RXRURLSessionDemux *)sharedDemux
-{
-  static dispatch_once_t onceToken;
-  static RXRURLSessionDemux *demux;
-
-  dispatch_once(&onceToken, ^{
-    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    demux = [[RXRURLSessionDemux alloc] initWithSessionConfiguration:sessionConfiguration];
-  });
-
-  return demux;
-}
-
-+ (BOOL)registerInterceptor
-{
-  BOOL result = NO;
-  if (sRegisterInterceptorCounter <= 0) {
-    result = [NSURLProtocol registerClass:[self class]];
-    if (result) {
-      sRegisterInterceptorCounter = 1;
-    }
-  }
-  else {
-    sRegisterInterceptorCounter++;
-    result = YES;
-  }
-  return result;
-}
-
-+ (void)unregisterInterceptor
-{
-  sRegisterInterceptorCounter--;
-  if (sRegisterInterceptorCounter < 0) {
-    sRegisterInterceptorCounter = 0;
-  }
-
-  if (sRegisterInterceptorCounter == 0) {
-    [NSURLProtocol unregisterClass:[self class]];
-  }
-}
-
-
-#pragma mark - NSURLProtocol
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request
 {
@@ -103,19 +54,29 @@ static NSInteger sRegisterInterceptorCounter;
 - (void)startLoading
 {
   NSParameterAssert(self.dataTask == nil);
-
   RXRDebugLog(@"Intercept <%@> within <%@>", self.request.URL, self.request.mainDocumentURL);
+
+  NSURL *localURL = [[self class] _rxr_localFileURL:self.request.URL];
+  if (localURL) {
+    NSData *data = [NSData dataWithContentsOfURL:localURL];
+    if ([data length] > 0) {
+      NSHTTPURLResponse *response = [NSHTTPURLResponse rxr_responseWithURL:self.request.URL
+                                                                statusCode:200
+                                                              headerFields:nil
+                                                           noAccessControl:YES];
+      [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+      [self.client URLProtocol:self didLoadData:data];
+      [self.client URLProtocolDidFinishLoading:self];
+
+      return;
+    }
+  }
 
   NSMutableURLRequest *newRequest = nil;
   if ([self.request isKindOfClass:[NSMutableURLRequest class]]) {
     newRequest = (NSMutableURLRequest *)self.request;
   } else {
     newRequest = [self.request mutableCopy];
-  }
-
-  NSURL *localURL = [[self class] _rxr_localFileURL:self.request.URL];
-  if (localURL) {
-    newRequest.URL = localURL;
   }
 
   [[self class] markRequestAsIgnored:newRequest];
@@ -132,14 +93,6 @@ static NSInteger sRegisterInterceptorCounter;
   NSURLSessionTask *dataTask = [[[self class] sharedDemux] dataTaskWithRequest:newRequest delegate:self modes:self.modes];
   [dataTask resume];
   [self setDataTask:dataTask];
-}
-
-- (void)stopLoading
-{
-  if (self.dataTask != nil) {
-    [self.dataTask cancel];
-    [self setDataTask:nil];
-  }
 }
 
 #pragma mark - NSURLSessionDataDelegate
@@ -205,7 +158,7 @@ didReceiveResponse:(NSURLResponse *)response
               task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error
 {
-  if (self.client != nil && (_dataTask == nil || _dataTask == task)) {
+  if (self.client != nil && (self.dataTask == nil || self.dataTask == task)) {
     if (error == nil) {
       if ([[self class] shouldInterceptRequest:task.currentRequest] && self.fileHandle) {
         [self.fileHandle closeFile];
@@ -243,24 +196,6 @@ didCompleteWithError:(nullable NSError *)error
   return NO;
 }
 
-+ (void)markRequestAsIgnored:(NSMutableURLRequest *)request
-{
-  [NSURLProtocol setProperty:@YES forKey:RXRCacheFileIntercepterHandledKey inRequest:request];
-}
-
-+ (void)unmarkRequestAsIgnored:(NSMutableURLRequest *)request
-{
-  [NSURLProtocol removePropertyForKey:RXRCacheFileIntercepterHandledKey inRequest:request];
-}
-
-+ (BOOL)isRequestIgnored:(NSURLRequest *)request
-{
-  if ([NSURLProtocol propertyForKey:RXRCacheFileIntercepterHandledKey inRequest:request]) {
-    return YES;
-  }
-  return NO;
-}
-
 #pragma mark - Private methods
 
 + (NSURL *)_rxr_localFileURL:(NSURL *)remoteURL
@@ -274,8 +209,11 @@ didCompleteWithError:(nullable NSError *)error
 
 + (BOOL)_rxr_isCacheableResponse:(NSURLResponse *)response
 {
-  NSSet *cacheableTypes = [NSSet setWithObjects:@"application/javascript", @"application/x-javascript",
-                           @"text/javascript", @"text/css", @"text/html", nil];
+  NSSet *cacheableTypes = [NSSet setWithObjects:@"application/javascript",
+                           @"application/x-javascript",
+                           @"text/javascript",
+                           @"text/css",
+                           @"text/html", nil];
   return [cacheableTypes containsObject:response.MIMEType];
 }
 

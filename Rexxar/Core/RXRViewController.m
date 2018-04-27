@@ -55,7 +55,7 @@
     _htmlFileURL = [htmlFileURL copy];
     _reloadRecord = [NSMutableDictionary dictionary];
     
-    [RXRCacheFileInterceptor registerInterceptor];
+    [RXRCacheFileInterceptor registerRXRProtocolClass:[RXRCacheFileInterceptor class]];
   }
   return self;
 }
@@ -91,7 +91,7 @@
 
 - (void)dealloc
 {
-  [RXRCacheFileInterceptor unregisterInterceptor];
+  [RXRCacheFileInterceptor unregisterRXRProtocolClass:[RXRCacheFileInterceptor class]];
   [self _rxr_onPageDestroy];
 }
 

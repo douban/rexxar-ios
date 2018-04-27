@@ -25,12 +25,12 @@
   [RXRConfig setRoutesResourcePath:resourcePath];
 
   [RXRConfig setRoutesCachePath:[[NSUUID UUID] UUIDString]];
-  [RXRCacheFileInterceptor registerInterceptor];
+  [RXRCacheFileInterceptor registerRXRProtocolClass:[RXRCacheFileInterceptor class]];
 }
 
 + (void)tearDown
 {
-  [RXRCacheFileInterceptor unregisterInterceptor];
+  [RXRCacheFileInterceptor unregisterRXRProtocolClass:[RXRCacheFileInterceptor class]];
 }
 
 
