@@ -278,7 +278,6 @@
 				A3249A061D66EF27006CCCCB /* Library */,
 				A39964791D549DB700813A60 /* Widget */,
 				A399647A1D549DB700813A60 /* ContainerAPI */,
-				A399647B1D549DB700813A60 /* Decorator */,
 				98B47B141BF1E0F20087735C /* AppDelegate.swift */,
 				B9E27ED31C054A7A00C12DAF /* RoutesViewController.swift */,
 				A3249A191D66F941006CCCCB /* FullRXRViewController.swift */,
@@ -462,13 +461,6 @@
 				A35E72341D7FCBD300D38BC0 /* RXRGeoContainerAPI.m */,
 			);
 			path = ContainerAPI;
-			sourceTree = "<group>";
-		};
-		A399647B1D549DB700813A60 /* Decorator */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Decorator;
 			sourceTree = "<group>";
 		};
 		B90EBEBD1BFEAA830055D477 /* RexxarTests */ = {
