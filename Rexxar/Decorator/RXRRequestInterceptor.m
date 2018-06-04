@@ -51,11 +51,29 @@ static NSArray<id<RXRDecorator>> *_decorators;
 
 - (void)startLoading
 {
+  NSMutableURLRequest *newRequest = [self _rxr_decorateRequest:self.request];
+  NSMutableArray *modes = [NSMutableArray array];
+  [modes addObject:NSDefaultRunLoopMode];
+
+  NSString *currentMode = [[NSRunLoop currentRunLoop] currentMode];
+  if (currentMode != nil && ![currentMode isEqualToString:NSDefaultRunLoopMode]) {
+    [modes addObject:currentMode];
+  }
+  [self setModes:modes];
+
+  NSURLSessionTask *dataTask = [[[self class] sharedDemux] dataTaskWithRequest:newRequest delegate:self modes:self.modes];
+  [dataTask resume];
+  [self setDataTask:dataTask];
+}
+
+- (NSURLRequest *)_rxr_decorateRequest:(NSURLRequest *)request
+{
   NSMutableURLRequest *newRequest = nil;
-  if ([self.request isKindOfClass:[NSMutableURLRequest class]]) {
-    newRequest = (NSMutableURLRequest *)self.request;
+
+  if ([request isKindOfClass:[NSMutableURLRequest class]]) {
+    newRequest = (NSMutableURLRequest *)request;
   } else {
-    newRequest = [self.request mutableCopy];
+    newRequest = [request mutableCopy];
   }
 
   for (id<RXRDecorator> decorator in _decorators) {
@@ -75,18 +93,21 @@ static NSArray<id<RXRDecorator>> *_decorators;
 
   [[self class] markRequestAsIgnored:newRequest];
 
-  NSMutableArray *modes = [NSMutableArray array];
-  [modes addObject:NSDefaultRunLoopMode];
+  return newRequest;
+}
 
-  NSString *currentMode = [[NSRunLoop currentRunLoop] currentMode];
-  if (currentMode != nil && ![currentMode isEqualToString:NSDefaultRunLoopMode]) {
-    [modes addObject:currentMode];
-  }
-  [self setModes:modes];
+#pragma mark - NSURLSessionDelegate
 
-  NSURLSessionTask *dataTask = [[[self class] sharedDemux] dataTaskWithRequest:newRequest delegate:self modes:self.modes];
-  [dataTask resume];
-  [self setDataTask:dataTask];
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+willPerformHTTPRedirection:(NSHTTPURLResponse *)response
+        newRequest:(NSURLRequest *)request
+ completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler
+{
+  NSMutableURLRequest *newRequest = [task.currentRequest mutableCopy];
+  [newRequest setURL:request.URL];
+
+  newRequest = [self _rxr_decorateRequest:newRequest];
+  completionHandler(newRequest);
 }
 
 @end
