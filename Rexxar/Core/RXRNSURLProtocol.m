@@ -136,14 +136,10 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
         newRequest:(NSURLRequest *)request
  completionHandler:(void (^)(NSURLRequest *_Nullable))completionHandler
 {
-  if ([self client] != nil && [self dataTask] == task) {
-    NSMutableURLRequest *mutableRequest = [request mutableCopy];
-    [[self class] unmarkRequestAsIgnored:mutableRequest];
-    [[self client] URLProtocol:self wasRedirectedToRequest:mutableRequest redirectResponse:response];
-
-    NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
-    [self.dataTask cancel];
-    [self.client URLProtocol:self didFailWithError:error];
+  if ([self client] != nil && _dataTask == task) {
+    NSMutableURLRequest *mutableRequest = [_dataTask.currentRequest mutableCopy];
+    [mutableRequest setURL:request.URL];
+    completionHandler(mutableRequest);
   }
 }
 
