@@ -71,14 +71,17 @@
 {
   [super viewDidLayoutSubviews];
 
-  _webView.frame = ({
-    CGRect frame = CGRectZero;
-    frame.origin.x = 0;
-    frame.origin.y = self.topLayoutGuide.length;
-    frame.size.width = CGRectGetWidth(self.view.bounds);
-    frame.size.height = CGRectGetHeight(self.view.bounds) - self.topLayoutGuide.length;
-    frame;
-  });
+  _webView.frame = [self webViewFrame];
+}
+
+- (CGRect)webViewFrame
+{
+  CGRect frame = CGRectZero;
+  frame.origin.x = 0;
+  frame.origin.y = self.topLayoutGuide.length;
+  frame.size.width = CGRectGetWidth(self.view.bounds);
+  frame.size.height = CGRectGetHeight(self.view.bounds) - self.topLayoutGuide.length;
+  return frame;
 }
 
 - (void)loadRequest:(NSURLRequest *)request

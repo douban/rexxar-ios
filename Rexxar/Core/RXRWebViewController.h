@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) WKWebView *webView;
 
 - (void)loadRequest:(NSURLRequest *)request;
+- (CGRect)webViewFrame;
 
 @end
 
