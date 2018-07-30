@@ -30,7 +30,7 @@
   [self setAutomaticallyAdjustsScrollViewInsets:NO];
   self.delegate = self;
 
-  _webView = [self _frd_createWebView];
+  _webView = [self _rxr_createWebView];
   [self.view addSubview:_webView];
 }
 
@@ -40,7 +40,7 @@
 
   if (_webView.URL == nil) {  // means webContentProcess is terminated
     [_webView removeFromSuperview];
-    _webView = [self _frd_createWebView];
+    _webView = [self _rxr_createWebView];
     [self.view addSubview:_webView];
     [self.view setNeedsLayout];
   }
@@ -140,7 +140,7 @@
   return instance;
 }
 
-- (WKWebView *)_frd_createWebView
+- (WKWebView *)_rxr_createWebView
 {
   WKWebViewConfiguration *webConfiguration = [[WKWebViewConfiguration alloc] init];
   webConfiguration.mediaPlaybackRequiresUserAction = NO;
