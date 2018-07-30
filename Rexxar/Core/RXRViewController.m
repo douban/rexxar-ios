@@ -298,19 +298,29 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
     }
   }
 
-  if (htmlFileURL.query.length != 0 && htmlFileURL.fragment.length != 0) {
-    // 为了方便 escape 正确的 uri，做了下面的假设。之后放弃 iOS 7 后可以改用 `queryItem` 来实现。
-    // 做个合理假设：html URL 中不应该有 query string 和 fragment。
-    RXRWarnLog(@"local html 's format is not right! Url has query and fragment.");
+  if (!htmlFileURL) {
+    NSAssert(NO, @"Should not be here");
+    return nil;
   }
 
-  // `absoluteString` 返回的是已经 escape 过的文本，这里先转换为原始文本。
-  NSString *uriText = uri.absoluteString.stringByRemovingPercentEncoding;
-  // 把 uri 的原始文本所有内容全部 escape。
-  NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@""];
-  uriText = [uriText stringByAddingPercentEncodingWithAllowedCharacters:set];
+  // add uri query
+  NSURLComponents *comp = [NSURLComponents componentsWithURL:htmlFileURL resolvingAgainstBaseURL:YES];
+  if (!comp) {
+    NSAssert(NO, @"Should not be here");
+    return nil;
+  }
 
-  return  [NSURL URLWithString:[NSString stringWithFormat:@"%@?uri=%@", htmlFileURL.absoluteString, uriText]];
+  NSURLQueryItem *uriItem = [NSURLQueryItem queryItemWithName:@"uri" value:uri.absoluteString.stringByRemovingPercentEncoding];
+  NSMutableArray *queryItems = [comp.queryItems mutableCopy];
+  if (queryItems.count && uriItem) {
+    [queryItems addObject:uriItem];
+    comp.queryItems = queryItems;
+  }
+  else if (uriItem) {
+    comp.queryItems = @[uriItem];
+  }
+
+  return comp.URL;
 }
 
 - (BOOL)_rxr_openWebPage:(NSURL *)url
