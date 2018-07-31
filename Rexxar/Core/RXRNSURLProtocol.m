@@ -76,14 +76,14 @@ static NSMutableDictionary *sRegisteredClassCounter;
   NSParameterAssert([clazz isSubclassOfClass:[self class]]);
 
   BOOL result;
-  NSInteger countForClass = [self _frd_countForRegisteredClass:clazz];
+  NSInteger countForClass = [self _rxr_countForRegisteredClass:clazz];
   if (countForClass <= 0) {
     result = [NSURLProtocol registerClass:clazz];
     if (result) {
-      [self _frd_setCount:1 forRegisteredClass:clazz];
+      [self _rxr_setCount:1 forRegisteredClass:clazz];
     }
   } else {
-    [self _frd_setCount:countForClass + 1 forRegisteredClass:clazz];
+    [self _rxr_setCount:countForClass + 1 forRegisteredClass:clazz];
     result = YES;
   }
 
@@ -94,19 +94,19 @@ static NSMutableDictionary *sRegisteredClassCounter;
 {
   NSParameterAssert([clazz isSubclassOfClass:[self class]]);
 
-  NSInteger countForClass = [self _frd_countForRegisteredClass:clazz] - 1;
+  NSInteger countForClass = [self _rxr_countForRegisteredClass:clazz] - 1;
   if (countForClass <= 0) {
     [NSURLProtocol unregisterClass:clazz];
   }
 
   if (countForClass >= 0) {
-    [self _frd_setCount:countForClass forRegisteredClass:clazz];
+    [self _rxr_setCount:countForClass forRegisteredClass:clazz];
   }
 }
 
 #pragma mark - Private methods
 
-+ (NSInteger)_frd_countForRegisteredClass:(Class)clazz
++ (NSInteger)_rxr_countForRegisteredClass:(Class)clazz
 {
   NSString *key = NSStringFromClass(clazz);
   if (key && sRegisteredClassCounter && sRegisteredClassCounter[key]) {
@@ -116,7 +116,7 @@ static NSMutableDictionary *sRegisteredClassCounter;
   return 0;
 }
 
-+ (void)_frd_setCount:(NSInteger)count forRegisteredClass:(Class)clazz
++ (void)_rxr_setCount:(NSInteger)count forRegisteredClass:(Class)clazz
 {
   if (!sRegisteredClassCounter) {
     sRegisteredClassCounter = [NSMutableDictionary dictionary];

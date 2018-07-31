@@ -56,7 +56,7 @@
 
   NSMutableArray *items = [NSMutableArray array];
   [self.menuItems enumerateObjectsUsingBlock:^(RXRMenuItem *menu, NSUInteger idx, BOOL *stop) {
-    UIBarButtonItem *item = [self _frd_buildMenuItem:menu];
+    UIBarButtonItem *item = [self _rxr_buildMenuItem:menu];
     item.tag = idx;
     [items addObject:item];
   }];
@@ -66,18 +66,18 @@
 
 #pragma mark - Private methods
 
-- (void)_frd_buttonItemAction:(UIBarButtonItem *)item
+- (void)_rxr_buttonItemAction:(UIBarButtonItem *)item
 {
   RXRMenuItem *menu = self.menuItems[item.tag];
   NSLog(@"Action go to uri: %@", menu.uri);
 }
 
-- (UIBarButtonItem *)_frd_buildMenuItem:(RXRMenuItem *)menu
+- (UIBarButtonItem *)_rxr_buildMenuItem:(RXRMenuItem *)menu
 {
   UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:menu.title
                                                            style:UIBarButtonItemStylePlain
                                                           target:self
-                                                          action:@selector(_frd_buttonItemAction:)];
+                                                          action:@selector(_rxr_buttonItemAction:)];
   return item;
 }
 
