@@ -4,20 +4,25 @@ PODS:
     - MTURLProtocol (= 0.1.0)
 
 DEPENDENCIES:
+  - MTURLProtocol (from `https://github.intra.douban.com/ios/mturlprotocol`, commit `d8c73d9c03703745ea5440a1c48616cc55c77d22`)
   - Rexxar (from `../`)
 
-SPEC REPOS:
-  http://github.intra.douban.com/iOS/CocoaPodsSpecs.git:
-    - MTURLProtocol
-
 EXTERNAL SOURCES:
+  MTURLProtocol:
+    :commit: d8c73d9c03703745ea5440a1c48616cc55c77d22
+    :git: https://github.intra.douban.com/ios/mturlprotocol
   Rexxar:
     :path: "../"
 
+CHECKOUT OPTIONS:
+  MTURLProtocol:
+    :commit: d8c73d9c03703745ea5440a1c48616cc55c77d22
+    :git: https://github.intra.douban.com/ios/mturlprotocol
+
 SPEC CHECKSUMS:
-  MTURLProtocol: d0861735db3dc10ff7c2c0dee195fff9fa0b584c
+  MTURLProtocol: 11b69f2b6b27e9aafce9b6d6cedb1c8e8e76915f
   Rexxar: 5c93f7023b8a63e42e0afa0035f6209578c93c86
 
-PODFILE CHECKSUM: 1666b1f613569a9f5f0e2159fd4c466d3985bfec
+PODFILE CHECKSUM: 544622f3dd8b4ec1f99242f04de898d8bcbf0c73
 
 COCOAPODS: 1.5.2

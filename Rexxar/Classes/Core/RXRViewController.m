@@ -6,10 +6,10 @@
 //  Copyright © 2015 Douban Inc. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+@import MTURLProtocol;
 
 #import "RXRViewController.h"
-#import "RXRCacheFileInterceptor.h"
 #import "RXRRouteManager.h"
 #import "RXRLogger.h"
 #import "RXRConfig.h"
@@ -18,6 +18,9 @@
 #import "UIColor+Rexxar.h"
 #import "NSURL+Rexxar.h"
 #import "RXRErrorHandler.h"
+#import "RXRCacheFileResponseHandler.h"
+#import "RXRCacheFileRequestHandler.h"
+#import "RXRCacheFileLocalRequestHandler.h"
 
 @interface RXRViewController ()
 
@@ -54,8 +57,12 @@
     _uri = [uri copy];
     _htmlFileURL = [htmlFileURL copy];
     _reloadRecord = [NSMutableDictionary dictionary];
-    
-    [RXRCacheFileInterceptor registerRXRProtocolClass:[RXRCacheFileInterceptor class]];
+
+    RXRCacheFileResponseHandler *cacheFileResponsehandler = [RXRCacheFileResponseHandler new];
+    RXRCacheFileRequestHandler *cacheFileRequestHandler = [RXRCacheFileRequestHandler new];
+    RXRCacheFileLocalRequestHandler *cacheFileLocalRequestHandler = [RXRCacheFileLocalRequestHandler new];
+    [MTURLProtocol setRequestHandlers:@[cacheFileRequestHandler, cacheFileLocalRequestHandler]];
+    [MTURLProtocol setResponseHandlers:@[cacheFileResponsehandler]];
   }
   return self;
 }
@@ -91,7 +98,6 @@
 
 - (void)dealloc
 {
-  [RXRCacheFileInterceptor unregisterRXRProtocolClass:[RXRCacheFileInterceptor class]];
   [self _rxr_onPageDestroy];
 }
 
