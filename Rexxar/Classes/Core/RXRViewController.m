@@ -36,6 +36,17 @@
 
 #pragma mark - LifeCycle
 
++ (void)initialize
+{
+  RXRCacheFileRequestHandler *cacheFileRequestHandler = [RXRCacheFileRequestHandler new];
+  RXRCacheFileLocalRequestHandler *cacheFileLocalRequestHandler = [RXRCacheFileLocalRequestHandler new];
+  [MTURLProtocol setRequestHandlers:@[cacheFileRequestHandler, cacheFileLocalRequestHandler]];
+
+  RXRCacheFileResponseHandler *cacheFileResponsehandler = [RXRCacheFileResponseHandler new];
+  [MTURLProtocol setResponseHandlers:@[cacheFileResponsehandler]];
+
+}
+
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
   NSAssert(NO, @"Use initWithURI:htmlFileURL:");
@@ -57,12 +68,6 @@
     _uri = [uri copy];
     _htmlFileURL = [htmlFileURL copy];
     _reloadRecord = [NSMutableDictionary dictionary];
-
-    RXRCacheFileResponseHandler *cacheFileResponsehandler = [RXRCacheFileResponseHandler new];
-    RXRCacheFileRequestHandler *cacheFileRequestHandler = [RXRCacheFileRequestHandler new];
-    RXRCacheFileLocalRequestHandler *cacheFileLocalRequestHandler = [RXRCacheFileLocalRequestHandler new];
-    [MTURLProtocol setRequestHandlers:@[cacheFileRequestHandler, cacheFileLocalRequestHandler]];
-    [MTURLProtocol setResponseHandlers:@[cacheFileResponsehandler]];
   }
   return self;
 }
