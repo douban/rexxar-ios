@@ -1,3 +1,5 @@
+source 'http://github.intra.douban.com/iOS/CocoaPodsSpecs.git'
+
 use_frameworks!
 
 target 'Rexxar_Example' do
@@ -6,6 +8,6 @@ target 'Rexxar_Example' do
   target 'Rexxar_Tests' do
     inherit! :search_paths
 
-    
+
   end
 end

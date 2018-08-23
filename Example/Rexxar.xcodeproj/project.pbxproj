@@ -301,10 +301,12 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Rexxar_Example/Pods-Rexxar_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/MTURLProtocol/MTURLProtocol.framework",
 				"${BUILT_PRODUCTS_DIR}/Rexxar/Rexxar.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MTURLProtocol.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rexxar.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

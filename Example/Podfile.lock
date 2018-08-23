@@ -1,16 +1,23 @@
 PODS:
-  - Rexxar (0.3.0)
+  - MTURLProtocol (0.1.0)
+  - Rexxar (0.3.0):
+    - MTURLProtocol (= 0.1.0)
 
 DEPENDENCIES:
   - Rexxar (from `../`)
+
+SPEC REPOS:
+  http://github.intra.douban.com/iOS/CocoaPodsSpecs.git:
+    - MTURLProtocol
 
 EXTERNAL SOURCES:
   Rexxar:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Rexxar: 78ab12133375268c79a15c9f6744c064f0a7700e
+  MTURLProtocol: d0861735db3dc10ff7c2c0dee195fff9fa0b584c
+  Rexxar: 5c93f7023b8a63e42e0afa0035f6209578c93c86
 
-PODFILE CHECKSUM: 4ac80f9e75138ae661ab71a0e488189662655a8c
+PODFILE CHECKSUM: 416cf8d16f0b1d13df6b61a551d9e8c1d7bef21c
 
 COCOAPODS: 1.5.2
