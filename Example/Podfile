@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'Rexxar_Example' do
+  pod 'Rexxar', :path => '../'
+
+  target 'Rexxar_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
