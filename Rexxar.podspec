@@ -7,36 +7,21 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = 'Rexxar'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of Rexxar.'
+  s.name         = 'Rexxar'
+  s.version      = "0.3.0"
+  s.license      = { :type => 'MIT', :text => 'LICENSE' }
 
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
-  s.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
-
-  s.homepage         = 'https://github.com/duyu1010@gmail.com/Rexxar'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'duyu1010@gmail.com' => 'huangduyu@douban.com' }
-  s.source           = { :git => 'https://github.com/duyu1010@gmail.com/Rexxar.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.summary      = "Rexxar Hybrid Framework"
+  s.description  = "Rexxar is Douban Hybrid Framework. By Rexxar, You can develop UI interface with Web tech."
+  s.homepage     = "https://www.github.com/douban/rexxar-ios"
+  s.author       = { "iOS Dev" => "ios-dev@douban.com" }
+  s.platform     = :ios, "7.0"
+  s.source       = { :git => "https://github.com/douban/rexxar-ios.git",
+                     :tag => "#{s.version}" }
+  s.requires_arc = true
+  s.framework    = "UIKit"
 
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'Rexxar/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'Rexxar' => ['Rexxar/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
