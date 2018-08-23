@@ -1,0 +1,16 @@
+PODS:
+  - Rexxar (0.1.0)
+
+DEPENDENCIES:
+  - Rexxar (from `../`)
+
+EXTERNAL SOURCES:
+  Rexxar:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Rexxar: 92003a763440e3bdab254082ad56efb3a8be1b35
+
+PODFILE CHECKSUM: 4ac80f9e75138ae661ab71a0e488189662655a8c
+
+COCOAPODS: 1.5.2
