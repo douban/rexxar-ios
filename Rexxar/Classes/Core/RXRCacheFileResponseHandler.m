@@ -19,9 +19,9 @@
 
 @implementation RXRCacheFileResponseHandler
 
-- (BOOL)shouldHandleRequest:(NSURLRequest *)request
+- (BOOL)shouldHandleRequest:(NSURLRequest *)request originalRequest:(nonnull NSURLRequest *)originalRequest
 {
-  return [request rxr_isCacheFileRequest];
+  return [originalRequest rxr_isCacheFileRequest];
 }
 
 #pragma mark - NSURLSessionDataDelegate

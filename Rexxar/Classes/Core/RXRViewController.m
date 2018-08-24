@@ -40,11 +40,12 @@
 {
   RXRCacheFileRequestHandler *cacheFileRequestHandler = [RXRCacheFileRequestHandler new];
   RXRCacheFileLocalRequestHandler *cacheFileLocalRequestHandler = [RXRCacheFileLocalRequestHandler new];
-  [MTURLProtocol setRequestHandlers:@[cacheFileRequestHandler, cacheFileLocalRequestHandler]];
+  MTURLProtocol.requestHandlers = @[cacheFileRequestHandler, cacheFileLocalRequestHandler];
 
   RXRCacheFileResponseHandler *cacheFileResponsehandler = [RXRCacheFileResponseHandler new];
-  [MTURLProtocol setResponseHandlers:@[cacheFileResponsehandler]];
+  MTURLProtocol.responseHandlers = @[cacheFileResponsehandler];
 
+  [NSURLProtocol registerClass:MTURLProtocol.class];
 }
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
