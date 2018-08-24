@@ -12,7 +12,7 @@
 
 @interface RXRCacheFileLocalRequestHandler ()
 
-@property (nonatomic, copy) NSURL *localURL;
+@property (nonatomic, copy) NSURLRequest *originalRequest;
 
 @end
 
@@ -25,8 +25,11 @@
 
 - (BOOL)canHandleRequest:(NSURLRequest *)request originalRequest:(NSURLRequest *)originalRequest
 {
-  self.localURL = [[self class] _rxr_localFileURL:request.URL];
-  return _localURL != nil;
+  if ([self canInitWithRequest:originalRequest]) {
+    self.originalRequest = originalRequest;
+    return YES;
+  }
+  return NO;
 }
 
 - (NSURLRequest *)decoratedRequestOfRequest:(NSURLRequest *)request originalRequest:(NSURLRequest *)originalRequest
@@ -36,10 +39,8 @@
 
 - (NSData *)responseData
 {
-  if (_localURL) {
-    return [NSData dataWithContentsOfURL:_localURL];
-  }
-  return nil;
+  NSURL *localURL = [[self class] _rxr_localFileURL:_originalRequest.URL];
+  return localURL ? [NSData dataWithContentsOfURL:localURL] : nil;
 }
 
 - (NSURLResponse *)responseForRequest:(NSURLRequest *)request
