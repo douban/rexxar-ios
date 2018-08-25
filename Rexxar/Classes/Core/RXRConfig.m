@@ -7,9 +7,13 @@
 //
 
 @import UIKit;
+@import MTURLProtocol;
 
 #import "RXRConfig.h"
 #import "RXRRouteManager.h"
+#import "RXRCacheFileResponseHandler.h"
+#import "RXRCacheFileRequestHandler.h"
+#import "RXRCacheFileLocalRequestHandler.h"
 
 @implementation RXRConfig
 
@@ -193,6 +197,13 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
 + (void)setRequestsURLSessionConfiguration:(NSURLSessionConfiguration *)sessionConfiguration
 {
   sURLSessionConfiguration = sessionConfiguration;
+}
+
++ (void)addMTURLProtocolHandlers
+{
+  [MTURLProtocol addRequestHandler:[RXRCacheFileRequestHandler new]];
+  [MTURLProtocol addRequestHandler:[RXRCacheFileLocalRequestHandler new]];
+  [MTURLProtocol addResponseHandler:[RXRCacheFileResponseHandler new]];
 }
 
 @end

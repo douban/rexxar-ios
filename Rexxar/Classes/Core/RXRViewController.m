@@ -7,7 +7,6 @@
 //
 
 @import UIKit;
-@import MTURLProtocol;
 
 #import "RXRViewController.h"
 #import "RXRRouteManager.h"
@@ -18,9 +17,6 @@
 #import "UIColor+Rexxar.h"
 #import "NSURL+Rexxar.h"
 #import "RXRErrorHandler.h"
-#import "RXRCacheFileResponseHandler.h"
-#import "RXRCacheFileRequestHandler.h"
-#import "RXRCacheFileLocalRequestHandler.h"
 
 @interface RXRViewController ()
 
@@ -35,18 +31,6 @@
 @implementation RXRViewController
 
 #pragma mark - LifeCycle
-
-+ (void)initialize
-{
-  RXRCacheFileRequestHandler *cacheFileRequestHandler = [RXRCacheFileRequestHandler new];
-  RXRCacheFileLocalRequestHandler *cacheFileLocalRequestHandler = [RXRCacheFileLocalRequestHandler new];
-  MTURLProtocol.requestHandlers = @[cacheFileRequestHandler, cacheFileLocalRequestHandler];
-
-  RXRCacheFileResponseHandler *cacheFileResponsehandler = [RXRCacheFileResponseHandler new];
-  MTURLProtocol.responseHandlers = @[cacheFileResponsehandler];
-
-  [NSURLProtocol registerClass:MTURLProtocol.class];
-}
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
