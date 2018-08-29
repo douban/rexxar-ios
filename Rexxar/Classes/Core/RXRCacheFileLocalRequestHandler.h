@@ -7,6 +7,6 @@
 
 @import MTURLProtocol;
 
-@interface RXRCacheFileLocalRequestHandler : MTLocalRequestHandler
+@interface RXRCacheFileLocalRequestHandler : NSObject <MTLocalRequestHandler>
 
 @end

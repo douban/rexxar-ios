@@ -201,9 +201,9 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
 
 + (void)addMTURLProtocolHandlers
 {
-  [MTURLProtocol addRequestHandler:[RXRCacheFileRequestHandler new]];
-  [MTURLProtocol addRequestHandler:[RXRCacheFileLocalRequestHandler new]];
-  [MTURLProtocol addResponseHandler:[RXRCacheFileResponseHandler new]];
+  [MTURLProtocol addRequestHandler:RXRCacheFileRequestHandler.class];
+  [MTURLProtocol addRequestHandler:RXRCacheFileLocalRequestHandler.class];
+  [MTURLProtocol addResponseHandler:RXRCacheFileResponseHandler.class];
 }
 
 @end

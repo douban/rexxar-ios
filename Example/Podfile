@@ -4,7 +4,7 @@ use_frameworks!
 
 target 'Rexxar_Example' do
   pod 'Rexxar',           :path => '../'
-  pod 'MTURLProtocol',    :git => 'https://github.intra.douban.com/ios/mturlprotocol', :commit => 'bc31853b12eee3e826eb21559ce0bf2a8bbe906c'
+  pod 'MTURLProtocol',    :git => 'https://github.intra.douban.com/ios/mturlprotocol', :commit => '843cf464c86a3c9b1150c3f68831b8d48d787af5'
 
   target 'Rexxar_Tests' do
     inherit! :search_paths

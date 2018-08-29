@@ -32,12 +32,12 @@ willPerformHTTPRedirection:(nonnull NSHTTPURLResponse *)response
         newRequest:(nonnull NSURLRequest *)request
  completionHandler:(nonnull void (^)(NSURLRequest * _Nullable))completionHandler
 {
-  if (self.client != nil && self.dataTask == task) {
-    [self.client URLProtocol:self.protocol wasRedirectedToRequest:request redirectResponse:response];
+  if (_client != nil && _dataTask == task) {
+    [_client URLProtocol:self.protocol wasRedirectedToRequest:request redirectResponse:response];
 
     NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
-    [self.dataTask cancel];
-    [self.client URLProtocol:self.protocol didFailWithError:error];
+    [_dataTask cancel];
+    [_client URLProtocol:self.protocol didFailWithError:error];
   }
 }
 
@@ -65,7 +65,7 @@ didReceiveResponse:(NSURLResponse *)response
                                             headerFields:URLResponse.allHeaderFields
                                          noAccessControl:YES];
   }
-  [self.client URLProtocol:self.protocol
+  [_client URLProtocol:self.protocol
         didReceiveResponse:URLResponse ?: response
         cacheStoragePolicy:NSURLCacheStorageNotAllowed];
   completionHandler(NSURLSessionResponseAllow);
@@ -78,14 +78,14 @@ didReceiveResponse:(NSURLResponse *)response
   if ([dataTask.currentRequest rxr_isCacheFileRequest] && self.fileHandle) {
     [self.fileHandle writeData:data];
   }
-  [self.client URLProtocol:self.protocol didLoadData:data];
+  [_client URLProtocol:self.protocol didLoadData:data];
 }
 
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error
 {
-  if (self.client != nil && (self.dataTask == nil || self.dataTask == task)) {
+  if (_client != nil && (_dataTask == nil || _dataTask == task)) {
     if (error == nil) {
       if ([task.currentRequest rxr_isCacheFileRequest] && self.fileHandle) {
         [self.fileHandle closeFile];
@@ -93,7 +93,7 @@ didCompleteWithError:(nullable NSError *)error
         NSData *data = [NSData dataWithContentsOfFile:self.responseDataFilePath];
         [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:task.currentRequest.URL];
       }
-      [self.client URLProtocolDidFinishLoading:self.protocol];
+      [_client URLProtocolDidFinishLoading:self.protocol];
     } else {
       if ([task.currentRequest rxr_isCacheFileRequest] && self.fileHandle) {
         [self.fileHandle closeFile];
@@ -104,7 +104,7 @@ didCompleteWithError:(nullable NSError *)error
       if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
         // Do nothing.
       } else {
-        [self.client URLProtocol:self.protocol didFailWithError:error];
+        [_client URLProtocol:self.protocol didFailWithError:error];
       }
     }
   }

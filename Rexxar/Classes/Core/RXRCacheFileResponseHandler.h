@@ -7,6 +7,10 @@
 
 @import MTURLProtocol;
 
-@interface RXRCacheFileResponseHandler : MTResponseHandler
+@interface RXRCacheFileResponseHandler : NSObject <MTResponseHandler>
+
+@property (nonatomic, weak) id<NSURLProtocolClient> client; // MTURLProtocol instance.client
+@property (nonatomic, weak) NSURLSessionTask *dataTask; //  MTURLProtocol instance.dataTask
+@property (nonatomic, weak) MTURLProtocol *protocol;  // MTURLProtocol
 
 @end

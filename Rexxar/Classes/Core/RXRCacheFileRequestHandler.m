@@ -10,14 +10,14 @@
 
 @implementation RXRCacheFileRequestHandler
 
-- (BOOL)canInitWithRequest:(NSURLRequest *)request
++ (BOOL)canInitWithRequest:(NSURLRequest *)request
 {
   return [request rxr_isCacheFileRequest];
 }
 
 - (BOOL)canHandleRequest:(NSURLRequest *)request originalRequest:(NSURLRequest *)originalRequest
 {
-  return [self canInitWithRequest:request];
+  return [self.class canInitWithRequest:request];
 }
 
 - (NSURLRequest *)decoratedRequestOfRequest:(NSURLRequest *)request originalRequest:(NSURLRequest *)originalRequest

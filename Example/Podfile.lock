@@ -4,25 +4,25 @@ PODS:
     - MTURLProtocol (= 0.1.0)
 
 DEPENDENCIES:
-  - MTURLProtocol (from `https://github.intra.douban.com/ios/mturlprotocol`, commit `bc31853b12eee3e826eb21559ce0bf2a8bbe906c`)
+  - MTURLProtocol (from `https://github.intra.douban.com/ios/mturlprotocol`, commit `843cf464c86a3c9b1150c3f68831b8d48d787af5`)
   - Rexxar (from `../`)
 
 EXTERNAL SOURCES:
   MTURLProtocol:
-    :commit: bc31853b12eee3e826eb21559ce0bf2a8bbe906c
+    :commit: 843cf464c86a3c9b1150c3f68831b8d48d787af5
     :git: https://github.intra.douban.com/ios/mturlprotocol
   Rexxar:
     :path: "../"
 
 CHECKOUT OPTIONS:
   MTURLProtocol:
-    :commit: bc31853b12eee3e826eb21559ce0bf2a8bbe906c
+    :commit: 843cf464c86a3c9b1150c3f68831b8d48d787af5
     :git: https://github.intra.douban.com/ios/mturlprotocol
 
 SPEC CHECKSUMS:
-  MTURLProtocol: 11b69f2b6b27e9aafce9b6d6cedb1c8e8e76915f
+  MTURLProtocol: e30e5c426347775a01f79db65b73144014454f67
   Rexxar: 5c93f7023b8a63e42e0afa0035f6209578c93c86
 
-PODFILE CHECKSUM: 003d7076739340a651a882b78c3daf8e26c7eda1
+PODFILE CHECKSUM: 4c2d76b3223625cfe6b61c79b34aa4fa4f8ceb2f
 
 COCOAPODS: 1.5.2

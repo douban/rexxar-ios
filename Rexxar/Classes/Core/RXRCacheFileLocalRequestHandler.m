@@ -18,14 +18,14 @@
 
 @implementation RXRCacheFileLocalRequestHandler
 
-- (BOOL)canInitWithRequest:(NSURLRequest *)request
++ (BOOL)canInitWithRequest:(NSURLRequest *)request
 {
   return [request rxr_isCacheFileRequest];
 }
 
 - (BOOL)canHandleRequest:(NSURLRequest *)request originalRequest:(NSURLRequest *)originalRequest
 {
-  if ([self canInitWithRequest:originalRequest]) {
+  if ([self.class canInitWithRequest:originalRequest]) {
     self.localURL = [[self class] _rxr_localFileURL:originalRequest.URL];
     return _localURL != nil;
   }
