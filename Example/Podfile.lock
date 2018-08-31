@@ -1,7 +1,7 @@
 PODS:
-  - MTURLProtocol (0.1.0)
+  - MTURLProtocol (0.1.2)
   - Rexxar (0.3.0):
-    - MTURLProtocol (= 0.1.0)
+    - MTURLProtocol (= 0.1.2)
 
 DEPENDENCIES:
   - Rexxar (from `../`)
@@ -15,8 +15,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  MTURLProtocol: 9adf7310c15a728a7bcb20f6e37ee8c5a162ba14
-  Rexxar: 5c93f7023b8a63e42e0afa0035f6209578c93c86
+  MTURLProtocol: 584d6d2fcdf0085845c85a998182362d725bad6e
+  Rexxar: 9bfd716d3cc734db2ad14829a462f5df2fad27a2
 
 PODFILE CHECKSUM: a3fd9b59bc7b16cddc7f8aebdcfa74c737021b9d
 
