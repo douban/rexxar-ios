@@ -151,7 +151,7 @@ didCompleteWithError:(nullable NSError *)error
     if (error == nil) {
       [[self client] URLProtocolDidFinishLoading:self];
     } else if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
-      // Do nothing.
+      [[self client] URLProtocol:self didFailWithError:error];
     } else {
       // Here we don't call `URLProtocol:didFailWithError:` method because browser may not be able to handle `error`
       // object correctly. Instead we return HTTP response manually and you can handle this response easily
@@ -163,6 +163,7 @@ didCompleteWithError:(nullable NSError *)error
                                                            noAccessControl:YES];
 
       [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+      [[self client] URLProtocolDidFinishLoading:self];
 
       if ([RXRConfig rxr_canHandleError]) {
         [RXRConfig rxr_handleError:error fromReporter:self];

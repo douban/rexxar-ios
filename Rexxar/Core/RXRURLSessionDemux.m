@@ -94,6 +94,7 @@
     NSString *delegateQueueName = [NSString stringWithFormat:@"%@.delegateQueue", sessionName];
 
     _sessionConfiguration = [sessionConfiguration copy];
+    _sessionConfiguration.timeoutIntervalForRequest = 30;
     _demuxTasks = [NSMutableDictionary dictionary];
     _sessionDelegateQueue = [[NSOperationQueue alloc] init];
     _sessionDelegateQueue.maxConcurrentOperationCount = 1;
