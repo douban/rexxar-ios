@@ -14,6 +14,8 @@
 #import "RXRConfig+Rexxar.h"
 #import "RXRErrorHandler.h"
 
+static WKProcessPool *sProcessPool;
+
 @interface RXRWebViewController () <WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, assign) BOOL viewDidAppeared;
@@ -65,6 +67,7 @@
   _webView.UIDelegate = nil;
   [_webView stopLoading];
   _webView = nil;
+  sProcessPool = [[WKProcessPool alloc] init];
 }
 
 - (void)viewDidLayoutSubviews
@@ -133,14 +136,10 @@
 
 - (WKProcessPool *)_rxr_sharedProcessPool
 {
-  static dispatch_once_t onceToken;
-  static WKProcessPool *instance;
-
-  dispatch_once(&onceToken, ^{
-    instance = [[WKProcessPool alloc] init];
-  });
-
-  return instance;
+  if (!sProcessPool) {
+    sProcessPool = [[WKProcessPool alloc] init];
+  }
+  return sProcessPool;
 }
 
 - (WKWebView *)_rxr_createWebView
