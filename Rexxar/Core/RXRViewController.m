@@ -330,7 +330,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
   if ([delegate respondsToSelector:@selector(application:openURL:options:)]) {
     [delegate application:[UIApplication sharedApplication]
                   openURL:url
-                  options:@{}];
+                  options:@{UIApplicationOpenURLOptionsSourceApplicationKey: NSStringFromClass([self class])}];
   } else if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
     [delegate application:[UIApplication sharedApplication]
                   openURL:url
