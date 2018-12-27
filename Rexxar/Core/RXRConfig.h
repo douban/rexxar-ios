@@ -101,12 +101,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 设置 Rexxar 接收的外部 User-Agent。Rexxar 会将这个 UserAgent 加到其所发出的所有的请求的 Headers 中。
  */
-+ (void)setExternalUserAgent:(NSString *)userAgent;
++ (void)setUserAgent:(NSString *)userAgent;
 
 /**
  * 读取 Rexxar 接收的外部 User-Agent。
  */
-+ (NSString *)externalUserAgent;
++ (NSString *)userAgent;
 
 /**
  * 更新全局配置。

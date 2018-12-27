@@ -162,10 +162,20 @@
     webConfiguration.dataDetectorTypes = WKDataDetectorTypeLink | WKDataDetectorTypePhoneNumber;
   }
 
+  NSString *userAgent = [RXRConfig userAgent];
+  if (![WKWebView instancesRespondToSelector:@selector(setCustomUserAgent:)] && userAgent) {
+    // 需要放在创建 webView 前面
+    [[NSUserDefaults standardUserDefaults] registerDefaults:@{@"UserAgent": userAgent}];
+  }
+
   WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
   webView.navigationDelegate = self;
   webView.UIDelegate = self;
   webView.scrollView.delegate = self;
+
+  if ([webView respondsToSelector:@selector(setCustomUserAgent:)] && userAgent) {
+    [webView setCustomUserAgent:userAgent];
+  }
 
   [self _rxr_registerWebViewCustomSchemes:webView];
 

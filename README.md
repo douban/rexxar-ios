@@ -267,6 +267,7 @@ Demo 中的 PartialRexxarViewController 给出了一个示例。
 ## Changelog
 
 - 0.3.0   使用 WKWebView 替换 UIWebView, 由于 WKWebView 对 NSURLProtocol 支持不够友好，你需要特别关心一下 NSURLProtocol 截获 Post 请求时 Body 被清空的问题。
+- master 2018-12-28 配置文件 `RXRConfig` 删除 `+ (void)setExternalUserAgent:(NSString *)userAgent;` 和 `+ (NSString *)externalUserAgent;`新增 `+ (**void**)setRxrUserAgent:(NSString *)userAgent;` 和 `+ (NSString *)rxrUserAgent;` 
 
 ## Unit Test
 

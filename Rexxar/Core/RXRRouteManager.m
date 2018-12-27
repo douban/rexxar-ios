@@ -124,21 +124,9 @@
                                                          cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                      timeoutInterval:60];
   // 更新 Http UserAgent Header
-  NSString *externalUserAgent = [RXRConfig externalUserAgent];
-  if (externalUserAgent) {
-    NSString *userAgent = [request.allHTTPHeaderFields objectForKey:@"User-Agent"];
-    NSMutableArray *components = [NSMutableArray array];
-    if (userAgent) {
-      [components addObject:userAgent];
-    }
-    NSArray *externalUAItems = [externalUserAgent componentsSeparatedByString:@" "];
-    for (NSString *item in externalUAItems) {
-      if (![userAgent containsString:item]) {
-        [components addObject:item];
-      }
-    }
-    NSString *newUserAgent = [components componentsJoinedByString:@" "];
-    [request setValue:newUserAgent forHTTPHeaderField:@"User-Agent"];
+  NSString *userAgent = [RXRConfig userAgent];
+  if (userAgent) {
+    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
   }
 
   [[self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
