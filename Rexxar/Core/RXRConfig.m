@@ -124,35 +124,15 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
   return sRoutesResourcePath;
 }
 
-+ (void)setExternalUserAgent:(NSString *)externalUserAgent
++ (void)setUserAgent:(NSString *)userAgent
 {
-  if ([sRXRUserAgent isEqualToString:externalUserAgent]) {
+  if ([sRXRUserAgent isEqualToString:userAgent]) {
     return;
   }
-
-  @synchronized (self) {
-    sRXRUserAgent = externalUserAgent;
-
-    NSArray<NSString *> *externalUserAgents = [externalUserAgent componentsSeparatedByString:@" "];
-
-    NSMutableString *newUserAgent = [NSMutableString string];
-    NSString *oldUserAgent = [[UIWebView new] stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
-    if (oldUserAgent) {
-      [newUserAgent appendString:oldUserAgent];
-    }
-
-    for (NSString *item in externalUserAgents) {
-      if (![newUserAgent containsString:item]) {
-        [newUserAgent appendFormat:@" %@", item];
-      }
-    }
-
-    [[NSUserDefaults standardUserDefaults] registerDefaults:@{@"UserAgent": newUserAgent}];
-
-  }
+  sRXRUserAgent = userAgent;
 }
 
-+ (NSString *)externalUserAgent
++ (NSString *)userAgent
 {
   return sRXRUserAgent;
 }
