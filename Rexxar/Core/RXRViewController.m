@@ -327,14 +327,18 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
   // 让 App 打开网页，通常 `UIApplicationDelegate` 都会实现 open url 相关的 delegate 方法。
   id<UIApplicationDelegate> delegate = [[UIApplication sharedApplication] delegate];
-  if ([delegate respondsToSelector:@selector(application:openURL:options:)]) {
+  BOOL isIOS9Above = NO;
+  if (@available(iOS 9.0, *)) {
+    isIOS9Above = YES;
+  }
+  if (isIOS9Above && [delegate respondsToSelector:@selector(application:openURL:options:)]) {
     [delegate application:[UIApplication sharedApplication]
                   openURL:url
-                  options:@{UIApplicationOpenURLOptionsSourceApplicationKey: NSStringFromClass([self class])}];
+                  options:@{}];
   } else if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
     [delegate application:[UIApplication sharedApplication]
                   openURL:url
-        sourceApplication:NSStringFromClass([self class])
+        sourceApplication:nil
                annotation:@""];
   } else if ([delegate respondsToSelector:@selector(application:handleOpenURL:)]) {
     [delegate application:[UIApplication sharedApplication] handleOpenURL:url];
