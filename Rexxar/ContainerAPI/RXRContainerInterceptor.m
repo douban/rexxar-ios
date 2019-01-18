@@ -51,15 +51,20 @@ static NSArray<id<RXRContainerAPI>> *_containerAPIs;
         [containerAPI prepareWithRequest:self.request];
       }
 
-      if ([containerAPI respondsToSelector:@selector(performWithRequest:)]) {
-        [containerAPI performWithRequest:self.request];
-      }
+      __weak __typeof(self) weakSelf = self;
+      void (^completion)() = ^() {
+        NSData *data = [containerAPI responseData];
+        NSURLResponse *response = [containerAPI responseWithRequest:weakSelf.request];
+        [weakSelf.client URLProtocol:weakSelf didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+        [weakSelf.client URLProtocol:weakSelf didLoadData:data];
+        [weakSelf.client URLProtocolDidFinishLoading:weakSelf];
+      };
 
-      NSData *data = [containerAPI responseData];
-      NSURLResponse *response = [containerAPI responseWithRequest:self.request];
-      [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
-      [self.client URLProtocol:self didLoadData:data];
-      [self.client URLProtocolDidFinishLoading:self];
+      if ([containerAPI respondsToSelector:@selector(performWithRequest:completion:)]) {
+        [containerAPI performWithRequest:self.request completion:completion];
+      } else {
+        completion();
+      }
       break;
     }
   }

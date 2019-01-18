@@ -41,11 +41,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)prepareWithRequest:(NSURLRequest *)request;
 
 /**
- * 执行对请求的模拟。
+ * 执行异步请求
  *
  * @param request 对应的请求
+ * @param completion 完成回调
  */
-- (void)performWithRequest:(NSURLRequest *)request;
+- (void)performWithRequest:(NSURLRequest *)request completion:(void (^)())completion;
 
 @end
 
