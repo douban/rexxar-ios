@@ -39,7 +39,7 @@
   return jsonData;
 }
 
-- (void)performWithRequest:(NSURLRequest *)request
+- (void)performWithRequest:(NSURLRequest *)request completion:(void (^)())completion
 {
   NSData *data = request.HTTPBody;
   NSString *encodeStr = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
@@ -58,6 +58,10 @@
     if ([form rxr_itemForKey:@"event"]) {
       NSLog(@"Log event:%@, label:%@", [form rxr_itemForKey:@"event"],  [form rxr_itemForKey:@"label"]);
     }
+  }
+
+  if (completion) {
+    completion();
   }
 }
 
