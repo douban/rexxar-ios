@@ -12,6 +12,7 @@
 #import "RXRURLSessionDemux.h"
 
 static NSArray<id<RXRDecorator>> *_decorators;
+static NSArray<id<RXRProxy>> *_proxies;
 
 @implementation RXRRequestInterceptor
 
@@ -27,6 +28,16 @@ static NSArray<id<RXRDecorator>> *_decorators;
   _decorators = [decorators copy];
 }
 
++ (NSArray<id<RXRProxy>> *)proxies
+{
+  return _proxies;
+}
+
++ (void)setProxies:(NSArray<id<RXRProxy>> *)proxies
+{
+  _proxies = [proxies copy];
+}
+
 #pragma mark - Superclass methods
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request
@@ -40,6 +51,12 @@ static NSArray<id<RXRDecorator>> *_decorators;
     return NO;
   }
 
+  for (id<RXRProxy> proxy in _proxies) {
+    if ([proxy shouldInterceptRequest:request]) {
+      return YES;
+    }
+  }
+
   for (id<RXRDecorator> decorator in _decorators) {
     if ([decorator shouldInterceptRequest:request]){
       return YES;
@@ -51,6 +68,21 @@ static NSArray<id<RXRDecorator>> *_decorators;
 
 - (void)startLoading
 {
+  for (id<RXRProxy> proxy in _proxies) {
+    if ([proxy shouldInterceptRequest:self.request]) {
+      NSURLResponse *response = [proxy responseWithRequest:self.request];
+      if (response != nil) {
+        NSData *data = [proxy responseDataWithRequest:self.request];
+        if (data != nil) {
+          [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+          [self.client URLProtocol:self didLoadData:data];
+          [self.client URLProtocolDidFinishLoading:self];
+          return;
+        }
+      }
+    }
+  }
+
   NSMutableURLRequest *newRequest = [self _rxr_decorateRequest:self.request];
   NSMutableArray *modes = [NSMutableArray array];
   [modes addObject:NSDefaultRunLoopMode];
@@ -66,7 +98,7 @@ static NSArray<id<RXRDecorator>> *_decorators;
   [self setDataTask:dataTask];
 }
 
-- (NSURLRequest *)_rxr_decorateRequest:(NSURLRequest *)request
+- (NSMutableURLRequest *)_rxr_decorateRequest:(NSURLRequest *)request
 {
   NSMutableURLRequest *newRequest = nil;
 

@@ -54,7 +54,8 @@
     _uri = [uri copy];
     _htmlFileURL = [htmlFileURL copy];
     _reloadRecord = [NSMutableDictionary dictionary];
-    
+    _autoLoad = YES;
+
     [RXRCacheFileInterceptor registerRXRProtocolClass:[RXRCacheFileInterceptor class]];
   }
   return self;
@@ -68,8 +69,9 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-
-  [self reloadWebView];
+  if (self.autoLoad) {
+    [self reloadWebView];
+  }
 }
 
 - (void)viewWillAppear:(BOOL)animated

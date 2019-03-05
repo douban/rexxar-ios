@@ -13,33 +13,31 @@ private let toastFinalY: CGFloat = 80
 private let miniToastShowTime: TimeInterval = 1.5
 private let horizonalMargin: CGFloat = 25
 
-
 @objc public enum FRDToastMaskType: Int {
   case `default`    // allow user interactions while Toast is displayed
   case clear      // don't allow user interactions
 }
 
-
-open class FRDToast: NSObject {
+public class FRDToast: NSObject {
 
   /**
     设置文本字体，如果不设置该属性，缺省为 HelveticaNeue-Medium 字体。
    */
-  open static var titleFont = UIFont(name:"HelveticaNeue-Medium", size:15) {
+  public static var titleFont = UIFont(name:"HelveticaNeue-Medium", size:15) {
     didSet {
       sharedToast.toastView.titleFont = titleFont
     }
   }
 
-  fileprivate static let sharedToast = FRDToast()
+  private static let sharedToast = FRDToast()
 
-  fileprivate lazy var toastView: ToastView = {
+  private lazy var toastView: ToastView = {
     let view = ToastView()
     view.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
     return view
   }()
 
-  fileprivate lazy var overlayView: UIControl = {
+  private lazy var overlayView: UIControl = {
 
     let application = UIApplication.shared
     let window = application.delegate?.window ?? nil
@@ -56,12 +54,12 @@ open class FRDToast: NSObject {
     return view
   }()
 
-  fileprivate var fadeOutTimer: Timer?
-  fileprivate var toastShowTime = miniToastShowTime
-  fileprivate var isFadeIn = false
-  fileprivate var isFadeOut = false
+  private var fadeOutTimer: Timer?
+  private var toastShowTime = miniToastShowTime
+  private var isFadeIn = false
+  private var isFadeOut = false
 
-  fileprivate func showToast(_ title: String, color: UIColor, maskType: FRDToastMaskType, image: UIImage?, loadingAnimateOrNot: Bool) {
+  private func showToast(_ title: String, color: UIColor, maskType: FRDToastMaskType, image: UIImage?, loadingAnimateOrNot: Bool) {
 
     let application = UIApplication.shared
     let window = application.delegate?.window ?? nil
@@ -111,7 +109,7 @@ open class FRDToast: NSObject {
     }
   }
 
-  fileprivate func addToastViewToOverLayView(_ toastView: ToastView, center: CGPoint?) {
+  private func addToastViewToOverLayView(_ toastView: ToastView, center: CGPoint?) {
     let toastViewSize = toastView.sizeThatFits(CGSize(width: (overlayView.bounds.width - 2 * horizonalMargin), height: 0))
     toastView.bounds = CGRect(x: 0, y: 0, width: toastViewSize.width, height: toastViewSize.height)
 
@@ -123,7 +121,7 @@ open class FRDToast: NSObject {
     }
   }
 
-  fileprivate func showToastWithAnimation() {
+  private func showToastWithAnimation() {
     if isFadeIn {
       return
     }
@@ -146,7 +144,7 @@ open class FRDToast: NSObject {
     })
   }
 
-  fileprivate func switchToastViewWithAnimation(_ newToastView: ToastView) {
+  private func switchToastViewWithAnimation(_ newToastView: ToastView) {
     let oldToastView = toastView
     if oldToastView.loadingAnimateOrNot {
       oldToastView.stopLoadingAnimation()
@@ -178,7 +176,7 @@ open class FRDToast: NSObject {
     showToastWithAnimation()
   }
 
-  @objc fileprivate func dismiss() {
+  @objc private func dismiss() {
     if isFadeOut || toastView.alpha == 0 {
       return
     }
@@ -201,11 +199,11 @@ open class FRDToast: NSObject {
     })
   }
 
-  fileprivate func showStaticToast(_ status: String, color: UIColor, image: UIImage?) {
+  private func showStaticToast(_ status: String, color: UIColor, image: UIImage?) {
     showToast(status, color: color, maskType: .default, image: image, loadingAnimateOrNot: false)
   }
 
-  fileprivate func displayDurationForTitle(_ title: String) -> TimeInterval {
+  private func displayDurationForTitle(_ title: String) -> TimeInterval {
     let nsTitle = title as NSString
     let time = max(TimeInterval(nsTitle.length)*0.06 + 0.5, miniToastShowTime)
     return min(time, 5.0)
@@ -221,6 +219,7 @@ public extension FRDToast {
  
    - Parameter status: 文本信息
    */
+  @objc
   class func showInfo(_ status: String) {
     showInfo(status, image: nil)
   }
@@ -231,6 +230,7 @@ public extension FRDToast {
     - Parameter status: 文本信息
     - Parameter image: 图片
    */
+  @objc
   class func showInfo(_ status: String, image: UIImage?) {
     let color = UIColor(hex: 0x494949, alpha: 0.96)
     FRDToast.sharedToast.showStaticToast(status, color: color, image: image)
@@ -241,6 +241,7 @@ public extension FRDToast {
     
     - Parameter status: 文本信息
    */
+  @objc
   class func showSuccess(_ status: String) {
     showSuccess(status, image: nil)
   }
@@ -251,6 +252,7 @@ public extension FRDToast {
    - Parameter status: 文本信息
    - Parameter image: 图片
    */
+  @objc
   class func showSuccess(_ status: String, image: UIImage?) {
     let color = UIColor(hex: 0x42bd56, alpha: 0.96)
     FRDToast.sharedToast.showStaticToast(status, color: color, image: image)
@@ -261,7 +263,8 @@ public extension FRDToast {
 
    - Parameter status: 展示的文本信息
   */
- class func showError(_ status: String) {
+  @objc
+  class func showError(_ status: String) {
     showError(status, image: nil)
   }
 
@@ -272,6 +275,7 @@ public extension FRDToast {
    - Parameter image: 图片
 
    */
+  @objc
   class func showError(_ status: String, image: UIImage?) {
     let color = UIColor(hex: 0xff4055, alpha: 0.96)
     FRDToast.sharedToast.showStaticToast(status, color: color, image: image)
@@ -285,6 +289,7 @@ public extension FRDToast {
    - Parameter backgroundColor: 背景色
    - Parameter maskType: 交互类型
    */
+  @objc
   class func show(_ status: String, backgroundColor: UIColor, image: UIImage?, maskType: FRDToastMaskType) {
     FRDToast.sharedToast.showStaticToast(status, color: backgroundColor, image: image)
   }
@@ -292,6 +297,7 @@ public extension FRDToast {
   /**
    使 Toast 消失。
    */
+  @objc
   class func dismiss() {
     FRDToast.sharedToast.dismiss()
   }
@@ -299,6 +305,7 @@ public extension FRDToast {
   /**
    检查 Toast 的可见性。
    */
+  @objc
   class func isVisible() -> Bool {
     let toastView = FRDToast.sharedToast.toastView
     return toastView.superview != nil && toastView.alpha == 1.0

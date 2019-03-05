@@ -229,6 +229,9 @@ deinit {
 
 在 Demo 中的 `FullRXRViewController` 可以看到如何注册和取消注册 RXRContainerAPI 和 RXRDecorator。
 
+### 定制 RXRProxy
+
+RXRProxy 是本地请求代理服务，当一个请求允许被本地服务代理时，可以直接返回本地内容（类似 ContainerAPI），当请求不能被本地服务代理时，继续原来的请求(类似 RequestInterceptor)。
 
 ## Partial RXRViewController
 
