@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param request 对应的请求
  * @param completion 完成回调
  */
-- (void)performWithRequest:(NSURLRequest *)request completion:(void (^)())completion;
+- (void)performWithRequest:(NSURLRequest *)request completion:(void (^)(void))completion;
 
 @end
 

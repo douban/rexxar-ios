@@ -24,13 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     RXRConfig.setRoutesMapURL(URL(string: routesMapURL)!)
     RXRConfig.setRoutesCachePath("com.douban.RexxarDemo")
     RXRConfig.setRoutesResourcePath("hybrid")
-
-    // Update UserAgent need by RexxarDemo javascript code.
-    let appSuffix = "com.douban.frodo/4.4.0"
-    let rexxarVersion = "Rexxar/1.2.5"
-    let userAgent = appSuffix.appendingFormat(" %@", rexxarVersion)
-    RXRConfig.setExternalUserAgent(userAgent)
-
+    RXRConfig.setUserAgent("Mozilla/5.0 AppleWebKit/605.1.15 com.douban.frodo/6.11.0 Rexxar/1.2.100 iOS/12.1")
     RXRViewController.updateRouteFiles(completion: nil)
 
     return true

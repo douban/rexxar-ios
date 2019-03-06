@@ -20,6 +20,7 @@
 		9875E7D71E8DFA9B00EA6A76 /* RXRURLSessionDemux.h in Headers */ = {isa = PBXBuildFile; fileRef = 9875E7D51E8DFA9B00EA6A76 /* RXRURLSessionDemux.h */; };
 		9875E7D81E8DFA9B00EA6A76 /* RXRURLSessionDemux.m in Sources */ = {isa = PBXBuildFile; fileRef = 9875E7D61E8DFA9B00EA6A76 /* RXRURLSessionDemux.m */; };
 		987FA5221BFC78310096ED5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B47B141BF1E0F20087735C /* AppDelegate.swift */; };
+		98B09FF2222E5DD300A9E847 /* RXRProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 98B09FF0222E5DD300A9E847 /* RXRProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		98B47B071BF1E0E00087735C /* Rexxar.h in Headers */ = {isa = PBXBuildFile; fileRef = 98B47B061BF1E0E00087735C /* Rexxar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		98B47B1F1BF1E0F20087735C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98B47B1D1BF1E0F20087735C /* LaunchScreen.storyboard */; };
 		98BCCFB81E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h in Headers */ = {isa = PBXBuildFile; fileRef = 98BCCFB61E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -121,6 +122,7 @@
 		77BB1328573CD94C05F4665D /* libPods-Rexxar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rexxar.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9875E7D51E8DFA9B00EA6A76 /* RXRURLSessionDemux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRURLSessionDemux.h; sourceTree = "<group>"; };
 		9875E7D61E8DFA9B00EA6A76 /* RXRURLSessionDemux.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRURLSessionDemux.m; sourceTree = "<group>"; };
+		98B09FF0222E5DD300A9E847 /* RXRProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RXRProxy.h; sourceTree = "<group>"; };
 		98B47B031BF1E0E00087735C /* Rexxar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rexxar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		98B47B061BF1E0E00087735C /* Rexxar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Rexxar.h; sourceTree = "<group>"; };
 		98B47B081BF1E0E00087735C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -236,6 +238,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		98B09FEF222E5B7A00A9E847 /* Proxy */ = {
+			isa = PBXGroup;
+			children = (
+				98B09FF0222E5DD300A9E847 /* RXRProxy.h */,
+			);
+			path = Proxy;
+			sourceTree = "<group>";
+		};
 		98B47AF91BF1E0E00087735C = {
 			isa = PBXGroup;
 			children = (
@@ -262,6 +272,7 @@
 		98B47B051BF1E0E00087735C /* Rexxar */ = {
 			isa = PBXGroup;
 			children = (
+				98B09FEF222E5B7A00A9E847 /* Proxy */,
 				A35E71E11D7FCA0200D38BC0 /* Core */,
 				A35E72361D7FCBF900D38BC0 /* Decorator */,
 				A35E723C1D7FCBF900D38BC0 /* ContainerAPI */,
@@ -504,6 +515,7 @@
 				A35E72031D7FCA0200D38BC0 /* RXRWidget.h in Headers */,
 				A35E71F51D7FCA0200D38BC0 /* RXRConfig.h in Headers */,
 				A35E72401D7FCBF900D38BC0 /* RXRDecorator.h in Headers */,
+				98B09FF2222E5DD300A9E847 /* RXRProxy.h in Headers */,
 				A35E72451D7FCBF900D38BC0 /* RXRContainerAPI.h in Headers */,
 				A35E71E01D7FC86000D38BC0 /* RXRPullRefreshWidget.h in Headers */,
 				A35D15A21D66AE2B009B24DC /* RXRAlertDialogWidget.h in Headers */,
@@ -588,7 +600,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Douban Inc";
 				TargetAttributes = {
 					98B47B021BF1E0E00087735C = {
@@ -596,7 +608,7 @@
 					};
 					98B47B111BF1E0F20087735C = {
 						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1010;
 					};
 					B90EBEBB1BFEAA830055D477 = {
 						CreatedOnToolsVersion = 7.1.1;
@@ -751,14 +763,22 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -801,14 +821,22 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -889,7 +917,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.douban.RexxarDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RexxarDemo/Bridge-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -904,7 +933,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.douban.RexxarDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RexxarDemo/Bridge-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

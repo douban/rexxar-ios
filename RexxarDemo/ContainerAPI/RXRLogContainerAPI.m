@@ -39,7 +39,7 @@
   return jsonData;
 }
 
-- (void)performWithRequest:(NSURLRequest *)request completion:(void (^)())completion
+- (void)performWithRequest:(NSURLRequest *)request completion:(void (^)(void))completion
 {
   NSData *data = request.HTTPBody;
   NSString *encodeStr = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];

@@ -52,7 +52,7 @@ static NSArray<id<RXRContainerAPI>> *_containerAPIs;
       }
 
       __weak __typeof(self) weakSelf = self;
-      void (^completion)() = ^() {
+      void (^completion)(void) = ^() {
         NSData *data = [containerAPI responseData];
         NSURLResponse *response = [containerAPI responseWithRequest:weakSelf.request];
         [weakSelf.client URLProtocol:weakSelf didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];

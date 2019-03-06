@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.framework    = "UIKit"
 
   s.subspec 'Core' do |core|
-    core.source_files  = 'Rexxar/Core/**/*.{h,m}', 'Rexxar/ContainerAPI/**/*.{h,m}', 'Rexxar/Decorator/**/*.{h,m}'
+    core.source_files  = 'Rexxar/Core/**/*.{h,m}', 'Rexxar/ContainerAPI/**/*.{h,m}', 'Rexxar/Decorator/**/*.{h,m}', 'Rexxar/Proxy/**/*.{h,m}'
     core.frameworks    = 'UIKit'
     core.requires_arc  = true
   end

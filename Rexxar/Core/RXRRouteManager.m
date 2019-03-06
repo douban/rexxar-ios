@@ -280,9 +280,9 @@
       NSData *data = [NSData dataWithContentsOfURL:location];
 
       // Validate data
-      if (_dataValidator
-          && [_dataValidator respondsToSelector:@selector(validateRemoteHTMLFile:fileData:)]
-          && ![_dataValidator validateRemoteHTMLFile:route.remoteHTML fileData:data]) {
+      if (self.dataValidator
+          && [self.dataValidator respondsToSelector:@selector(validateRemoteHTMLFile:fileData:)]
+          && ![self.dataValidator validateRemoteHTMLFile:route.remoteHTML fileData:data]) {
 
         // Log
         if ([RXRConfig rxr_canLog]) {
@@ -298,8 +298,8 @@
           [RXRConfig rxr_logWithLogObject:logObj];
         }
 
-        if ([_dataValidator respondsToSelector:@selector(stopDownloadingIfValidationFailed)]
-            && [_dataValidator stopDownloadingIfValidationFailed]) {
+        if ([self.dataValidator respondsToSelector:@selector(stopDownloadingIfValidationFailed)] &&
+            [self.dataValidator stopDownloadingIfValidationFailed]) {
           success = NO;
           if (downloadGroup) {
             dispatch_group_leave(downloadGroup);
