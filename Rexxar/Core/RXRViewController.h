@@ -24,11 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSURL *uri;
 
 /**
- * 是否自动加载页面，默认为 YES.
- */
-@property (nonatomic, assign) BOOL autoLoad;
-
-/**
  * activities 代表该 Rexxar Container 可以响应的协议。
  */
 @property (nonatomic, copy) NSArray<id<RXRWidget>> *widgets;
