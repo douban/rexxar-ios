@@ -32,6 +32,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSData *)responseDataWithRequest:(NSURLRequest *)request;
 
+@optional
+
+/**
+ * 代理工作完成时
+ */
+- (void)proxyDidFinishWithRequest:(NSURLRequest *)request;
+
 @end
 
 NS_ASSUME_NONNULL_END
