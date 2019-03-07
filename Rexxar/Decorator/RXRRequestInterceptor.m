@@ -77,6 +77,9 @@ static NSArray<id<RXRProxy>> *_proxies;
           [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
           [self.client URLProtocol:self didLoadData:data];
           [self.client URLProtocolDidFinishLoading:self];
+          if ([proxy respondsToSelector:@selector(proxyDidFinishWithRequest:)]) {
+            [proxy proxyDidFinishWithRequest:self.request];
+          }
           return;
         }
       }
