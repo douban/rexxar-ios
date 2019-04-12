@@ -14,7 +14,7 @@
 #import "RXRConfig+Rexxar.h"
 #import "RXRErrorHandler.h"
 
-@interface RXRWebViewController () <WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate>
+@interface RXRWebViewController () <WKNavigationDelegate, WKUIDelegate>
 
 @property (nonatomic, assign) BOOL viewDidAppeared;
 @property (nonatomic, weak) id<RXRWebViewDelegate> delegate;
