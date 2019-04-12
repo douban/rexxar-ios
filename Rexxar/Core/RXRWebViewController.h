@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)webViewDidTerminate:(WKWebView *)webView;
 @end
 
-@interface RXRWebViewController : UIViewController <RXRWebViewDelegate>
+@interface RXRWebViewController : UIViewController <RXRWebViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, readonly) WKWebView *webView;
 
