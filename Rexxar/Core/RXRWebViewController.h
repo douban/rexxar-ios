@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RXRWebViewController : UIViewController <RXRWebViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, readonly) WKWebView *webView;
+@property (nonatomic, assign) BOOL shouldRegisterWebViewCustomSchemes; // default is YES;
 
 - (void)loadRequest:(NSURLRequest *)request;
 - (CGRect)webViewFrame;
