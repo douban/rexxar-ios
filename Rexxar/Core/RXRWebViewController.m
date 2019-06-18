@@ -24,6 +24,15 @@
 @implementation RXRWebViewController
 @synthesize webView = _webView;
 
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+  self = [super initWithNibName:nil bundle:nil];
+  if (self) {
+    _shouldRegisterWebViewCustomSchemes = YES;
+  }
+  return self;
+}
+
 - (void)viewDidLoad
 {
   [super viewDidLoad];
@@ -110,6 +119,18 @@
   }
 }
 
+- (void)setShouldRegisterWebViewCustomSchemes:(BOOL)shouldRegisterWebViewCustomSchemes
+{
+  _shouldRegisterWebViewCustomSchemes = shouldRegisterWebViewCustomSchemes;
+  if (_webView) {
+    if (shouldRegisterWebViewCustomSchemes) {
+      [self _rxr_registerWebViewCustomSchemes:_webView];
+    } else {
+      [self _rxr_unregisterWebViewCustomSchemes:_webView];
+    }
+  }
+}
+
 #pragma mark - NSURLProtocol
 
 /**
@@ -120,6 +141,19 @@
 {
   Class klass = [[webView valueForKey:@"browsingContextController"] class];
   SEL sel = NSSelectorFromString(@"registerSchemeForCustomProtocol:");
+  if ([(id)klass respondsToSelector:sel]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [(id)klass performSelector:sel withObject:@"https"];
+    [(id)klass performSelector:sel withObject:@"http"];
+#pragma clang diagnostic pop
+  }
+}
+
+- (void)_rxr_unregisterWebViewCustomSchemes:(WKWebView *)webView
+{
+  Class klass = [[webView valueForKey:@"browsingContextController"] class];
+  SEL sel = NSSelectorFromString(@"unregisterSchemeForCustomProtocol:");
   if ([(id)klass respondsToSelector:sel]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -177,7 +211,12 @@
     [webView setCustomUserAgent:userAgent];
   }
 
-  [self _rxr_registerWebViewCustomSchemes:webView];
+  if (self.shouldRegisterWebViewCustomSchemes) {
+    [self _rxr_registerWebViewCustomSchemes:webView];
+  } else {
+    [self _rxr_unregisterWebViewCustomSchemes:webView];
+  }
+
 
   return webView;
 }
