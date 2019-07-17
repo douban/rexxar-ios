@@ -309,7 +309,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
     return nil;
   }
 
-  NSURLQueryItem *uriItem = [NSURLQueryItem queryItemWithName:@"uri" value:uri.absoluteString.stringByRemovingPercentEncoding];
+  NSURLQueryItem *uriItem = [NSURLQueryItem queryItemWithName:@"uri" value:uri.absoluteString];
   NSMutableArray *queryItems = [comp.queryItems mutableCopy];
   if (queryItems.count && uriItem) {
     [queryItems addObject:uriItem];
