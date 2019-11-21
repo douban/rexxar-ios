@@ -24,6 +24,7 @@ static id<RXRLogger> sLogger;
 static id<RXRErrorHandler> sErrorHandler;
 static NSInteger sReloadLimitWhen404 = 2;
 static NSURLSessionConfiguration *sURLSessionConfiguration;
+static RXRDidCompleteRequestBlock _didCompleteRequestBlock;
 
 static NSString * const DefaultRXRScheme = @"douban";
 static NSString * const DefaultRXRHost = @"rexxar-container";
@@ -173,6 +174,16 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
 + (void)setRequestsURLSessionConfiguration:(NSURLSessionConfiguration *)sessionConfiguration
 {
   sURLSessionConfiguration = sessionConfiguration;
+}
+
++ (RXRDidCompleteRequestBlock)didCompleteRequestBlock
+{
+  return _didCompleteRequestBlock;
+}
+
++ (void)setDidCompleteRequestBlock:(RXRDidCompleteRequestBlock)didCompleteRequestBlock
+{
+  _didCompleteRequestBlock = [didCompleteRequestBlock copy];
 }
 
 @end

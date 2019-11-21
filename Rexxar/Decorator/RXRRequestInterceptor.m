@@ -10,6 +10,7 @@
 
 #import "RXRRequestInterceptor.h"
 #import "RXRURLSessionDemux.h"
+#import "RXRConfig.h"
 
 static NSArray<id<RXRDecorator>> *_decorators;
 static NSArray<id<RXRProxy>> *_proxies;
@@ -96,6 +97,7 @@ static NSArray<id<RXRProxy>> *_proxies;
   }
   [self setModes:modes];
 
+  [NSURLProtocol setProperty:@([NSDate timeIntervalSinceReferenceDate]) forKey:@"StartTime" inRequest:newRequest];
   NSURLSessionTask *dataTask = [[[self class] sharedDemux] dataTaskWithRequest:newRequest delegate:self modes:self.modes];
   [dataTask resume];
   [self setDataTask:dataTask];
@@ -143,6 +145,15 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
 
   newRequest = [self _rxr_decorateRequest:newRequest];
   completionHandler(newRequest);
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+  NSNumber *startNum = [NSURLProtocol propertyForKey:@"StartTime" inRequest:task.originalRequest];
+  NSTimeInterval startTime = [startNum doubleValue];
+  if (RXRConfig.didCompleteRequestBlock) {
+    RXRConfig.didCompleteRequestBlock(task.originalRequest.URL, task.response, error, [NSDate timeIntervalSinceReferenceDate] - startTime);
+  }
 }
 
 @end

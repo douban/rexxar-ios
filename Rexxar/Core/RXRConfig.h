@@ -14,6 +14,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^RXRDidCompleteRequestBlock)(NSURL *_Nonnull url, NSURLResponse *_Nullable response, NSError *_Nullable error, NSTimeInterval timeElapsed);
+
 /**
  * `RXRConfig` 提供对 Rexxar 的全局配置接口。
  */
@@ -35,6 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
  - Note: 每一次 reload 会调用 `updateRoutesWithCompletion:` 方法更新路由及本地文件。
  */
 @property (class, nonatomic) NSInteger reloadLimitWhen404;
+
+/**
+RXRRequestInterceptor处理请求完成时的回调
+*/
+@property (class, nonatomic, copy, nullable) RXRDidCompleteRequestBlock didCompleteRequestBlock;
 
 /**
  * 设置 rxrProtocolScheme。
