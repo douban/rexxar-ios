@@ -149,6 +149,8 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
+  [super URLSession:session task:task didCompleteWithError:error];
+  
   NSNumber *startNum = [NSURLProtocol propertyForKey:@"StartTime" inRequest:task.originalRequest];
   NSTimeInterval startTime = [startNum doubleValue];
   if (RXRConfig.didCompleteRequestBlock) {
