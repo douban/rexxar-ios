@@ -165,7 +165,7 @@
 
 #pragma mark - Private Methods
 
-- (WKProcessPool *)_rxr_sharedProcessPool
++ (WKProcessPool *)_rxr_sharedProcessPool
 {
   static dispatch_once_t onceToken;
   static WKProcessPool *instance;
@@ -182,7 +182,7 @@
   WKWebViewConfiguration *webConfiguration = [[WKWebViewConfiguration alloc] init];
   webConfiguration.mediaPlaybackRequiresUserAction = NO;
   webConfiguration.allowsInlineMediaPlayback = YES;
-  webConfiguration.processPool = [self _rxr_sharedProcessPool];
+  webConfiguration.processPool = [RXRWebViewController _rxr_sharedProcessPool];
 
   // iOS9
   if ([webConfiguration respondsToSelector:@selector(websiteDataStore)]) {
