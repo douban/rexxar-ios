@@ -6,14 +6,23 @@
 //  Copyright © 2016 Douban Inc. All rights reserved.
 //
 
+@import WebKit;
+
 #import "RXRNSURLProtocol.h"
 #import "RXRConfig.h"
 #import "RXRConfig+Rexxar.h"
 #import "RXRURLSessionDemux.h"
 #import "NSHTTPURLResponse+Rexxar.h"
 #import "RXRErrorHandler.h"
+#import "RXRWebViewController.h"
 
 static NSMutableDictionary *sRegisteredClassCounter;
+
+@interface RXRNSURLProtocol()
+
+@property (nonatomic, strong) WKWebView *webview;
+
+@end
 
 @implementation RXRNSURLProtocol
 
@@ -49,6 +58,19 @@ static NSMutableDictionary *sRegisteredClassCounter;
 }
 
 #pragma mark - Public methods, do not override
+
+- (void)beforeStartLoadingRequest
+{
+  NSString *ua = self.request.allHTTPHeaderFields[@"User-Agent"];
+  NSArray *comps = [ua componentsSeparatedByString:@" "];
+  NSString *webviewID = nil;
+  for (NSString *comp in comps) {
+    if ([comp hasPrefix:@"webviewID/"]) {
+      webviewID = [comp stringByReplacingOccurrencesOfString:@"webviewID/" withString:@""];
+    }
+  }
+  self.webview = [RXRWebViewStore webviewForID:webviewID];
+}
 
 + (void)markRequestAsIgnored:(NSMutableURLRequest *)request
 {

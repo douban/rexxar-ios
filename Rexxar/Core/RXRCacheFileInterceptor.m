@@ -56,6 +56,8 @@
   NSParameterAssert(self.dataTask == nil);
   RXRDebugLog(@"Intercept <%@> within <%@>", self.request.URL, self.request.mainDocumentURL);
 
+  [self beforeStartLoadingRequest];
+
   NSURL *localURL = [[self class] _rxr_localFileURL:self.request.URL];
   if (localURL) {
     NSData *data = [NSData dataWithContentsOfURL:localURL];

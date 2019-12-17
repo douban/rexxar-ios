@@ -44,6 +44,8 @@ static NSArray<id<RXRContainerAPI>> *_containerAPIs;
 
 - (void)startLoading
 {
+  [self beforeStartLoadingRequest];
+
   for (id<RXRContainerAPI> containerAPI in _containerAPIs) {
     if ([containerAPI shouldInterceptRequest:self.request]) {
 

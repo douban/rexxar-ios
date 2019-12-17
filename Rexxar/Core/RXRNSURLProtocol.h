@@ -18,6 +18,11 @@
 #pragma mark - Public methods, do not override
 
 /**
+* 在startLoading中调用此方法
+*/
+- (void)beforeStartLoadingRequest;
+
+/**
  * 将该请求标记为可以忽略
  */
 + (void)markRequestAsIgnored:(NSMutableURLRequest *)request;

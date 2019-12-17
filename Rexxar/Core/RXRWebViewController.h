@@ -30,4 +30,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface RXRWebViewStore: NSObject
+
++ (void)setWebview:(WKWebView *)webview withWebViewID:(NSString *)webviewID;
++ (WKWebView *)webviewForID:(NSString *)webviewID;
+
+@end
+
+
 NS_ASSUME_NONNULL_END
