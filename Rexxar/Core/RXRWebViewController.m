@@ -206,8 +206,11 @@
   webView.navigationDelegate = self;
   webView.UIDelegate = self;
   webView.scrollView.delegate = self;
+  NSString *webviewID = [NSString stringWithFormat:@"%p", webView];
+  [RXRWebViewStore setWebview:webView withWebViewID:webviewID];
 
   if ([webView respondsToSelector:@selector(setCustomUserAgent:)] && userAgent) {
+    userAgent = [userAgent stringByAppendingFormat:@" webviewID/%@", webviewID];
     [webView setCustomUserAgent:userAgent];
   }
 
@@ -216,7 +219,6 @@
   } else {
     [self _rxr_unregisterWebViewCustomSchemes:webView];
   }
-
 
   return webView;
 }
@@ -440,6 +442,46 @@
   }
 
   [self _rxr_resetControllerAppearance];
+}
+
+@end
+
+
+static NSLock *sStoreLock()
+{
+  static NSLock *instance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    instance = [[NSLock alloc] init];
+  });
+  return instance;
+}
+
+static NSMapTable *sWebviewsTable()
+{
+  static NSMapTable *instance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    instance = [NSMapTable mapTableWithKeyOptions:NSMapTableCopyIn valueOptions:NSMapTableWeakMemory];
+  });
+  return instance;
+}
+
+@implementation RXRWebViewStore
+
++ (WKWebView *)webviewForID:(NSString *)webviewID
+{
+  [sStoreLock() lock];
+  WKWebView *webview = [sWebviewsTable() objectForKey:webviewID];
+  [sStoreLock() unlock];
+  return webview;
+}
+
++ (void)setWebview:(WKWebView *)webview withWebViewID:(NSString *)webviewID
+{
+  [sStoreLock() lock];
+  [sWebviewsTable() setObject:webview forKey:webviewID];
+  [sStoreLock() unlock];
 }
 
 @end

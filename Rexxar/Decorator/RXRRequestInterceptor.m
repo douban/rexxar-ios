@@ -69,6 +69,8 @@ static NSArray<id<RXRProxy>> *_proxies;
 
 - (void)startLoading
 {
+  [self beforeStartLoadingRequest];
+
   for (id<RXRProxy> proxy in _proxies) {
     if ([proxy shouldInterceptRequest:self.request]) {
       NSURLResponse *response = [proxy responseWithRequest:self.request];
