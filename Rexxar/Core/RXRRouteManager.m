@@ -133,32 +133,32 @@
     RXRDebugLog(@"Download %@", response.URL);
     RXRDebugLog(@"Response: %@", response);
 
-    if (((NSHTTPURLResponse *)response).statusCode != 200) {
+    NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
+    if (statusCode != 200) {
       APICompletion(NO);
-      if ([RXRConfig rxr_canLog]) {
 
+      if ([RXRConfig rxr_canLog]) {
         RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeDownloadingRoutesError
                                                                error:error
                                                           requestURL:request.URL
                                                        localFilePath:nil
-                                                    otherInformation:@{logOtherInfoStatusCodeKey: @(((NSHTTPURLResponse *)response).statusCode)}];
+                                                    otherInformation:@{logOtherInfoStatusCodeKey: @(statusCode)}];
         [RXRConfig rxr_logWithLogObject:logObj];
       }
 
       return;
     }
 
-    // 下载最新 routes 中的资源文件，只有成功后，才更新 `routes.json` 及内存中的 `routes`。
+    // 下载最新 routes 中的资源文件，立即更新 `routes.json` 及内存中的 `routes`。
     NSArray *routes = [self _rxr_routesWithData:data];
-    [self _rxr_downloadFilesWithinRoutes:routes completion:^(BOOL success) {
-      if (success) {
-        self.routes = routes;
-        RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
-        [routeFileCache saveRoutesMapFile:data];
-      }
+    if (routes.count > 0) {
+      self.routes = routes;
+      RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
+      [routeFileCache saveRoutesMapFile:data];
+    }
 
-      APICompletion(success);
-    }];
+    APICompletion(routes.count > 0);
+    [self _rxr_downloadFilesWithinRoutes:routes completion:nil];
   }] resume];
 }
 
