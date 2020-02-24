@@ -11,6 +11,7 @@
 #import "RXRNSURLProtocol.h"
 #import "RXRConfig.h"
 #import "RXRConfig+Rexxar.h"
+#import "NSURL+Rexxar.h"
 #import "RXRURLSessionDemux.h"
 #import "NSHTTPURLResponse+Rexxar.h"
 #import "RXRErrorHandler.h"
@@ -46,6 +47,8 @@ static NSMutableDictionary *sRegisteredClassCounter;
 
 - (void)stopLoading
 {
+  [self afterStopLoadingRequest];
+
   if ([self dataTask] != nil) {
     [[self dataTask] cancel];
     [self setDataTask:nil];
@@ -69,7 +72,17 @@ static NSMutableDictionary *sRegisteredClassCounter;
       webviewID = [comp stringByReplacingOccurrencesOfString:@"webviewID/" withString:@""];
     }
   }
-  self.webview = [RXRWebViewStore webviewForID:webviewID];
+  self.webview = [RXRWebViewStore webViewForID:webviewID];
+
+  [RXRWebViewStore addInterceptor:self withWebViewID:webviewID];
+}
+
+- (void)afterStopLoadingRequest
+{
+  if (self.webview != nil) {
+    NSString *webViewID = [RXRWebViewStore IDForWebView:self.webview];
+    [RXRWebViewStore removeInterceptor:self withWebViewID:webViewID];
+  }
 }
 
 + (void)markRequestAsIgnored:(NSMutableURLRequest *)request
@@ -172,7 +185,7 @@ didCompleteWithError:(nullable NSError *)error
   if ([self client] != nil && (_dataTask == nil || _dataTask == task)) {
     if (error == nil) {
       [[self client] URLProtocolDidFinishLoading:self];
-    } else if ([error.domain isEqual:NSURLErrorDomain] && error.code == NSURLErrorCancelled) {
+    } else if ([error.domain isEqual:NSURLErrorDomain] && error.code >= NSURLErrorCannotFindHost) {
       [[self client] URLProtocol:self didFailWithError:error];
     } else {
       // Here we don't call `URLProtocol:didFailWithError:` method because browser may not be able to handle `error`
@@ -191,6 +204,8 @@ didCompleteWithError:(nullable NSError *)error
         [RXRConfig rxr_handleError:error fromReporter:self];
       }
     }
+
+    [self afterStopLoadingRequest];
   }
 }
 
@@ -235,6 +250,54 @@ didReceiveResponse:(NSURLResponse *)response
   if ([self client] != nil && [self dataTask] == dataTask) {
     completionHandler(proposedResponse);
   }
+}
+
+@end
+
+
+@implementation RXRDefaultURLProtocol
+
++ (BOOL)canInitWithRequest:(NSURLRequest *)request
+{
+  // 不是 HTTP 请求，不处理
+  if (![request.URL rxr_isHttpOrHttps]) {
+    return NO;
+  }
+  // 请求被忽略（被标记为忽略或者已经请求过），不处理
+  if ([self isRequestIgnored:request]) {
+    return NO;
+  }
+  // 请求不是来自浏览器，不处理
+  if (![request.allHTTPHeaderFields[@"User-Agent"] hasPrefix:@"Mozilla"]) {
+    return NO;
+  }
+  return YES;
+}
+
+- (void)startLoading
+{
+  [self beforeStartLoadingRequest];
+
+  NSMutableURLRequest *newRequest = nil;
+  if ([self.request isKindOfClass:[NSMutableURLRequest class]]) {
+    newRequest = (NSMutableURLRequest *)self.request;
+  } else {
+    newRequest = [self.request mutableCopy];
+  }
+
+  [[self class] markRequestAsIgnored:newRequest];
+
+  NSMutableArray *modes = [NSMutableArray array];
+  [modes addObject:NSDefaultRunLoopMode];
+  NSString *currentMode = [[NSRunLoop currentRunLoop] currentMode];
+  if (currentMode != nil && ![currentMode isEqualToString:NSDefaultRunLoopMode]) {
+    [modes addObject:currentMode];
+  }
+  [self setModes:modes];
+
+  NSURLSessionTask *dataTask = [[[self class] sharedDemux] dataTaskWithRequest:newRequest delegate:self modes:self.modes];
+  [dataTask resume];
+  [self setDataTask:dataTask];
 }
 
 @end

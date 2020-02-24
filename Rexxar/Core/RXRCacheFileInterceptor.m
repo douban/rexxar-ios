@@ -182,6 +182,8 @@ didCompleteWithError:(nullable NSError *)error
         [self.client URLProtocol:self didFailWithError:error];
       }
     }
+
+    [self afterStopLoadingRequest];
   }
 }
 

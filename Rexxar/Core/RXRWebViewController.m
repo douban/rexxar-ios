@@ -48,7 +48,9 @@
   [super viewWillAppear:animated];
 
   if (_webView.URL == nil) {  // means webContentProcess is terminated
+    [self _rxr_cancelInterceptorsForWebView:_webView];
     [_webView removeFromSuperview];
+
     _webView = [self _rxr_createWebView];
     [self.view addSubview:_webView];
     [self.view setNeedsLayout];
@@ -69,6 +71,7 @@
 
 - (void)dealloc
 {
+  [self _rxr_cancelInterceptorsForWebView:_webView];
   _webView.scrollView.delegate = nil;
   _webView.navigationDelegate = nil;
   _webView.UIDelegate = nil;
@@ -206,8 +209,9 @@
   webView.navigationDelegate = self;
   webView.UIDelegate = self;
   webView.scrollView.delegate = self;
-  NSString *webviewID = [NSString stringWithFormat:@"%p", webView];
-  [RXRWebViewStore setWebview:webView withWebViewID:webviewID];
+
+  NSString *webviewID = [RXRWebViewStore IDForWebView:webView];
+  [RXRWebViewStore setWebView:webView withWebViewID:webviewID];
 
   if ([webView respondsToSelector:@selector(setCustomUserAgent:)] && userAgent) {
     userAgent = [userAgent stringByAppendingFormat:@" webviewID/%@", webviewID];
@@ -221,6 +225,18 @@
   }
 
   return webView;
+}
+
+// 由于所有的 WebView 共享一个 ProcessPool, 为了避免 WebView 释放掉后请求没有释放的情况，这里手动释放掉还未完成的请求。
+- (void)_rxr_cancelInterceptorsForWebView:(WKWebView *)webView
+{
+  NSString *webViewID = [RXRWebViewStore IDForWebView:webView];
+  NSArray<NSURLProtocol *> *urlProtocols = [RXRWebViewStore interceptorsForWebViewID:webViewID];
+
+  for (NSURLProtocol *urlProtocol in urlProtocols) {
+    [urlProtocol stopLoading];
+    [RXRWebViewStore removeInterceptor:urlProtocol withWebViewID:webViewID];
+  }
 }
 
 - (void)_rxr_resetControllerAppearance
@@ -446,6 +462,7 @@
 
 @end
 
+#pragma mark - RXRWebViewStore
 
 static NSLock *sStoreLock()
 {
@@ -469,19 +486,67 @@ static NSMapTable *sWebviewsTable()
 
 @implementation RXRWebViewStore
 
-+ (WKWebView *)webviewForID:(NSString *)webviewID
++ (NSString *)IDForWebView:(WKWebView *)webView
+{
+  return [NSString stringWithFormat:@"%p", webView];
+}
+
++ (WKWebView *)webViewForID:(NSString *)webViewID;
 {
   [sStoreLock() lock];
-  WKWebView *webview = [sWebviewsTable() objectForKey:webviewID];
+  WKWebView *webview = [sWebviewsTable() objectForKey:webViewID];
   [sStoreLock() unlock];
   return webview;
 }
 
-+ (void)setWebview:(WKWebView *)webview withWebViewID:(NSString *)webviewID
++ (void)setWebView:(WKWebView *)webView withWebViewID:(NSString *)webViewID;
 {
   [sStoreLock() lock];
-  [sWebviewsTable() setObject:webview forKey:webviewID];
+  [sWebviewsTable() setObject:webView forKey:webViewID];
   [sStoreLock() unlock];
+}
+
+static NSMapTable *sWebViewInterceptorTable()
+{
+  static NSMapTable *instance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    instance = [NSMapTable mapTableWithKeyOptions:NSMapTableCopyIn valueOptions:NSMapTableWeakMemory];
+  });
+  return instance;
+}
+
++ (void)addInterceptor:(NSURLProtocol *)interceptor withWebViewID:(NSString *)webViewID
+{
+  [sStoreLock() lock];
+  NSString *key = [NSString stringWithFormat:@"%@:%p", webViewID, interceptor];
+  [sWebViewInterceptorTable() setObject:interceptor forKey:key];
+  [sStoreLock() unlock];
+}
+
++ (void)removeInterceptor:(NSURLProtocol *)interceptor withWebViewID:(NSString *)webViewID
+{
+  [sStoreLock() lock];
+  NSString *key = [NSString stringWithFormat:@"%@:%p", webViewID, interceptor];
+  [sWebViewInterceptorTable() setObject:interceptor forKey:key];
+  [sStoreLock() unlock];
+}
+
++ (NSArray<NSURLProtocol *> *)interceptorsForWebViewID:(NSString *)webViewID
+{
+  [sStoreLock() lock];
+  NSMutableArray<NSURLProtocol *> *instances = [NSMutableArray array];
+  NSEnumerator *keyEnumerator = [sWebViewInterceptorTable() keyEnumerator];
+  for (NSString *key in [keyEnumerator allObjects]) {
+    if ([key hasPrefix:webViewID]) {
+      NSURLProtocol *instance = [sWebViewInterceptorTable() objectForKey:key];
+      if (instance != nil) {
+        [instances addObject:instance];
+      }
+    }
+  }
+  [sStoreLock() unlock];
+  return instances;
 }
 
 @end
