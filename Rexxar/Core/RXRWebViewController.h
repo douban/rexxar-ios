@@ -32,10 +32,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RXRWebViewStore: NSObject
 
-+ (void)setWebview:(WKWebView *)webview withWebViewID:(NSString *)webviewID;
-+ (WKWebView *)webviewForID:(NSString *)webviewID;
++ (NSString *)IDForWebView:(WKWebView *)webView;
++ (void)setWebView:(WKWebView *)webView withWebViewID:(NSString *)webViewID;
++ (WKWebView *)webViewForID:(NSString *)webViewID;
+
++ (void)addInterceptor:(NSURLProtocol *)interceptor withWebViewID:(NSString *)webViewID;
++ (void)removeInterceptor:(NSURLProtocol *)interceptor withWebViewID:(NSString *)webViewID;
++ (NSArray<NSURLProtocol *> *)interceptorsForWebViewID:(NSString *)webViewID;
 
 @end
-
 
 NS_ASSUME_NONNULL_END

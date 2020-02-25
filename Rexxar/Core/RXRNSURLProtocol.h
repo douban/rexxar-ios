@@ -18,9 +18,14 @@
 #pragma mark - Public methods, do not override
 
 /**
-* 在startLoading中调用此方法
-*/
+ * 在startLoading中调用此方法
+ */
 - (void)beforeStartLoadingRequest;
+
+/**
+ * 加载完成时调用此方法
+ */
+- (void)afterStopLoadingRequest;
 
 /**
  * 将该请求标记为可以忽略
@@ -57,5 +62,13 @@
  * @return 共享的复用解析器
  */
 + (RXRURLSessionDemux *)sharedDemux;
+
+@end
+
+///
+/// 截获所有的 http / https 请求，然后内部使用 URLSession 重新发送请求
+/// 为了确保 URLProtocol 注册顺序，使用时必须优先注册这个类
+///
+@interface RXRDefaultURLProtocol : RXRNSURLProtocol
 
 @end
