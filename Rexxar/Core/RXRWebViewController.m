@@ -330,7 +330,7 @@
   }];
   [alert addAction:action];
 
-  if (self.navigationController.topViewController == self) {
+  if (self.navigationController.topViewController == self && !self.navigationController.presentedViewController) {
     [self presentViewController:alert animated:YES completion:nil];
   } else {
     completionHandler();
@@ -355,7 +355,7 @@
   [alert addAction:cancelAction];
   [alert addAction:confirmAction];
 
-  if (self.navigationController.topViewController == self) {
+  if (self.navigationController.topViewController == self && !self.navigationController.presentedViewController) {
     [self presentViewController:alert animated:YES completion:nil];
   } else {
     completionHandler(NO);
@@ -380,7 +380,7 @@
   [alert addAction:cancelAction];
   [alert addAction:confirmAction];
 
-  if (self.navigationController.topViewController == self) {
+  if (self.navigationController.topViewController == self && !self.navigationController.presentedViewController) {
     [self presentViewController:alert animated:YES completion:nil];
   } else {
     completionHandler(nil);
