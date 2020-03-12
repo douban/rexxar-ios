@@ -51,7 +51,7 @@
   NSAssert(_thread != nil, nil);
 
   if (_delegate != nil && _thread != nil) {
-    [self performSelector:@selector(performBlockOnClientThread:) onThread:_thread withObject:[block copy] waitUntilDone:NO modes:_modes];
+    [self performSelector:@selector(performBlockOnClientThread:) onThread:_thread withObject:[block copy] waitUntilDone:YES modes:[_modes copy]];
   }
 }
 
