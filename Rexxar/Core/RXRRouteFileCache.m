@@ -63,15 +63,7 @@ static NSString * const RoutesMapFile = @"routes.json";
                                                   error:&error];
   if (error) {
     RXRDebugLog(@"Failed to create directory: %@", _cachePath);
-
-    if ([RXRConfig rxr_canLog] ) {
-      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeFailedToCreateCacheDirectoryError
-                                                             error:error
-                                                        requestURL:nil
-                                                     localFilePath:_cachePath
-                                                  otherInformation:nil];
-      [RXRConfig rxr_logWithLogObject:logObj];
-    }
+    [RXRConfig rxr_logWithType:RXRLogTypeFailedToCreateCacheDirectoryError error:error requestURL:nil localFilePath:_cachePath userInfo:nil];
   }
 }
 

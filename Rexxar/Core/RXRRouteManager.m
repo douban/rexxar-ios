@@ -12,6 +12,7 @@
 #import "RXRRouteFileCache.h"
 #import "RXRConfig.h"
 #import "RXRConfig+Rexxar.h"
+#import "RXRDateFormater.h"
 #import "RXRRoute.h"
 #import "RXRLogger.h"
 
@@ -86,16 +87,7 @@
 
   if (self.routesMapURL == nil) {
     RXRDebugLog(@"[Warning] `routesRemoteURL` not set.");
-
-    if ([RXRConfig rxr_canLog]) {
-      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeNoRoutesMapURLError
-                                                             error:nil
-                                                        requestURL:nil
-                                                     localFilePath:nil
-                                                  otherInformation:nil];
-      [RXRConfig rxr_logWithLogObject:logObj];
-    }
-
+    [RXRConfig rxr_logWithType:RXRLogTypeNoRoutesMapURLError error:nil requestURL:nil localFilePath:nil userInfo:nil];
     return;
   }
 
@@ -136,16 +128,8 @@
     NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
     if (statusCode != 200) {
       APICompletion(NO);
-
-      if ([RXRConfig rxr_canLog]) {
-        RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeDownloadingRoutesError
-                                                               error:error
-                                                          requestURL:request.URL
-                                                       localFilePath:nil
-                                                    otherInformation:@{logOtherInfoStatusCodeKey: @(statusCode)}];
-        [RXRConfig rxr_logWithLogObject:logObj];
-      }
-
+      NSDictionary *userInfo = @{logOtherInfoStatusCodeKey: @(statusCode)};
+      [RXRConfig rxr_logWithType:RXRLogTypeDownloadingRoutesError error:error requestURL:request.URL localFilePath:nil userInfo:userInfo];
       return;
     }
 
@@ -220,9 +204,8 @@
 
   NSString *routesDepolyTime = JSON[@"deploy_time"];
   if (routesDepolyTime) {
-    _routesDeployTime = [routesDepolyTime copy];
-  }
-  else {
+    _routesDeployTime = [RXRDateFormater dateFromString:routesDepolyTime format:RXRDeployTimeFormat];
+  } else {
     _routesDeployTime = nil;
   }
 
@@ -242,36 +225,33 @@
   BOOL __block success = YES;
 
   for (RXRRoute *route in routes) {
-
     // 如果文件在本地文件存在（要么在缓存，要么在资源文件夹），什么都不需要做
     if ([[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:route.remoteHTML]) {
       continue;
     }
 
-    if (downloadGroup) { dispatch_group_enter(downloadGroup); }
+    if (downloadGroup) {
+      dispatch_group_enter(downloadGroup);
+    }
 
     // 文件不存在，下载下来。
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:route.remoteHTML
-                                                           cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
-                                                       timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:route.remoteHTML
+                                             cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+                                         timeoutInterval:60];
     [[self.session downloadTaskWithRequest:request completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
-
       RXRDebugLog(@"Download %@", response.URL);
       RXRDebugLog(@"Response: %@", response);
 
-      if (error || ((NSHTTPURLResponse *)response).statusCode != 200) {
+      NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
+      if (error || statusCode != 200) {
         // Log
-        if ([RXRConfig rxr_canLog]) {
-          RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeDownloadingHTMLFileError
-                                                                 error:error
-                                                            requestURL:request.URL
-                                                         localFilePath:nil
-                                                      otherInformation:@{logOtherInfoStatusCodeKey: @(((NSHTTPURLResponse *)response).statusCode)}];
-          [RXRConfig rxr_logWithLogObject:logObj];
-        }
+        NSDictionary *userInfo = @{logOtherInfoStatusCodeKey: @(statusCode)};
+        [RXRConfig rxr_logWithType:RXRLogTypeDownloadingHTMLFileError error:error requestURL:request.URL localFilePath:nil userInfo:userInfo];
 
         success = NO;
-        if (downloadGroup) { dispatch_group_leave(downloadGroup); }
+        if (downloadGroup) {
+          dispatch_group_leave(downloadGroup);
+        }
 
         RXRDebugLog(@"Fail to move download remote html: %@", error);
         return;
@@ -283,20 +263,8 @@
       if (self.dataValidator
           && [self.dataValidator respondsToSelector:@selector(validateRemoteHTMLFile:fileData:)]
           && ![self.dataValidator validateRemoteHTMLFile:route.remoteHTML fileData:data]) {
-
         // Log
-        if ([RXRConfig rxr_canLog]) {
-          NSDictionary *otherInfo;
-          if (RXRRouteManager.sharedInstance.routesDeployTime) {
-            otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
-          }
-          RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeValidatingHTMLFileError
-                                                                 error:nil
-                                                            requestURL:route.remoteHTML
-                                                         localFilePath:nil
-                                                      otherInformation:otherInfo];
-          [RXRConfig rxr_logWithLogObject:logObj];
-        }
+        [RXRConfig rxr_logWithType:RXRLogTypeValidatingHTMLFileError error:nil requestURL:route.remoteHTML localFilePath:nil userInfo:nil];
 
         if ([self.dataValidator respondsToSelector:@selector(stopDownloadingIfValidationFailed)] &&
             [self.dataValidator stopDownloadingIfValidationFailed]) {
@@ -310,7 +278,9 @@
 
       [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:response.URL];
 
-      if (downloadGroup) { dispatch_group_leave(downloadGroup); }
+      if (downloadGroup) {
+        dispatch_group_leave(downloadGroup);
+      }
     }] resume];
   }
 
