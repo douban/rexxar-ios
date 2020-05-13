@@ -16,6 +16,17 @@
 #import "RXRRoute.h"
 #import "RXRLogger.h"
 
+@interface RXRRoutesObject : NSObject
+
+@property (nonatomic, copy) NSArray<RXRRoute *> *routes;
+@property (nonatomic, strong) NSDate *deployTime;
+
+@end
+
+@implementation RXRRoutesObject
+
+@end
+
 @interface RXRRouteManager ()
 
 @property (nonatomic, strong) NSURLSession *session;
@@ -23,6 +34,7 @@
 @property (nonatomic, strong) NSOperationQueue *sessionDelegateQueue;
 
 @property (nonatomic, copy) NSArray<RXRRoute *> *routes;
+@property (nonatomic, strong) NSDate *routesDeployTime;
 @property (nonatomic, assign) BOOL updatingRoutes;
 @property (nonatomic, strong) NSMutableArray *updateRoutesCompletions;
 
@@ -63,7 +75,9 @@
 {
   if (_routesMapURL != routesMapURL) {
     _routesMapURL = [routesMapURL copy];
-    self.routes = [self _rxr_routesWithData:[[RXRRouteFileCache sharedInstance] routesMapFile]];
+    RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[[RXRRouteFileCache sharedInstance] routesMapFile]];
+    self.routes = routesObject.routes;
+    self.routesDeployTime = routesObject.deployTime;
   }
 }
 
@@ -71,14 +85,18 @@
 {
   RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
   routeFileCache.cachePath = cachePath;
-  self.routes = [self _rxr_routesWithData:[routeFileCache routesMapFile]];
+  RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[routeFileCache routesMapFile]];
+  self.routes = routesObject.routes;
+  self.routesDeployTime = routesObject.deployTime;
 }
 
 - (void)setResoucePath:(NSString *)resourcePath
 {
   RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
   routeFileCache.resourcePath = resourcePath;
-  self.routes = [self _rxr_routesWithData:[routeFileCache routesMapFile]];
+  RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[routeFileCache routesMapFile]];
+  self.routes = routesObject.routes;
+  self.routesDeployTime = routesObject.deployTime;
 }
 
 - (void)updateRoutesWithCompletion:(void (^)(BOOL success))completion
@@ -133,16 +151,23 @@
       return;
     }
 
+    // 如果下载的 routes deployTime 早于当前的 routesDeployTime，则不更新
+    RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:data];
+    if (routesObject.deployTime && self.routesDeployTime && [routesObject.deployTime compare:self.routesDeployTime] == NSOrderedAscending) {
+      APICompletion(NO);
+      return;
+    }
+
     // 下载最新 routes 中的资源文件，立即更新 `routes.json` 及内存中的 `routes`。
-    NSArray *routes = [self _rxr_routesWithData:data];
-    if (routes.count > 0) {
-      self.routes = routes;
+    if (routesObject.routes.count > 0) {
+      self.routes = routesObject.routes;
+      self.routesDeployTime = routesObject.deployTime;
       RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
       [routeFileCache saveRoutesMapFile:data];
     }
 
-    APICompletion(routes.count > 0);
-    [self _rxr_downloadFilesWithinRoutes:routes completion:nil];
+    APICompletion(routesObject.routes.count > 0);
+    [self _rxr_downloadFilesWithinRoutes:routesObject.routes completion:nil];
   }] resume];
 }
 
@@ -180,7 +205,7 @@
   return nil;
 }
 
-- (NSArray *)_rxr_routesWithData:(NSData *)data
+- (RXRRoutesObject *)_rxr_routesObjectWithData:(NSData *)data
 {
   if (data == nil) {
     return nil;
@@ -191,6 +216,7 @@
     return nil;
   }
 
+  RXRRoutesObject *routesObject = [[RXRRoutesObject alloc] init];
   NSMutableArray *items = [[NSMutableArray alloc] init];
   // 页面级别的 route
   for (NSDictionary *item in JSON[@"items"]) {
@@ -204,12 +230,13 @@
 
   NSString *routesDepolyTime = JSON[@"deploy_time"];
   if (routesDepolyTime) {
-    _routesDeployTime = [RXRDateFormater dateFromString:routesDepolyTime format:RXRDeployTimeFormat];
+    routesObject.deployTime = [RXRDateFormater dateFromString:routesDepolyTime format:RXRDeployTimeFormat];
   } else {
-    _routesDeployTime = nil;
+    routesObject.deployTime = nil;
   }
 
-  return items;
+  routesObject.routes = items;
+  return routesObject;
 }
 
 /**

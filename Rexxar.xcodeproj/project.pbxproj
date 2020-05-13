@@ -624,10 +624,9 @@
 			};
 			buildConfigurationList = 98B47AFD1BF1E0E00087735C /* Build configuration list for PBXProject "Rexxar" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);

@@ -8,7 +8,7 @@
 
 #import "RXRDateFormater.h"
 
-NSString *const RXRDeployTimeFormat = @"EEE, d MMM yyyy HH:mm:ss";
+NSString *const RXRDeployTimeFormat = @"E, dd MMM yyyy HH:mm:ss ZZZ";
 
 @implementation RXRDateFormater
 
@@ -39,7 +39,7 @@ NSString *const RXRDeployTimeFormat = @"EEE, d MMM yyyy HH:mm:ss";
       if (instance == nil) {
         instance = [[NSDateFormatter alloc] init];
         instance.dateFormat = fmt;
-        instance.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:8 * 60 * 60];
+        instance.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
         [cache setObject:instance forKey:fmt];
       }
     }

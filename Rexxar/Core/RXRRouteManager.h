@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  当前 routes 的生效时间，可用来区分 routes 版本。
  */
-@property (nonatomic, readonly) NSDate *routesDeployTime;
+@property (nonatomic, readonly, nullable) NSDate *routesDeployTime;
 
 /**
  * 读取 Routes Map 信息的 URL 地址。路由表应该由服务器提供。
