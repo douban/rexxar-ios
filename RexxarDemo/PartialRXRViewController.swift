@@ -29,13 +29,13 @@ class PartialRexxarViewController: UIViewController {
     view.backgroundColor = UIColor.lightGray
     childRexxarViewController.view.backgroundColor = UIColor.white
 
-    addChildViewController(childRexxarViewController)
+    addChild(childRexxarViewController)
     childRexxarViewController.view.frame = CGRect(x: 0,
                                                   y: 100,
                                                   width: view.frame.size.width,
                                                   height: 500)
     view.addSubview(childRexxarViewController.view)
-    childRexxarViewController.didMove(toParentViewController: self)
+    childRexxarViewController.didMove(toParent: self)
   }
 
   override func viewWillAppear(_ animated: Bool) {

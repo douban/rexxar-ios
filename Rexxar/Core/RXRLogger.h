@@ -47,10 +47,11 @@ typedef enum : NSUInteger {
 
 @end
 
-FOUNDATION_EXPORT const NSString * _Nonnull logOtherInfoStatusCodeKey;
-FOUNDATION_EXPORT const NSString * _Nonnull logOtherInfoRoutesDepolyTimeKey;
+FOUNDATION_EXPORT NSString *const _Nonnull logOtherInfoStatusCodeKey;
+FOUNDATION_EXPORT NSString *const _Nonnull logOtherInfoRoutesDepolyTimeKey;
 
 NS_ASSUME_NONNULL_BEGIN
+
 @interface RXRLogObject : NSObject
 
 @property (nonatomic, readonly) RXRLogType type;
@@ -71,7 +72,6 @@ NS_ASSUME_NONNULL_BEGIN
                             requestURL:(nullable NSURL *)requestURL
                          localFilePath:(nullable NSString *)localFilePath
                       otherInformation:(nullable NSDictionary *)otherInformation NS_DESIGNATED_INITIALIZER;
+@end
 
 NS_ASSUME_NONNULL_END
-
-@end

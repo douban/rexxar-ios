@@ -12,8 +12,20 @@
 #import "RXRRouteFileCache.h"
 #import "RXRConfig.h"
 #import "RXRConfig+Rexxar.h"
+#import "RXRDateFormater.h"
 #import "RXRRoute.h"
 #import "RXRLogger.h"
+
+@interface RXRRoutesObject : NSObject
+
+@property (nonatomic, copy) NSArray<RXRRoute *> *routes;
+@property (nonatomic, strong) NSDate *deployTime;
+
+@end
+
+@implementation RXRRoutesObject
+
+@end
 
 @interface RXRRouteManager ()
 
@@ -22,6 +34,7 @@
 @property (nonatomic, strong) NSOperationQueue *sessionDelegateQueue;
 
 @property (nonatomic, copy) NSArray<RXRRoute *> *routes;
+@property (nonatomic, strong) NSDate *routesDeployTime;
 @property (nonatomic, assign) BOOL updatingRoutes;
 @property (nonatomic, strong) NSMutableArray *updateRoutesCompletions;
 
@@ -62,7 +75,9 @@
 {
   if (_routesMapURL != routesMapURL) {
     _routesMapURL = [routesMapURL copy];
-    self.routes = [self _rxr_routesWithData:[[RXRRouteFileCache sharedInstance] routesMapFile]];
+    RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[[RXRRouteFileCache sharedInstance] routesMapFile]];
+    self.routes = routesObject.routes;
+    self.routesDeployTime = routesObject.deployTime;
   }
 }
 
@@ -70,14 +85,18 @@
 {
   RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
   routeFileCache.cachePath = cachePath;
-  self.routes = [self _rxr_routesWithData:[routeFileCache routesMapFile]];
+  RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[routeFileCache routesMapFile]];
+  self.routes = routesObject.routes;
+  self.routesDeployTime = routesObject.deployTime;
 }
 
 - (void)setResoucePath:(NSString *)resourcePath
 {
   RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
   routeFileCache.resourcePath = resourcePath;
-  self.routes = [self _rxr_routesWithData:[routeFileCache routesMapFile]];
+  RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[routeFileCache routesMapFile]];
+  self.routes = routesObject.routes;
+  self.routesDeployTime = routesObject.deployTime;
 }
 
 - (void)updateRoutesWithCompletion:(void (^)(BOOL success))completion
@@ -86,16 +105,7 @@
 
   if (self.routesMapURL == nil) {
     RXRDebugLog(@"[Warning] `routesRemoteURL` not set.");
-
-    if ([RXRConfig rxr_canLog]) {
-      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeNoRoutesMapURLError
-                                                             error:nil
-                                                        requestURL:nil
-                                                     localFilePath:nil
-                                                  otherInformation:nil];
-      [RXRConfig rxr_logWithLogObject:logObj];
-    }
-
+    [RXRConfig rxr_logWithType:RXRLogTypeNoRoutesMapURLError error:nil requestURL:nil localFilePath:nil userInfo:nil];
     return;
   }
 
@@ -120,7 +130,19 @@
   };
 
   // 请求路由表 API
-  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.routesMapURL
+  NSURL *routesURL = self.routesMapURL;
+  if ([RXRConfig extraRequestParams].count > 0) {
+    NSURLComponents *comps = [NSURLComponents componentsWithURL:routesURL resolvingAgainstBaseURL:YES];
+    NSMutableArray<NSURLQueryItem *> *queryItems = [NSMutableArray<NSURLQueryItem *> array];
+    if ([comps.queryItems count] > 0) {
+      [queryItems addObjectsFromArray:comps.queryItems];
+    }
+    [queryItems addObjectsFromArray:[RXRConfig extraRequestParams]];
+    comps.queryItems = queryItems;
+    routesURL = comps.URL;
+  }
+
+  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:routesURL
                                                          cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                      timeoutInterval:60];
   // 更新 Http UserAgent Header
@@ -136,29 +158,28 @@
     NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
     if (statusCode != 200) {
       APICompletion(NO);
+      NSDictionary *userInfo = @{logOtherInfoStatusCodeKey: @(statusCode)};
+      [RXRConfig rxr_logWithType:RXRLogTypeDownloadingRoutesError error:error requestURL:request.URL localFilePath:nil userInfo:userInfo];
+      return;
+    }
 
-      if ([RXRConfig rxr_canLog]) {
-        RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeDownloadingRoutesError
-                                                               error:error
-                                                          requestURL:request.URL
-                                                       localFilePath:nil
-                                                    otherInformation:@{logOtherInfoStatusCodeKey: @(statusCode)}];
-        [RXRConfig rxr_logWithLogObject:logObj];
-      }
-
+    // 如果下载的 routes deployTime 早于当前的 routesDeployTime，则不更新
+    RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:data];
+    if (routesObject.deployTime && self.routesDeployTime && [self.routesDeployTime compare:routesObject.deployTime] != NSOrderedAscending) {
+      APICompletion(NO);
       return;
     }
 
     // 下载最新 routes 中的资源文件，立即更新 `routes.json` 及内存中的 `routes`。
-    NSArray *routes = [self _rxr_routesWithData:data];
-    if (routes.count > 0) {
-      self.routes = routes;
+    if (routesObject.routes.count > 0) {
+      self.routes = routesObject.routes;
+      self.routesDeployTime = routesObject.deployTime;
       RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
       [routeFileCache saveRoutesMapFile:data];
     }
 
-    APICompletion(routes.count > 0);
-    [self _rxr_downloadFilesWithinRoutes:routes completion:nil];
+    APICompletion(routesObject.routes.count > 0);
+    [self _rxr_downloadFilesWithinRoutes:routesObject.routes completion:nil];
   }] resume];
 }
 
@@ -196,7 +217,7 @@
   return nil;
 }
 
-- (NSArray *)_rxr_routesWithData:(NSData *)data
+- (RXRRoutesObject *)_rxr_routesObjectWithData:(NSData *)data
 {
   if (data == nil) {
     return nil;
@@ -207,6 +228,7 @@
     return nil;
   }
 
+  RXRRoutesObject *routesObject = [[RXRRoutesObject alloc] init];
   NSMutableArray *items = [[NSMutableArray alloc] init];
   // 页面级别的 route
   for (NSDictionary *item in JSON[@"items"]) {
@@ -220,13 +242,13 @@
 
   NSString *routesDepolyTime = JSON[@"deploy_time"];
   if (routesDepolyTime) {
-    _routesDeployTime = [routesDepolyTime copy];
-  }
-  else {
-    _routesDeployTime = nil;
+    routesObject.deployTime = [RXRDateFormater dateFromString:routesDepolyTime format:RXRDeployTimeFormat];
+  } else {
+    routesObject.deployTime = nil;
   }
 
-  return items;
+  routesObject.routes = items;
+  return routesObject;
 }
 
 /**
@@ -242,36 +264,33 @@
   BOOL __block success = YES;
 
   for (RXRRoute *route in routes) {
-
     // 如果文件在本地文件存在（要么在缓存，要么在资源文件夹），什么都不需要做
     if ([[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:route.remoteHTML]) {
       continue;
     }
 
-    if (downloadGroup) { dispatch_group_enter(downloadGroup); }
+    if (downloadGroup) {
+      dispatch_group_enter(downloadGroup);
+    }
 
     // 文件不存在，下载下来。
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:route.remoteHTML
-                                                           cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
-                                                       timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:route.remoteHTML
+                                             cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+                                         timeoutInterval:60];
     [[self.session downloadTaskWithRequest:request completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
-
       RXRDebugLog(@"Download %@", response.URL);
       RXRDebugLog(@"Response: %@", response);
 
-      if (error || ((NSHTTPURLResponse *)response).statusCode != 200) {
+      NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
+      if (error || statusCode != 200) {
         // Log
-        if ([RXRConfig rxr_canLog]) {
-          RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeDownloadingHTMLFileError
-                                                                 error:error
-                                                            requestURL:request.URL
-                                                         localFilePath:nil
-                                                      otherInformation:@{logOtherInfoStatusCodeKey: @(((NSHTTPURLResponse *)response).statusCode)}];
-          [RXRConfig rxr_logWithLogObject:logObj];
-        }
+        NSDictionary *userInfo = @{logOtherInfoStatusCodeKey: @(statusCode)};
+        [RXRConfig rxr_logWithType:RXRLogTypeDownloadingHTMLFileError error:error requestURL:request.URL localFilePath:nil userInfo:userInfo];
 
         success = NO;
-        if (downloadGroup) { dispatch_group_leave(downloadGroup); }
+        if (downloadGroup) {
+          dispatch_group_leave(downloadGroup);
+        }
 
         RXRDebugLog(@"Fail to move download remote html: %@", error);
         return;
@@ -283,20 +302,8 @@
       if (self.dataValidator
           && [self.dataValidator respondsToSelector:@selector(validateRemoteHTMLFile:fileData:)]
           && ![self.dataValidator validateRemoteHTMLFile:route.remoteHTML fileData:data]) {
-
         // Log
-        if ([RXRConfig rxr_canLog]) {
-          NSDictionary *otherInfo;
-          if (RXRRouteManager.sharedInstance.routesDeployTime) {
-            otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
-          }
-          RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeValidatingHTMLFileError
-                                                                 error:nil
-                                                            requestURL:route.remoteHTML
-                                                         localFilePath:nil
-                                                      otherInformation:otherInfo];
-          [RXRConfig rxr_logWithLogObject:logObj];
-        }
+        [RXRConfig rxr_logWithType:RXRLogTypeValidatingHTMLFileError error:nil requestURL:route.remoteHTML localFilePath:nil userInfo:nil];
 
         if ([self.dataValidator respondsToSelector:@selector(stopDownloadingIfValidationFailed)] &&
             [self.dataValidator stopDownloadingIfValidationFailed]) {
@@ -310,7 +317,9 @@
 
       [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:response.URL];
 
-      if (downloadGroup) { dispatch_group_leave(downloadGroup); }
+      if (downloadGroup) {
+        dispatch_group_leave(downloadGroup);
+      }
     }] resume];
   }
 

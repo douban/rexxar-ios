@@ -39,21 +39,21 @@ private let animationDuration: TimeInterval = 2.4
     ringLayer.contentsScale = UIScreen.main.scale
     ringLayer.strokeColor = strokeColor.cgColor
     ringLayer.fillColor = UIColor.clear.cgColor
-    ringLayer.lineCap = kCALineCapRound
-    ringLayer.lineJoin = kCALineJoinBevel
+    ringLayer.lineCap = CAShapeLayerLineCap.round
+    ringLayer.lineJoin = CAShapeLayerLineJoin.bevel
 
     layer.addSublayer(ringLayer)
     layer.addSublayer(pointSuperLayer)
 
     rightPointLayer.strokeColor = strokeColor.cgColor
-    rightPointLayer.lineCap = kCALineCapRound
+    rightPointLayer.lineCap = CAShapeLayerLineCap.round
     pointSuperLayer.addSublayer(rightPointLayer)
 
     leftPointLayer.strokeColor = strokeColor.cgColor
-    leftPointLayer.lineCap = kCALineCapRound
+    leftPointLayer.lineCap = CAShapeLayerLineCap.round
     pointSuperLayer.addSublayer(leftPointLayer)
 
-    NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
   }
 
   required init?(coder aDecoder: NSCoder) {

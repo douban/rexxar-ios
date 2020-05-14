@@ -440,16 +440,7 @@
 {
   // Log
   if ([RXRConfig rxr_canLog]) {
-    NSDictionary *otherInfo;
-    if (RXRRouteManager.sharedInstance.routesDeployTime) {
-      otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
-    }
-    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoadingError
-                                                           error:error
-                                                      requestURL:webView.URL
-                                                   localFilePath:nil
-                                                otherInformation:otherInfo];
-    [RXRConfig rxr_logWithLogObject:logObj];
+    [RXRConfig rxr_logWithType:RXRLogTypeWebViewLoadingError error:error requestURL:webView.URL localFilePath:nil userInfo:nil];
   }
 
   // Handle Error

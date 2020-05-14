@@ -228,15 +228,9 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
   }
   else if (httpResponse.statusCode == 404) {
     decisionHandler(WKNavigationResponsePolicyCancel);
+    // Log 404 error when reload not work
+    [RXRConfig rxr_logWithType:RXRLogTypeWebViewLoad404 error:nil requestURL:httpResponse.URL localFilePath:nil userInfo:nil];
 
-    if ([RXRConfig rxr_canLog]) { // Log 404 error when reload not work
-      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeWebViewLoad404
-                                                             error:nil
-                                                        requestURL:httpResponse.URL
-                                                     localFilePath:nil
-                                                  otherInformation:nil];
-      [RXRConfig rxr_logWithLogObject:logObj];
-    }
     if ([RXRConfig rxr_canHandleError]) {
       NSDictionary *userInfo = httpResponse.URL ? @{rxrErrorUserInfoURLKey: httpResponse.URL} : nil;
       NSError *error = [NSError errorWithDomain:rxrHttpErrorDomain code:rxrHttpResponseErrorNotFound userInfo:userInfo];
@@ -264,16 +258,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
     htmlFileURL = [[RXRRouteManager sharedInstance] remoteHtmlURLForURI:self.uri];
 
     if (!htmlFileURL && [RXRConfig rxr_canLog]) {
-      NSDictionary *otherInfo;
-      if (RXRRouteManager.sharedInstance.routesDeployTime) {
-        otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
-      }
-      RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeNoRemoteHTMLForURI
-                                                             error:nil
-                                                        requestURL:self.uri
-                                                     localFilePath:nil
-                                                  otherInformation:otherInfo];
-      [RXRConfig rxr_logWithLogObject:logObj];
+      [RXRConfig rxr_logWithType:RXRLogTypeNoRemoteHTMLForURI error:nil requestURL:self.uri localFilePath:nil userInfo:nil];
     }
 
     if ([RXRConfig isCacheEnable]) {
@@ -283,16 +268,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
         htmlFileURL = localHtmlURL;
       }
       else if (!localHtmlURL && [RXRConfig rxr_canLog]) {
-        NSDictionary *otherInfo;
-        if (RXRRouteManager.sharedInstance.routesDeployTime) {
-          otherInfo = @{logOtherInfoRoutesDepolyTimeKey: RXRRouteManager.sharedInstance.routesDeployTime};
-        }
-        RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogType:RXRLogTypeNoLocalHTMLForURI
-                                                               error:nil
-                                                          requestURL:self.uri
-                                                       localFilePath:nil
-                                                    otherInformation:otherInfo];
-        [RXRConfig rxr_logWithLogObject:logObj];
+        [RXRConfig rxr_logWithType:RXRLogTypeNoLocalHTMLForURI error:nil requestURL:self.uri localFilePath:nil userInfo:nil];
       }
     }
   }

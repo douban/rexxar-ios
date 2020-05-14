@@ -87,6 +87,8 @@
 		B9E27ED01C049A9900C12DAF /* RXRRouteManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */; };
 		B9E27ED41C054A7A00C12DAF /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E27ED31C054A7A00C12DAF /* RoutesViewController.swift */; };
 		B9EF27D81C033C5300C7E2E9 /* www in Resources */ = {isa = PBXBuildFile; fileRef = B9EF27D71C033C5300C7E2E9 /* www */; };
+		D85B0B68246BE2B400FFA36B /* RXRDateFormater.h in Headers */ = {isa = PBXBuildFile; fileRef = D85B0B66246BE2B400FFA36B /* RXRDateFormater.h */; };
+		D85B0B69246BE2B400FFA36B /* RXRDateFormater.m in Sources */ = {isa = PBXBuildFile; fileRef = D85B0B67246BE2B400FFA36B /* RXRDateFormater.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -202,6 +204,8 @@
 		B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRRouteManagerTests.m; sourceTree = "<group>"; };
 		B9E27ED31C054A7A00C12DAF /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesViewController.swift; sourceTree = "<group>"; };
 		B9EF27D71C033C5300C7E2E9 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
+		D85B0B66246BE2B400FFA36B /* RXRDateFormater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RXRDateFormater.h; sourceTree = "<group>"; };
+		D85B0B67246BE2B400FFA36B /* RXRDateFormater.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RXRDateFormater.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -359,6 +363,8 @@
 				7196C5EF1FB1551700E2B57C /* RXRLogger.m */,
 				71F7C3461FEB8F4E00243719 /* RXRErrorHandler.h */,
 				71F7C3471FEB8F4E00243719 /* RXRErrorHandler.m */,
+				D85B0B66246BE2B400FFA36B /* RXRDateFormater.h */,
+				D85B0B67246BE2B400FFA36B /* RXRDateFormater.m */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -533,6 +539,7 @@
 				98B47B071BF1E0E00087735C /* Rexxar.h in Headers */,
 				A35E71FC1D7FCA0200D38BC0 /* RXRRouteFileCache.h in Headers */,
 				71F7C34C1FEB919100243719 /* RXRConfig+Rexxar.h in Headers */,
+				D85B0B68246BE2B400FFA36B /* RXRDateFormater.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,7 +615,7 @@
 					};
 					98B47B111BF1E0F20087735C = {
 						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1140;
 					};
 					B90EBEBB1BFEAA830055D477 = {
 						CreatedOnToolsVersion = 7.1.1;
@@ -617,7 +624,7 @@
 			};
 			buildConfigurationList = 98B47AFD1BF1E0E00087735C /* Build configuration list for PBXProject "Rexxar" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -671,6 +678,7 @@
 				A35E71FD1D7FCA0200D38BC0 /* RXRRouteFileCache.m in Sources */,
 				A35E71FF1D7FCA0200D38BC0 /* RXRRouteManager.m in Sources */,
 				A35E722B1D7FCB0B00D38BC0 /* NSURL+Rexxar.m in Sources */,
+				D85B0B69246BE2B400FFA36B /* RXRDateFormater.m in Sources */,
 				A398DC331D222CC1006D4817 /* RXRModel.m in Sources */,
 				A35E72421D7FCBF900D38BC0 /* RXRRequestDecorator.m in Sources */,
 				A35D15A31D66AE2B009B24DC /* RXRAlertDialogWidget.m in Sources */,
@@ -918,7 +926,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RexxarDemo/Bridge-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -934,7 +942,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RexxarDemo/Bridge-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
