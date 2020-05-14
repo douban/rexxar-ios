@@ -74,7 +74,7 @@ public class FRDToast: NSObject {
       for window in UIApplication.shared.windows {
         let windowOnMainScreen = window.screen == UIScreen.main
         let windowIsVisible = !window.isHidden && window.alpha > 0
-        let windowLevelNormal = window.windowLevel == UIWindowLevelNormal
+        let windowLevelNormal = window.windowLevel == UIWindow.Level.normal
 
         if windowOnMainScreen && windowIsVisible && windowLevelNormal {
           window.addSubview(overlayView)
@@ -82,7 +82,7 @@ public class FRDToast: NSObject {
         }
       }
     } else {
-      overlayView.superview?.bringSubview(toFront: overlayView)
+      overlayView.superview?.bringSubviewToFront(overlayView)
     }
 
     switch maskType {
@@ -139,7 +139,7 @@ public class FRDToast: NSObject {
           }
 
           self.fadeOutTimer = Timer(timeInterval: self.toastShowTime, target: self, selector: #selector(self.dismiss), userInfo: nil, repeats: false)
-          RunLoop.main.add(self.fadeOutTimer!, forMode: RunLoopMode.commonModes)
+          RunLoop.main.add(self.fadeOutTimer!, forMode: RunLoop.Mode.common)
         }
     })
   }
