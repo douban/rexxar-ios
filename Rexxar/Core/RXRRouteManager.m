@@ -130,7 +130,20 @@
   };
 
   // 请求路由表 API
-  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.routesMapURL
+  NSURL *routesURL = self.routesMapURL;
+  if ([[RXRConfig deviceID] length] > 0) {
+    NSURLComponents *comps = [NSURLComponents componentsWithURL:routesURL resolvingAgainstBaseURL:YES];
+    NSMutableArray<NSURLQueryItem *> *queryItems = [NSMutableArray<NSURLQueryItem *> array];
+    NSURLQueryItem *queryItem = [NSURLQueryItem queryItemWithName:@"device_id" value:[RXRConfig deviceID]];
+    if ([comps.queryItems count] > 0) {
+      [queryItems addObjectsFromArray:comps.queryItems];
+    }
+    [queryItems addObject:queryItem];
+    comps.queryItems = queryItems;
+    routesURL = comps.URL;
+  }
+
+  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:routesURL
                                                          cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                      timeoutInterval:60];
   // 更新 Http UserAgent Header
@@ -153,7 +166,7 @@
 
     // 如果下载的 routes deployTime 早于当前的 routesDeployTime，则不更新
     RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:data];
-    if (routesObject.deployTime && self.routesDeployTime && [routesObject.deployTime compare:self.routesDeployTime] == NSOrderedAscending) {
+    if (routesObject.deployTime && self.routesDeployTime && [self.routesDeployTime compare:routesObject.deployTime] != NSOrderedAscending) {
       APICompletion(NO);
       return;
     }

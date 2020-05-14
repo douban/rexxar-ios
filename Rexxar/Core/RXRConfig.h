@@ -116,6 +116,16 @@ RXRRequestInterceptor处理请求完成时的回调
 + (NSString *)userAgent;
 
 /**
+ * 设置 deviceID，Rexxar 会将这个 deviceID 加到其发出的所有请求的 url query 中。
+ */
++ (void)setDeviceID:(NSString *)deviceID;
+
+/**
+ * 读取 deviceID。
+ */
++ (NSString *)deviceID;
+
+/**
  * 更新全局配置。
  */
 + (void)updateConfig;
