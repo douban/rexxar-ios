@@ -16,7 +16,7 @@
 static NSString *sRXRProtocolScheme;
 static NSString *sRXRProtocolHost;
 static NSString *sRXRUserAgent;
-static NSString *sRXRDeviceID;
+static NSArray<NSURLQueryItem *> *sRXRExtraRequestParams;
 static NSURL *sRoutesMapURL;
 static NSString *sRoutesCachePath;
 static NSString *sRoutesResourcePath;
@@ -139,14 +139,14 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
   return sRXRUserAgent;
 }
 
-+ (void)setDeviceID:(NSString *)deviceID
++ (void)setExtraRequestParams:(NSArray<NSURLQueryItem *> *)params
 {
-  sRXRDeviceID = [deviceID copy];
+  sRXRExtraRequestParams = params;
 }
 
-+ (NSString *)deviceID
++ (NSArray<NSURLQueryItem *> *)extraRequestParams
 {
-  return sRXRDeviceID;
+  return sRXRExtraRequestParams;
 }
 
 + (void)updateConfig

@@ -131,14 +131,13 @@
 
   // 请求路由表 API
   NSURL *routesURL = self.routesMapURL;
-  if ([[RXRConfig deviceID] length] > 0) {
+  if ([RXRConfig extraRequestParams].count > 0) {
     NSURLComponents *comps = [NSURLComponents componentsWithURL:routesURL resolvingAgainstBaseURL:YES];
     NSMutableArray<NSURLQueryItem *> *queryItems = [NSMutableArray<NSURLQueryItem *> array];
-    NSURLQueryItem *queryItem = [NSURLQueryItem queryItemWithName:@"device_id" value:[RXRConfig deviceID]];
     if ([comps.queryItems count] > 0) {
       [queryItems addObjectsFromArray:comps.queryItems];
     }
-    [queryItems addObject:queryItem];
+    [queryItems addObjectsFromArray:[RXRConfig extraRequestParams]];
     comps.queryItems = queryItems;
     routesURL = comps.URL;
   }
