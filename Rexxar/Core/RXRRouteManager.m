@@ -12,14 +12,14 @@
 #import "RXRRouteFileCache.h"
 #import "RXRConfig.h"
 #import "RXRConfig+Rexxar.h"
-#import "RXRDateFormater.h"
 #import "RXRRoute.h"
 #import "RXRLogger.h"
 
 @interface RXRRoutesObject : NSObject
 
 @property (nonatomic, copy) NSArray<RXRRoute *> *routes;
-@property (nonatomic, strong) NSDate *deployTime;
+@property (nonatomic, copy) NSString *deployTime;
+@property (nonatomic, assign) NSTimeInterval releaseID;
 
 @end
 
@@ -34,7 +34,8 @@
 @property (nonatomic, strong) NSOperationQueue *sessionDelegateQueue;
 
 @property (nonatomic, copy) NSArray<RXRRoute *> *routes;
-@property (nonatomic, strong) NSDate *routesDeployTime;
+@property (nonatomic, strong) NSString *routesDeployTime;
+@property (nonatomic, assign) NSTimeInterval releaseID;
 @property (nonatomic, assign) BOOL updatingRoutes;
 @property (nonatomic, strong) NSMutableArray *updateRoutesCompletions;
 
@@ -78,6 +79,7 @@
     RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[[RXRRouteFileCache sharedInstance] routesMapFile]];
     self.routes = routesObject.routes;
     self.routesDeployTime = routesObject.deployTime;
+    self.releaseID = routesObject.releaseID;
   }
 }
 
@@ -88,6 +90,7 @@
   RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[routeFileCache routesMapFile]];
   self.routes = routesObject.routes;
   self.routesDeployTime = routesObject.deployTime;
+  self.releaseID = routesObject.releaseID;
 }
 
 - (void)setResoucePath:(NSString *)resourcePath
@@ -97,6 +100,7 @@
   RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[routeFileCache routesMapFile]];
   self.routes = routesObject.routes;
   self.routesDeployTime = routesObject.deployTime;
+  self.releaseID = routesObject.releaseID;
 }
 
 - (void)updateRoutesWithCompletion:(void (^)(BOOL success))completion
@@ -165,7 +169,7 @@
 
     // 如果下载的 routes deployTime 早于当前的 routesDeployTime，则不更新
     RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:data];
-    if (routesObject.deployTime && self.routesDeployTime && [self.routesDeployTime compare:routesObject.deployTime] != NSOrderedAscending) {
+    if (routesObject.releaseID > 0 && self.releaseID > 0 && self.releaseID >= routesObject.releaseID) {
       APICompletion(NO);
       return;
     }
@@ -174,6 +178,7 @@
     if (routesObject.routes.count > 0) {
       self.routes = routesObject.routes;
       self.routesDeployTime = routesObject.deployTime;
+      self.releaseID = routesObject.releaseID;
       RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
       [routeFileCache saveRoutesMapFile:data];
     }
@@ -242,9 +247,12 @@
 
   NSString *routesDepolyTime = JSON[@"deploy_time"];
   if (routesDepolyTime) {
-    routesObject.deployTime = [RXRDateFormater dateFromString:routesDepolyTime format:RXRDeployTimeFormat];
-  } else {
-    routesObject.deployTime = nil;
+    routesObject.deployTime = [routesDepolyTime copy];
+  }
+
+  NSNumber *releaseID = JSON[@"release_id"];
+  if (releaseID != nil) {
+    routesObject.releaseID = [releaseID doubleValue];
   }
 
   routesObject.routes = items;
