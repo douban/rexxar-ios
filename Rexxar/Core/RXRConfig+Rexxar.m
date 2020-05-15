@@ -10,7 +10,6 @@
 #import "RXRLogger.h"
 #import "RXRErrorHandler.h"
 #import "RXRRouteManager.h"
-#import "RXRDateFormater.h"
 
 @implementation RXRConfig (Rexxar)
 
@@ -37,15 +36,10 @@
   }
 
   NSMutableDictionary *info = [NSMutableDictionary dictionary];
+  [info setValue:[RXRRouteManager sharedInstance].routesDeployTime forKey:logOtherInfoRoutesDepolyTimeKey];
   if (userInfo != nil) {
     [info addEntriesFromDictionary:userInfo];
   }
-  NSDate *routesDeployTime = [RXRRouteManager sharedInstance].routesDeployTime;
-  if (routesDeployTime != nil) {
-    NSString *routesDeployTimeStr = [RXRDateFormater stringFromDate:routesDeployTime format:RXRDeployTimeFormat];
-    [info setValue:routesDeployTimeStr forKey:logOtherInfoRoutesDepolyTimeKey];
-  }
-
   RXRLogObject *obj = [[RXRLogObject alloc] initWithLogType:type error:error requestURL:url localFilePath:localFilePath otherInformation:info];
   [RXRConfig rxr_logWithLogObject:obj];
 }
