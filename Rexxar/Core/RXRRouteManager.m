@@ -169,10 +169,13 @@
 
     // 如果下载的 routes deployTime 早于当前的 routesDeployTime，则不更新
     RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:data];
+
+    #if defined(RELEASE)
     if (routesObject.releaseID > 0 && self.releaseID > 0 && self.releaseID >= routesObject.releaseID) {
       APICompletion(NO);
       return;
     }
+    #endif /* defined(RELEASE) */
 
     // 下载最新 routes 中的资源文件，立即更新 `routes.json` 及内存中的 `routes`。
     if (routesObject.routes.count > 0) {
