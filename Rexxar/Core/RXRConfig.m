@@ -177,7 +177,7 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
 + (NSURLSessionConfiguration *)requestsURLSessionConfiguration
 {
   if (!sURLSessionConfiguration) {
-    return [NSURLSessionConfiguration defaultSessionConfiguration];
+    sURLSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
   }
   return sURLSessionConfiguration;
 }
