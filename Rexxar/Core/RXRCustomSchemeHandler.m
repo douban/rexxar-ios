@@ -65,13 +65,13 @@ didReceiveResponse:(NSURLResponse *)response
   NSHTTPURLResponse *URLResponse = nil;
   if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
     URLResponse = (NSHTTPURLResponse *)response;
-    URLResponse = [NSHTTPURLResponse rxr_responseWithURL:URLResponse.URL
+    URLResponse = [NSHTTPURLResponse rxr_responseWithURL:self.schemeTask.request.URL
                                               statusCode:URLResponse.statusCode
                                             headerFields:URLResponse.allHeaderFields
                                          noAccessControl:YES];
   }
 
-  [self.schemeTask didReceiveResponse:response];
+  [self.schemeTask didReceiveResponse:URLResponse ?: response];
   completionHandler(NSURLSessionResponseAllow);
 }
 
