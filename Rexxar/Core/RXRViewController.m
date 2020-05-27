@@ -25,6 +25,7 @@
 @property (nonatomic, copy) NSURL *requestURL;
 
 @property (nonatomic, strong) NSMutableDictionary *reloadRecord;
+@property (nonatomic, assign) BOOL isWebViewOnceLoaded;
 
 @end
 
@@ -75,7 +76,7 @@
 {
   [super viewWillAppear:animated];
 
-  if (!self.webView.URL || [self.webView.URL isEqual:[NSURL URLWithString:@"about:blank"]]) {
+  if (self.isWebViewOnceLoaded && (!self.webView.URL || [self.webView.URL isEqual:[NSURL URLWithString:@"about:blank"]])) {
     [self reloadWebView];
   }
 
@@ -187,7 +188,6 @@
 decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse
 decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
-
   if (![navigationResponse.response isKindOfClass:[NSHTTPURLResponse class]]) {
     decisionHandler(WKNavigationResponsePolicyAllow);
     return;
@@ -241,6 +241,12 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
   }
 
   decisionHandler(WKNavigationResponsePolicyAllow);
+}
+
+- (void)webViewDidFinishLoad:(WKWebView *)webView
+{
+  [super webViewDidFinishLoad:webView];
+  self.isWebViewOnceLoaded = YES;
 }
 
 - (void)webViewDidTerminate:(WKWebView *)webView
