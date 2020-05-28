@@ -13,6 +13,8 @@
 #import "RXRRouteManager.h"
 #import "RXRConfig+Rexxar.h"
 #import "RXRErrorHandler.h"
+#import "RXRCustomSchemeHandler.h"
+#import "NSURL+Rexxar.h"
 
 @interface RXRWebViewController () <WKNavigationDelegate, WKUIDelegate>
 
@@ -142,6 +144,9 @@
  */
 - (void)_rxr_registerWebViewCustomSchemes:(WKWebView *)webView
 {
+  if (@available(iOS 11.0, *)) {
+    return;
+  }
   Class klass = [[webView valueForKey:@"browsingContextController"] class];
   SEL sel = NSSelectorFromString(@"registerSchemeForCustomProtocol:");
   if ([(id)klass respondsToSelector:sel]) {
@@ -155,6 +160,9 @@
 
 - (void)_rxr_unregisterWebViewCustomSchemes:(WKWebView *)webView
 {
+  if (@available(iOS 11.0, *)) {
+    return;
+  }
   Class klass = [[webView valueForKey:@"browsingContextController"] class];
   SEL sel = NSSelectorFromString(@"unregisterSchemeForCustomProtocol:");
   if ([(id)klass respondsToSelector:sel]) {
@@ -197,6 +205,13 @@
   if ([webConfiguration respondsToSelector:@selector(dataDetectorTypes)]) {
     webConfiguration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
     webConfiguration.dataDetectorTypes = WKDataDetectorTypeLink | WKDataDetectorTypePhoneNumber;
+  }
+
+  // iOS11
+  if (@available(iOS 11.0, *)) {
+    id <WKURLSchemeHandler> handler = [RXRCustomSchemeHandler new];
+    [webConfiguration setURLSchemeHandler:handler forURLScheme:@"rexxar-http"];
+    [webConfiguration setURLSchemeHandler:handler forURLScheme:@"rexxar-https"];
   }
 
   NSString *userAgent = [RXRConfig userAgent];
@@ -277,12 +292,16 @@
 {
   BOOL allowed = YES;
   if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
+    NSMutableURLRequest *request = [navigationAction.request mutableCopy];
+    if ([request.URL rxr_isRexxarHttpScheme]) {
+      request.URL = [request.URL rxr_urlByReplacingRexxarSchemeWithHttp];
+    }
     allowed = [self.delegate webView:webView
-          shouldStartLoadWithRequest:navigationAction.request
+          shouldStartLoadWithRequest:request
                       navigationType:navigationAction.navigationType];
 
     // `WKWebView` 无法打开非 HTTP 链接，检查是否需要使用 `UIApplication.openURL` 来处理请求的 URL。
-    NSURL *url = navigationAction.request.URL;
+    NSURL *url = request.URL;
     if (allowed && ![url isFileURL]) {
       BOOL isHTTP = [url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"];
       BOOL useOpenURL = (isHTTP && [url.host isEqualToString:@"itunes.apple.com"]) // iTunes 链接。

@@ -33,13 +33,20 @@
   [RXRCacheFileInterceptor unregisterRXRProtocolClass:[RXRCacheFileInterceptor class]];
 }
 
++ (NSURLSession *)session
+{
+  if (@available(iOS 11.0, *)) {
+    return [NSURLSession sessionWithConfiguration:[RXRConfig requestsURLSessionConfiguration]];
+  }
+  return [NSURLSession sharedSession];
+}
 
 - (void)testCacheJS
 {
   NSURL *resourceURL = [NSURL URLWithString:@"http://img3.doubanio.com/f/shire/3d5cb5d1155d18c20ab9bd966387432a8a9f2008/js/core/_init_.js"];
 
   XCTestExpectation *expect = [self expectationWithDescription:@"Resource cached"];
-  [[[NSURLSession sharedSession] dataTaskWithRequest:[self webResourceRequest:resourceURL]
+  [[[self.class session] dataTaskWithRequest:[self webResourceRequest:resourceURL]
                                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 
                                      if (data && [[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:resourceURL]) {
@@ -55,7 +62,7 @@
   NSURL *resourceURL = [NSURL URLWithString:@"https://img3.doubanio.com/f/shire/7e852f2bb1782270ae227988d79adc8e7acb1e30/css/frontpage/_init_.css"];
 
   XCTestExpectation *expect = [self expectationWithDescription:@"Resource cached"];
-  [[[NSURLSession sharedSession] dataTaskWithRequest:[self webResourceRequest:resourceURL]
+  [[[self.class session] dataTaskWithRequest:[self webResourceRequest:resourceURL]
                                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 
                                      if (data && [[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:resourceURL]) {
@@ -71,7 +78,7 @@
   NSURL *resourceURL = [NSURL URLWithString:@"http://cdn.staticfile.org/jquery/2.1.1-rc2/jquery.js"];
 
   XCTestExpectation *expect = [self expectationWithDescription:@"Resource should not be cached"];
-  [[[NSURLSession sharedSession] dataTaskWithRequest:[self webResourceRequest:resourceURL]
+  [[[self.class session] dataTaskWithRequest:[self webResourceRequest:resourceURL]
                                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 
                                      if (data && [[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:resourceURL]) {
