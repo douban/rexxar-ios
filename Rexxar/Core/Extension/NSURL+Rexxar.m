@@ -47,4 +47,37 @@
   return dict;
 }
 
+- (BOOL)rxr_isRexxarHttpScheme
+{
+  if ([self.scheme caseInsensitiveCompare:@"rexxar-http"] == NSOrderedSame ||
+      [self.scheme caseInsensitiveCompare:@"rexxar-https"] == NSOrderedSame) {
+    return YES;
+  }
+  return NO;
+}
+
+- (NSURL *)rxr_urlByRemovingRexxarScheme
+{
+  if ([self rxr_isRexxarHttpScheme]) {
+    NSURLComponents *comp = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:YES];
+    comp.scheme = [comp.scheme stringByReplacingOccurrencesOfString:@"rexxar-" withString:@""];
+    return comp.URL;
+  }
+  return self;
+}
+
+- (NSURL *)rxr_urlByAddingRexxarScheme
+{
+  if ([self rxr_isHttpOrHttps]) {
+    NSURLComponents *comp = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:YES];
+    if ([comp.scheme isEqualToString:@"http"]) {
+      comp.scheme = @"rexxar-http";
+    } else if ([comp.scheme isEqualToString:@"https"]) {
+      comp.scheme = @"rexxar-https";
+    }
+    return comp.URL;
+  }
+  return self;
+}
+
 @end

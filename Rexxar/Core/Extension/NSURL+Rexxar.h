@@ -27,4 +27,19 @@
  */
 - (NSDictionary *)rxr_queryDictionary;
 
+/**
+* 该 url 的 scheme 是否是 rexxar-http 或 rexxar-https
+*/
+- (BOOL)rxr_isRexxarHttpScheme;
+
+/**
+* 将该 url 的 scheme 从 rexxar-http, rexxar-https 替换为 http, https。
+*/
+- (NSURL *)rxr_urlByRemovingRexxarScheme;
+
+/**
+* 将该 url 的 scheme 从 http, https 替换为 rexxar-http, rexxar-https。
+*/
+- (NSURL *)rxr_urlByAddingRexxarScheme;
+
 @end

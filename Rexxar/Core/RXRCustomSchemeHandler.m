@@ -9,6 +9,7 @@
 #import "RXRURLSessionDemux.h"
 #import "RXRConfig.h"
 #import "NSHTTPURLResponse+Rexxar.h"
+#import "NSURL+Rexxar.h"
 
 API_AVAILABLE(ios(11.0))
 @interface RXRCustomSchemeDataTaskRunner: NSObject <NSURLSessionDataDelegate>
@@ -27,10 +28,8 @@ API_AVAILABLE(ios(11.0))
     _schemeTask = schemeTask;
 
     NSMutableURLRequest *request = [schemeTask.request mutableCopy];
-    if ([request.URL.scheme isEqualToString:@"rexxar-http"] || [request.URL.scheme isEqualToString:@"rexxar-https"]) {
-      NSURLComponents *comp = [NSURLComponents componentsWithURL:request.URL resolvingAgainstBaseURL:YES];
-      comp.scheme = [comp.scheme stringByReplacingOccurrencesOfString:@"rexxar-" withString:@""];
-      request.URL = comp.URL;
+    if ([request.URL rxr_isRexxarHttpScheme]) {
+      request.URL = [request.URL rxr_urlByRemovingRexxarScheme];
     }
 
     NSMutableArray *modes = [NSMutableArray array];

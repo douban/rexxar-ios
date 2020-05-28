@@ -14,6 +14,7 @@
 #import "RXRConfig+Rexxar.h"
 #import "RXRErrorHandler.h"
 #import "RXRCustomSchemeHandler.h"
+#import "NSURL+Rexxar.h"
 
 @interface RXRWebViewController () <WKNavigationDelegate, WKUIDelegate>
 
@@ -292,10 +293,8 @@
   BOOL allowed = YES;
   if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
     NSMutableURLRequest *request = [navigationAction.request mutableCopy];
-    if ([request.URL.scheme isEqualToString:@"rexxar-http"] || [request.URL.scheme isEqualToString:@"rexxar-https"]) {
-      NSURLComponents *comp = [NSURLComponents componentsWithURL:request.URL resolvingAgainstBaseURL:YES];
-      comp.scheme = [comp.scheme stringByReplacingOccurrencesOfString:@"rexxar-" withString:@""];
-      request.URL = comp.URL;
+    if ([request.URL rxr_isRexxarHttpScheme]) {
+      request.URL = [request.URL rxr_urlByRemovingRexxarScheme];
     }
     allowed = [self.delegate webView:webView
           shouldStartLoadWithRequest:request
