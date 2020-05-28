@@ -35,11 +35,11 @@
 /**
 * 将该 url 的 scheme 从 rexxar-http, rexxar-https 替换为 http, https。
 */
-- (NSURL *)rxr_urlByRemovingRexxarScheme;
+- (NSURL *)rxr_urlByReplacingRexxarSchemeWithHttp;
 
 /**
 * 将该 url 的 scheme 从 http, https 替换为 rexxar-http, rexxar-https。
 */
-- (NSURL *)rxr_urlByAddingRexxarScheme;
+- (NSURL *)rxr_urlByReplacingHttpWithRexxarScheme;
 
 @end

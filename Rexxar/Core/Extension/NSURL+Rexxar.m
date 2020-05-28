@@ -56,7 +56,7 @@
   return NO;
 }
 
-- (NSURL *)rxr_urlByRemovingRexxarScheme
+- (NSURL *)rxr_urlByReplacingRexxarSchemeWithHttp
 {
   if ([self rxr_isRexxarHttpScheme]) {
     NSURLComponents *comp = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:YES];
@@ -66,7 +66,7 @@
   return self;
 }
 
-- (NSURL *)rxr_urlByAddingRexxarScheme
+- (NSURL *)rxr_urlByReplacingHttpWithRexxarScheme
 {
   if ([self rxr_isHttpOrHttps]) {
     NSURLComponents *comp = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:YES];

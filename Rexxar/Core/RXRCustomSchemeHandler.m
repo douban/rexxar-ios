@@ -29,7 +29,7 @@ API_AVAILABLE(ios(11.0))
 
     NSMutableURLRequest *request = [schemeTask.request mutableCopy];
     if ([request.URL rxr_isRexxarHttpScheme]) {
-      request.URL = [request.URL rxr_urlByRemovingRexxarScheme];
+      request.URL = [request.URL rxr_urlByReplacingRexxarSchemeWithHttp];
     }
 
     NSMutableArray *modes = [NSMutableArray array];

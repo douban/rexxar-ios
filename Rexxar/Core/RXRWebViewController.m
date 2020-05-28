@@ -294,7 +294,7 @@
   if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
     NSMutableURLRequest *request = [navigationAction.request mutableCopy];
     if ([request.URL rxr_isRexxarHttpScheme]) {
-      request.URL = [request.URL rxr_urlByRemovingRexxarScheme];
+      request.URL = [request.URL rxr_urlByReplacingRexxarSchemeWithHttp];
     }
     allowed = [self.delegate webView:webView
           shouldStartLoadWithRequest:request

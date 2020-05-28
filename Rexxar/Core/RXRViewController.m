@@ -301,7 +301,7 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
     comp.queryItems = @[uriItem];
   }
 
-  return [comp.URL rxr_urlByAddingRexxarScheme];
+  return [comp.URL rxr_urlByReplacingHttpWithRexxarScheme];
 }
 
 - (BOOL)_rxr_openWebPage:(NSURL *)url
