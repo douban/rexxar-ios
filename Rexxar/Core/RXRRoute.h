@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) NSURL *remoteHTML;
 
+@property (nonatomic, readonly) BOOL isPackageInApp;
+
 @end
 
 NS_ASSUME_NONNULL_END

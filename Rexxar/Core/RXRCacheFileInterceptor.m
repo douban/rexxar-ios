@@ -166,7 +166,9 @@ didCompleteWithError:(nullable NSError *)error
         [self.fileHandle closeFile];
         self.fileHandle = nil;
         NSData *data = [NSData dataWithContentsOfFile:self.responseDataFilePath];
-        [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:task.currentRequest.URL];
+        NSURL *cacheURL = [[self class] _rxr_cacheURL:task.currentRequest.URL];
+        [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:cacheURL];
+        RXRDebugLog(@"Download resource %@", cacheURL);
       }
       [self.client URLProtocolDidFinishLoading:self];
     } else {
@@ -202,12 +204,15 @@ didCompleteWithError:(nullable NSError *)error
 
 #pragma mark - Private methods
 
++ (NSURL *)_rxr_cacheURL:(NSURL *)remoteURL
+{
+  return [[NSURL alloc] initWithScheme:[remoteURL scheme] host:[remoteURL host] path:[remoteURL path]];
+}
+
 + (NSURL *)_rxr_localFileURL:(NSURL *)remoteURL
 {
-  NSURL *URL = [[NSURL alloc] initWithScheme:[remoteURL scheme]
-                                        host:[remoteURL host]
-                                        path:[remoteURL path]];
-  NSURL *localURL = [[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:URL];
+  NSURL *cacheURL = [self _rxr_cacheURL:remoteURL];
+  NSURL *localURL = [[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:cacheURL];
   return localURL;
 }
 

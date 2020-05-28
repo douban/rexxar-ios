@@ -15,6 +15,7 @@
   if ( (self = [super init]) ) {
     _remoteHTML = [NSURL URLWithString:dict[@"remote_file"]];
     _URIRegex = [NSRegularExpression regularExpressionWithPattern:dict[@"uri"] options:0 error:nil];
+    _isPackageInApp = [dict[@"pack_in_app"] boolValue];
   }
   return self;
 }

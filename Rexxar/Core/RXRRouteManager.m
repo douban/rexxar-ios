@@ -177,7 +177,7 @@
     }
     #endif /* defined(RELEASE) */
 
-    // 下载最新 routes 中的资源文件，立即更新 `routes.json` 及内存中的 `routes`。
+    // 立即更新 `routes.json` 及内存中的 `routes`。
     if (routesObject.routes.count > 0) {
       self.routes = routesObject.routes;
       self.routesDeployTime = routesObject.deployTime;
@@ -187,7 +187,7 @@
     }
 
     APICompletion(routesObject.routes.count > 0);
-    [self _rxr_downloadFilesWithinRoutes:routesObject.routes completion:nil];
+    [self _rxr_downloadCommonUsedFilesWithinRoutes:routesObject.routes completion:nil];
   }] resume];
 }
 
@@ -263,9 +263,9 @@
 }
 
 /**
- *  下载 `routes` 中的资源文件。
+ *  下载 `routes` 中常用的资源文件。
  */
-- (void)_rxr_downloadFilesWithinRoutes:(NSArray *)routes completion:(void (^)(BOOL success))completion
+- (void)_rxr_downloadCommonUsedFilesWithinRoutes:(NSArray<RXRRoute *> *)routes completion:(void (^)(BOOL success))completion
 {
   dispatch_group_t downloadGroup = nil;
   if (completion) {
@@ -275,6 +275,10 @@
   BOOL __block success = YES;
 
   for (RXRRoute *route in routes) {
+    if (!route.isPackageInApp) {
+      continue;
+    }
+
     // 如果文件在本地文件存在（要么在缓存，要么在资源文件夹），什么都不需要做
     if ([[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:route.remoteHTML]) {
       continue;
