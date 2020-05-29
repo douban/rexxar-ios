@@ -12,10 +12,21 @@
 #import "NSURL+Rexxar.h"
 
 API_AVAILABLE(ios(11.0))
+@protocol RXRCustomSchemeRunnerDelegate <NSObject>
+
+@optional
+- (void)schemeTask:(id <WKURLSchemeTask>)task didCompleteWithError:(nullable NSError *)error;
+
+@end
+
+
+API_AVAILABLE(ios(11.0))
 @interface RXRCustomSchemeDataTaskRunner: NSObject <NSURLSessionDataDelegate>
 
 @property (nonatomic, strong) id <WKURLSchemeTask> schemeTask;
 @property (nonatomic, strong) NSURLSessionDataTask *dataTask;
+
+@property (nonatomic, weak) id<RXRCustomSchemeRunnerDelegate> delegate;
 
 @end
 
@@ -113,12 +124,16 @@ didCompleteWithError:(nullable NSError *)error
       [self.schemeTask didFailWithError:error];
     }
   }
+
+  if ([self.delegate respondsToSelector:@selector(schemeTask:didCompleteWithError:)]) {
+    [self.delegate schemeTask:self.schemeTask didCompleteWithError:error];
+  }
 }
 
 @end
 
 API_AVAILABLE(ios(11.0))
-@interface RXRCustomSchemeHandler()
+@interface RXRCustomSchemeHandler() <RXRCustomSchemeRunnerDelegate>
 
 @property(nonatomic, strong) NSMutableDictionary<NSString *, RXRCustomSchemeDataTaskRunner *> *runningTasks;
 @property(nonatomic, strong) dispatch_semaphore_t listSema;
@@ -144,6 +159,7 @@ API_AVAILABLE(ios(11.0))
 - (void)webView:(WKWebView *)webView startURLSchemeTask:(id <WKURLSchemeTask>)urlSchemeTask API_AVAILABLE(ios(11.0))
 {
   RXRCustomSchemeDataTaskRunner *runner = [[RXRCustomSchemeDataTaskRunner alloc] initWithSchemeTask:urlSchemeTask sessionDemux:self.sessionDemux];
+  runner.delegate = self;
   NSString *taskID = [self taskIDForSchemeTask:urlSchemeTask];
   dispatch_semaphore_wait(self.listSema, DISPATCH_TIME_FOREVER);
   self.runningTasks[taskID] = runner;
@@ -163,6 +179,14 @@ API_AVAILABLE(ios(11.0))
 - (NSString *)taskIDForSchemeTask:(id <WKURLSchemeTask>)urlSchemeTask API_AVAILABLE(ios(11.0))
 {
   return [NSString stringWithFormat:@"%p", urlSchemeTask];
+}
+
+- (void)schemeTask:(id<WKURLSchemeTask>)task didCompleteWithError:(NSError *)error
+{
+  NSString *taskID = [self taskIDForSchemeTask:task];
+  dispatch_semaphore_wait(self.listSema, DISPATCH_TIME_FOREVER);
+  self.runningTasks[taskID] = nil;
+  dispatch_semaphore_signal(self.listSema);
 }
 
 @end
