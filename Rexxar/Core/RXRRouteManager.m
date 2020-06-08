@@ -19,7 +19,7 @@
 
 @property (nonatomic, copy) NSArray<RXRRoute *> *routes;
 @property (nonatomic, copy) NSString *deployTime;
-@property (nonatomic, assign) NSTimeInterval releaseID;
+@property (nonatomic, copy) NSString *version;
 
 @end
 
@@ -34,8 +34,8 @@
 @property (nonatomic, strong) NSOperationQueue *sessionDelegateQueue;
 
 @property (nonatomic, copy) NSArray<RXRRoute *> *routes;
+@property (nonatomic, copy) NSString *routesVersion;
 @property (nonatomic, strong) NSString *routesDeployTime;
-@property (nonatomic, assign) NSTimeInterval releaseID;
 @property (nonatomic, assign) BOOL updatingRoutes;
 @property (nonatomic, strong) NSMutableArray *updateRoutesCompletions;
 
@@ -79,7 +79,7 @@
     RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[[RXRRouteFileCache sharedInstance] routesMapFile]];
     self.routes = routesObject.routes;
     self.routesDeployTime = routesObject.deployTime;
-    self.releaseID = routesObject.releaseID;
+    self.routesVersion = routesObject.version;
   }
 }
 
@@ -90,7 +90,7 @@
   RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[routeFileCache routesMapFile]];
   self.routes = routesObject.routes;
   self.routesDeployTime = routesObject.deployTime;
-  self.releaseID = routesObject.releaseID;
+  self.routesVersion = routesObject.version;
 }
 
 - (void)setResoucePath:(NSString *)resourcePath
@@ -100,7 +100,7 @@
   RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[routeFileCache routesMapFile]];
   self.routes = routesObject.routes;
   self.routesDeployTime = routesObject.deployTime;
-  self.releaseID = routesObject.releaseID;
+  self.routesVersion = routesObject.version;
 }
 
 - (void)updateRoutesWithCompletion:(void (^)(BOOL success))completion
@@ -171,7 +171,7 @@
     RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:data];
 
     #if defined(RELEASE)
-    if (routesObject.releaseID > 0 && self.releaseID > 0 && self.releaseID >= routesObject.releaseID) {
+    if (routesObject.version.length > 0 && self.routesVersion.length > 0 && [self compareVersion:self.routesVersion toVersion:routesObject.version] == NSOrderedAscending) {
       APICompletion(NO);
       return;
     }
@@ -181,7 +181,7 @@
     if (routesObject.routes.count > 0) {
       self.routes = routesObject.routes;
       self.routesDeployTime = routesObject.deployTime;
-      self.releaseID = routesObject.releaseID;
+      self.routesVersion = routesObject.version;
       RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
       [routeFileCache saveRoutesMapFile:data];
     }
@@ -253,9 +253,9 @@
     routesObject.deployTime = [routesDepolyTime copy];
   }
 
-  NSNumber *releaseID = JSON[@"release_id"];
-  if (releaseID != nil) {
-    routesObject.releaseID = [releaseID doubleValue];
+  NSString *version = JSON[@"version"];
+  if ([version isKindOfClass:[NSString class]] && [version length] > 0) {
+    routesObject.version = version;
   }
 
   routesObject.routes = items;
@@ -343,6 +343,29 @@
       completion(success);
     });
   }
+}
+
+- (NSComparisonResult)compareVersion:(NSString *)version1 toVersion:(NSString *)version2
+{
+  NSParameterAssert(version1.length > 0);
+  NSParameterAssert(version2.length > 0);
+  NSArray *comp1 = [version1 componentsSeparatedByString:@"."];
+  NSArray *comp2 = [version2 componentsSeparatedByString:@"."];
+  for (NSInteger idx = 0; idx < comp1.count || idx < comp2.count; idx++) {
+    NSInteger a = 0, b = 0;
+    if (idx < comp1.count) {
+      a = [comp1[idx] integerValue];
+    }
+    if (idx < comp2.count) {
+      b = [comp2[idx] integerValue];
+    }
+    if (a > b) {
+      return NSOrderedDescending;
+    } else if (a < b) {
+      return NSOrderedAscending;
+    }
+  }
+  return NSOrderedSame;
 }
 
 @end
