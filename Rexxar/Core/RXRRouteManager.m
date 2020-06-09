@@ -170,12 +170,12 @@
     // 如果下载的 routes deployTime 早于当前的 routesDeployTime，则不更新
     RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:data];
 
-    #if defined(RELEASE)
-    if (routesObject.version.length > 0 && self.routesVersion.length > 0 && [self compareVersion:self.routesVersion toVersion:routesObject.version] == NSOrderedAscending) {
-      APICompletion(NO);
-      return;
+    if (![RXRConfig needsIgnoreRoutesVersion]) {
+      if (routesObject.version.length > 0 && self.routesVersion.length > 0 && [self compareVersion:self.routesVersion toVersion:routesObject.version] == NSOrderedAscending) {
+        APICompletion(NO);
+        return;
+      }
     }
-    #endif /* defined(RELEASE) */
 
     // 立即更新 `routes.json` 及内存中的 `routes`。
     if (routesObject.routes.count > 0) {
