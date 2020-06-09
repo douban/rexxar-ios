@@ -171,7 +171,7 @@
     RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:data];
 
     if (![RXRConfig needsIgnoreRoutesVersion]) {
-      if (routesObject.version.length > 0 && self.routesVersion.length > 0 && [self compareVersion:self.routesVersion toVersion:routesObject.version] == NSOrderedAscending) {
+      if (routesObject.version.length > 0 && self.routesVersion.length > 0 && [self compareVersion:self.routesVersion toVersion:routesObject.version] != NSOrderedAscending) {
         APICompletion(NO);
         return;
       }
@@ -187,7 +187,7 @@
     }
 
     APICompletion(routesObject.routes.count > 0);
-    [self _rxr_downloadCommonUsedFilesWithinRoutes:routesObject.routes completion:nil];
+    [self _rxr_prefetchCommonUsedFilesWithinRoutes:routesObject.routes];
   }] resume];
 }
 
@@ -265,14 +265,27 @@
 /**
  *  下载 `routes` 中常用的资源文件。
  */
-- (void)_rxr_downloadCommonUsedFilesWithinRoutes:(NSArray<RXRRoute *> *)routes completion:(void (^)(BOOL success))completion
+- (void)_rxr_prefetchCommonUsedFilesWithinRoutes:(NSArray<RXRRoute *> *)routes
 {
-  dispatch_group_t downloadGroup = nil;
-  if (completion) {
-    downloadGroup = dispatch_group_create();
+  static BOOL isRuning = NO;
+  static NSLock *lock;
+
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    lock = [[NSLock alloc] init];
+  });
+
+  [lock lock];
+  if (isRuning) {
+    [lock unlock];
+    return;
   }
 
-  BOOL __block success = YES;
+  isRuning = YES;
+  [lock unlock];
+
+  NSMutableSet<NSURL *> *htmlURLs = [NSMutableSet<NSURL *> set];
+  dispatch_group_t downloadGroup = dispatch_group_create();
 
   for (RXRRoute *route in routes) {
     if (!route.isPackageInApp) {
@@ -284,9 +297,13 @@
       continue;
     }
 
-    if (downloadGroup) {
-      dispatch_group_enter(downloadGroup);
+    if ([htmlURLs containsObject:route.remoteHTML]) {
+      RXRDebugLog(@"Download %@ abort! Alread in download queue.", route.remoteHTML);
+      continue;
     }
+
+    dispatch_group_enter(downloadGroup);
+    [htmlURLs addObject:route.remoteHTML];
 
     // 文件不存在，下载下来。
     NSURLRequest *request = [NSURLRequest requestWithURL:route.remoteHTML
@@ -301,13 +318,8 @@
         // Log
         NSDictionary *userInfo = @{logOtherInfoStatusCodeKey: @(statusCode)};
         [RXRConfig rxr_logWithType:RXRLogTypeDownloadingHTMLFileError error:error requestURL:request.URL localFilePath:nil userInfo:userInfo];
-
-        success = NO;
-        if (downloadGroup) {
-          dispatch_group_leave(downloadGroup);
-        }
-
-        RXRDebugLog(@"Fail to move download remote html: %@", error);
+        dispatch_group_leave(downloadGroup);
+        RXRDebugLog(@"Fail to download remote html: %@", error);
         return;
       }
 
@@ -322,27 +334,22 @@
 
         if ([self.dataValidator respondsToSelector:@selector(stopDownloadingIfValidationFailed)] &&
             [self.dataValidator stopDownloadingIfValidationFailed]) {
-          success = NO;
-          if (downloadGroup) {
-            dispatch_group_leave(downloadGroup);
-          }
+          dispatch_group_leave(downloadGroup);
           return;
         }
       }
 
       [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:response.URL];
 
-      if (downloadGroup) {
-        dispatch_group_leave(downloadGroup);
-      }
+      dispatch_group_leave(downloadGroup);
     }] resume];
   }
 
-  if (downloadGroup) {
-    dispatch_group_notify(downloadGroup, dispatch_get_main_queue(), ^{
-      completion(success);
-    });
-  }
+  dispatch_group_notify(downloadGroup, dispatch_get_main_queue(), ^{
+    [lock lock];
+    isRuning = NO;
+    [lock unlock];
+  });
 }
 
 - (NSComparisonResult)compareVersion:(NSString *)version1 toVersion:(NSString *)version2
