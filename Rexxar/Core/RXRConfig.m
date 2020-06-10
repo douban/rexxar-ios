@@ -21,6 +21,7 @@ static NSURL *sRoutesMapURL;
 static NSString *sRoutesCachePath;
 static NSString *sRoutesResourcePath;
 static BOOL sIsCacheEnable = YES;
+static BOOL sNeedsIgnoreRoutesVersion = NO;
 static id<RXRLogger> sLogger;
 static id<RXRErrorHandler> sErrorHandler;
 static NSInteger sReloadLimitWhen404 = 2;
@@ -167,6 +168,16 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
 + (BOOL)isCacheEnable
 {
   return sIsCacheEnable;
+}
+
++ (void)setNeedsIgnoreRoutesVersion:(BOOL)needsIgnoreRoutesVersion
+{
+  sNeedsIgnoreRoutesVersion = needsIgnoreRoutesVersion;
+}
+
++ (BOOL)needsIgnoreRoutesVersion
+{
+  return sNeedsIgnoreRoutesVersion;
 }
 
 + (void)setHTMLFileDataValidator:(id<RXRDataValidator>)dataValidator

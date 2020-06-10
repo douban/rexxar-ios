@@ -75,6 +75,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)updateRoutesWithCompletion:(nullable void (^)(BOOL success))completion;
 
+- (NSComparisonResult)compareVersion:(NSString *)version toVersion:(NSString *)otherVersion;
+
 @end
 
 NS_ASSUME_NONNULL_END

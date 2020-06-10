@@ -59,6 +59,14 @@
   XCTAssertTrue(found);
 }
 
+- (void)testCompareVersion
+{
+  XCTAssert([[RXRRouteManager sharedInstance] compareVersion:@"6.36.0" toVersion:@"6.36.1"] == NSOrderedAscending);
+  XCTAssert([[RXRRouteManager sharedInstance] compareVersion:@"6.36.0" toVersion:@"6.36.0"] == NSOrderedSame);
+  XCTAssert([[RXRRouteManager sharedInstance] compareVersion:@"6.36.0" toVersion:@"6.35.100"] == NSOrderedDescending);
+  XCTAssert([[RXRRouteManager sharedInstance] compareVersion:@"6.36.4" toVersion:@"6.36.4.1"] == NSOrderedAscending);
+}
+
 - (NSPredicate *)predicateForURI:(NSURL *)uri routable:(BOOL)routable
 {
   return [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary<NSString *,id> * bindings) {

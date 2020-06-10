@@ -142,6 +142,16 @@ RXRRequestInterceptor处理请求完成时的回调
 + (BOOL)isCacheEnable;
 
 /**
+ * 设置 RXRRouteManager 是否忽略 routes 版本。缺省 NO。
+ * 缺省设置下，RXRRouteManager 会根据拉取的 routes 版本跟本地已拉取的 routes 版本比较，只有版本更大的情况下才会更新 routes 文件。
+ * 如果设置为 YES，RXRRouteManager 检查 routes 文件更新时，将不比较 version 版本大小，立刻更新到新获取到的 routes。
+ * 建议在本地开发中设置为 YES，线上版本为缺省设置 NO。
+ */
++ (void)setNeedsIgnoreRoutesVersion:(BOOL)needsIgnoreRoutesVersion;
+
++ (BOOL)needsIgnoreRoutesVersion;
+
+/**
  设置 `RXRDataValidator`。设置后，将会在下载 HTML file 时验证文件合法性（可用来做完整性检验）。
  */
 + (void)setHTMLFileDataValidator:(id<RXRDataValidator>)dataValidator;
