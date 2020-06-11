@@ -301,7 +301,10 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
     comp.queryItems = @[uriItem];
   }
 
-  return [comp.URL rxr_urlByReplacingHttpWithRexxarScheme];
+  if ([RXRConfig useCustomScheme]) {
+    return [comp.URL rxr_urlByReplacingHttpWithRexxarScheme];
+  }
+  return comp.URL;
 }
 
 - (BOOL)_rxr_openWebPage:(NSURL *)url
