@@ -35,7 +35,7 @@
 
 + (NSURLSession *)session
 {
-  if (@available(iOS 11.0, *)) {
+  if ([RXRConfig useCustomScheme]) {
     return [NSURLSession sessionWithConfiguration:[RXRConfig requestsURLSessionConfiguration]];
   }
   return [NSURLSession sharedSession];

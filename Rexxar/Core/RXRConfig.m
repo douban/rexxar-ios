@@ -26,6 +26,7 @@ static id<RXRErrorHandler> sErrorHandler;
 static NSInteger sReloadLimitWhen404 = 2;
 static NSURLSessionConfiguration *sURLSessionConfiguration;
 static RXRDidCompleteRequestBlock _didCompleteRequestBlock;
+static BOOL sUseCustomScheme = NO;
 
 static NSString * const DefaultRXRScheme = @"douban";
 static NSString * const DefaultRXRHost = @"rexxar-container";
@@ -195,6 +196,16 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
 + (void)setDidCompleteRequestBlock:(RXRDidCompleteRequestBlock)didCompleteRequestBlock
 {
   _didCompleteRequestBlock = [didCompleteRequestBlock copy];
+}
+
++ (BOOL)useCustomScheme
+{
+  return sUseCustomScheme;
+}
+
++(void)setUseCustomScheme:(BOOL)useCustomScheme
+{
+  sUseCustomScheme = useCustomScheme;
 }
 
 @end

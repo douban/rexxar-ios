@@ -113,7 +113,7 @@ static NSMutableDictionary *sRegisteredClassCounter;
   BOOL result;
   NSInteger countForClass = [self _rxr_countForRegisteredClass:clazz];
   if (countForClass <= 0) {
-    if (@available(iOS 11.0, *)) {
+    if ([RXRConfig useCustomScheme]) {
       NSMutableArray<Class> *const mutableProtocolClasses = [([RXRConfig requestsURLSessionConfiguration].protocolClasses ?: @[]) mutableCopy];
       [mutableProtocolClasses insertObject:clazz atIndex:0];
       [RXRConfig requestsURLSessionConfiguration].protocolClasses = mutableProtocolClasses;
@@ -138,7 +138,7 @@ static NSMutableDictionary *sRegisteredClassCounter;
 
   NSInteger countForClass = [self _rxr_countForRegisteredClass:clazz] - 1;
   if (countForClass <= 0) {
-    if (@available(iOS 11.0, *)) {
+    if ([RXRConfig useCustomScheme]) {
       NSMutableArray<Class> *const mutableProtocolClasses = [([RXRConfig requestsURLSessionConfiguration].protocolClasses ?: @[]) mutableCopy];
       [mutableProtocolClasses removeObjectIdenticalTo:clazz];
       [RXRConfig requestsURLSessionConfiguration].protocolClasses = mutableProtocolClasses;
