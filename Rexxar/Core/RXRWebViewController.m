@@ -207,7 +207,6 @@
     webConfiguration.dataDetectorTypes = WKDataDetectorTypeLink | WKDataDetectorTypePhoneNumber;
   }
 
-  // iOS11
   if ([RXRConfig useCustomScheme]) {
     id <WKURLSchemeHandler> handler = [RXRCustomSchemeHandler new];
     [webConfiguration setURLSchemeHandler:handler forURLScheme:@"rexxar-http"];
