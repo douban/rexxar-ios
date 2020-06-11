@@ -44,6 +44,11 @@ RXRRequestInterceptor处理请求完成时的回调
 @property (class, nonatomic, copy, nullable) RXRDidCompleteRequestBlock didCompleteRequestBlock;
 
 /**
+ 使用WKURLSchemeHandler拦截网络请求，默认NO，iOS 13.4以上版本可以设置为YES
+*/
+@property (class, nonatomic) BOOL useCustomScheme;
+
+/**
  * 设置 rxrProtocolScheme。
  *
  * @discussion Rexxar-Container 实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。

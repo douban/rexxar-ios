@@ -144,7 +144,7 @@
  */
 - (void)_rxr_registerWebViewCustomSchemes:(WKWebView *)webView
 {
-  if (@available(iOS 11.0, *)) {
+  if ([RXRConfig useCustomScheme]) {
     return;
   }
   Class klass = [[webView valueForKey:@"browsingContextController"] class];
@@ -160,7 +160,7 @@
 
 - (void)_rxr_unregisterWebViewCustomSchemes:(WKWebView *)webView
 {
-  if (@available(iOS 11.0, *)) {
+  if ([RXRConfig useCustomScheme]) {
     return;
   }
   Class klass = [[webView valueForKey:@"browsingContextController"] class];
@@ -208,7 +208,7 @@
   }
 
   // iOS11
-  if (@available(iOS 11.0, *)) {
+  if ([RXRConfig useCustomScheme]) {
     id <WKURLSchemeHandler> handler = [RXRCustomSchemeHandler new];
     [webConfiguration setURLSchemeHandler:handler forURLScheme:@"rexxar-http"];
     [webConfiguration setURLSchemeHandler:handler forURLScheme:@"rexxar-https"];
