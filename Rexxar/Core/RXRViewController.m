@@ -301,6 +301,9 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
     comp.queryItems = @[uriItem];
   }
 
+  if ([RXRConfig useCustomScheme]) {
+    return [comp.URL rxr_urlByReplacingHttpWithRexxarScheme];
+  }
   return comp.URL;
 }
 

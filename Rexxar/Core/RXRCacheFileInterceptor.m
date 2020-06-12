@@ -12,6 +12,7 @@
 #import "RXRRouteFileCache.h"
 #import "RXRLogger.h"
 #import "NSURL+Rexxar.h"
+#import "RXRConfig.h"
 
 @interface RXRCacheFileInterceptor () <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
@@ -39,7 +40,7 @@
   }
 
   // 如果请求不需要被拦截，不处理
-  if (![self shouldInterceptRequest:request]) {
+  if (![self shouldInterceptRequest:request] || ![RXRConfig isCacheEnable]) {
     return NO;
   }
 
