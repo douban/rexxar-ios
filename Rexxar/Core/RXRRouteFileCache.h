@@ -52,11 +52,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)saveRoutesMapFile:(NSData *)data;
 
 /**
- * 读取 Route Map File。
+ * 读取缓存中 Route Map File。
  *
- * Read routes map file.
+ * Read routes map file in cache.
  */
-- (nullable NSData *)routesMapFile;
+- (nullable NSData *)cacheRoutesMapFile;
+
+/**
+ * 读取资源文件中 Route Map File。
+ *
+ * Read routes map file in bundle resource.
+ */
+- (nullable NSData *)resourceRoutesMapFile;
 
 
 /**
