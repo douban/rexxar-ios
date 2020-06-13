@@ -35,7 +35,6 @@
 
 @property (nonatomic, copy) NSArray<RXRRoute *> *routes;
 @property (nonatomic, copy) NSString *routesVersion;
-@property (nonatomic, strong) NSString *routesDeployTime;
 @property (nonatomic, assign) BOOL updatingRoutes;
 @property (nonatomic, strong) NSMutableArray *updateRoutesCompletions;
 
@@ -158,7 +157,7 @@
       return;
     }
 
-    // 如果下载的 routes deployTime 早于当前的 routesDeployTime，则不更新
+    // 如果下载的 routes version 早于当前的 version，则不更新
     RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:data];
 
     if (![RXRConfig needsIgnoreRoutesVersion]) {
@@ -171,7 +170,6 @@
     // 立即更新 `routes.json` 及内存中的 `routes`。
     if (routesObject.routes.count > 0) {
       self.routes = routesObject.routes;
-      self.routesDeployTime = routesObject.deployTime;
       self.routesVersion = routesObject.version;
       RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
       [routeFileCache saveRoutesMapFile:data];
@@ -293,7 +291,6 @@
   NSAssert(routesObject != nil, @"Routes should not be nil");
   if (routesObject) {
     self.routes = routesObject.routes;
-    self.routesDeployTime = routesObject.deployTime;
     self.routesVersion = routesObject.version;
   }
 }

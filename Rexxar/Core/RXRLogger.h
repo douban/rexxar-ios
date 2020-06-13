@@ -48,7 +48,7 @@ typedef enum : NSUInteger {
 @end
 
 FOUNDATION_EXPORT NSString *const _Nonnull logOtherInfoStatusCodeKey;
-FOUNDATION_EXPORT NSString *const _Nonnull logOtherInfoRoutesDepolyTimeKey;
+FOUNDATION_EXPORT NSString *const _Nonnull logOtherInfoRoutesVersionKey;
 
 NS_ASSUME_NONNULL_BEGIN
 

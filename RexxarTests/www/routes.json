@@ -1,3 +1,6 @@
-{"count":1,"items":[
-                    {"remote_file":"subject_collection.html","uri":"douban:\/\/douban.com\/subject_collection\/(\\w+)[\/]?.*"}
-                  ]}
+{
+  "version": "6.4.0",
+  "items":[
+    {"remote_file":"subject_collection.html","uri":"douban:\/\/douban.com\/subject_collection\/(\\w+)[\/]?.*"}
+  ]
+}

@@ -36,7 +36,7 @@
   }
 
   NSMutableDictionary *info = [NSMutableDictionary dictionary];
-  [info setValue:[RXRRouteManager sharedInstance].routesDeployTime forKey:logOtherInfoRoutesDepolyTimeKey];
+  [info setValue:[RXRRouteManager sharedInstance].routesVersion forKey:logOtherInfoRoutesVersionKey];
   if (userInfo != nil) {
     [info addEntriesFromDictionary:userInfo];
   }

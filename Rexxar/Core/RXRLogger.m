@@ -8,8 +8,8 @@
 
 #import "RXRLogger.h"
 
-NSString *const logOtherInfoStatusCodeKey = @"logOtherInfoStatusCodeKey";
-NSString *const logOtherInfoRoutesDepolyTimeKey = @"logOtherInfoRoutesDepolyTimeKey";
+NSString *const logOtherInfoStatusCodeKey = @"status";
+NSString *const logOtherInfoRoutesVersionKey = @"version";
 
 static NSString *descriptionFromLogType(RXRLogType type)
 {
