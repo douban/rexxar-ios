@@ -9,9 +9,8 @@
 #import <XCTest/XCTest.h>
 
 #import "RXRCacheFileInterceptor.h"
-#import "RXRConfig.h"
-
 #import "RXRRouteFileCache.h"
+#import "RXRConfig.h"
 
 @interface RXRRouteFileCacheTests : XCTestCase
 
@@ -88,7 +87,6 @@
 
   [self waitForExpectationsWithTimeout:30 handler:nil];
 }
-
 
 - (NSMutableURLRequest *)webResourceRequest:(NSURL *)url
 {

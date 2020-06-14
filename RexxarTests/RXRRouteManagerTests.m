@@ -7,13 +7,13 @@
 //
 #import <XCTest/XCTest.h>
 
-#import "RXRConfig.h"
 #import "RXRRouteManager.h"
+#import "RXRRouteFileCache.h"
 #import "RXRViewController.h"
+#import "RXRConfig.h"
 #import "RXRRoute.h"
 
 @interface RXRRouteManagerTests : XCTestCase
-
 
 @end
 
@@ -65,6 +65,23 @@
   XCTAssert([[RXRRouteManager sharedInstance] compareVersion:@"6.36.0" toVersion:@"6.36.0"] == NSOrderedSame);
   XCTAssert([[RXRRouteManager sharedInstance] compareVersion:@"6.36.0" toVersion:@"6.35.100"] == NSOrderedDescending);
   XCTAssert([[RXRRouteManager sharedInstance] compareVersion:@"6.36.4" toVersion:@"6.36.4.1"] == NSOrderedAscending);
+}
+
+- (void)testInitializeRoutes
+{
+  // Resource routes version: 6.4.0
+  NSString *json = @"{\"version\": \"6.6.0\", \"items\": []}";
+  NSData *data = [json dataUsingEncoding:NSUTF8StringEncoding];
+  [[RXRRouteFileCache sharedInstance] saveRoutesMapFile:data];
+
+  RXRRouteManager *manager = [[RXRRouteManager alloc] init];
+  manager.routesMapURL = [RXRConfig routesMapURL];
+
+  XCTAssertNotNil([[RXRRouteFileCache sharedInstance] cacheRoutesMapFile]);
+  XCTAssertNotNil([[RXRRouteFileCache sharedInstance] resourceRoutesMapFile]);
+
+  XCTAssertTrue(manager.routes.count == 0);
+  XCTAssertTrue([manager.routesVersion isEqualToString:@"6.6.0"]);
 }
 
 - (NSPredicate *)predicateForURI:(NSURL *)uri routable:(BOOL)routable

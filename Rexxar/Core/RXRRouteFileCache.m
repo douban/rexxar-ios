@@ -106,14 +106,19 @@ static NSString * const RoutesMapFile = @"routes.json";
   }
 }
 
-- (NSData *)routesMapFile
+- (NSData *)cacheRoutesMapFile
 {
   NSString *filePath = [self.cachePath stringByAppendingPathComponent:RoutesMapFile];
   if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
     return [NSData dataWithContentsOfFile:filePath];
   }
 
-  filePath = [self.resourcePath stringByAppendingPathComponent:RoutesMapFile];
+  return nil;
+}
+
+- (NSData *)resourceRoutesMapFile
+{
+  NSString *filePath = [self.resourcePath stringByAppendingPathComponent:RoutesMapFile];
   if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
     return [NSData dataWithContentsOfFile:filePath];
   }

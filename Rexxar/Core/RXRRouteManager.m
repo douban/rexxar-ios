@@ -35,7 +35,6 @@
 
 @property (nonatomic, copy) NSArray<RXRRoute *> *routes;
 @property (nonatomic, copy) NSString *routesVersion;
-@property (nonatomic, strong) NSString *routesDeployTime;
 @property (nonatomic, assign) BOOL updatingRoutes;
 @property (nonatomic, strong) NSMutableArray *updateRoutesCompletions;
 
@@ -76,10 +75,7 @@
 {
   if (_routesMapURL != routesMapURL) {
     _routesMapURL = [routesMapURL copy];
-    RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[[RXRRouteFileCache sharedInstance] routesMapFile]];
-    self.routes = routesObject.routes;
-    self.routesDeployTime = routesObject.deployTime;
-    self.routesVersion = routesObject.version;
+    [self _rxr_initializeRoutesFromLocalFiles];
   }
 }
 
@@ -87,20 +83,14 @@
 {
   RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
   routeFileCache.cachePath = cachePath;
-  RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[routeFileCache routesMapFile]];
-  self.routes = routesObject.routes;
-  self.routesDeployTime = routesObject.deployTime;
-  self.routesVersion = routesObject.version;
+  [self _rxr_initializeRoutesFromLocalFiles];
 }
 
 - (void)setResoucePath:(NSString *)resourcePath
 {
   RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
   routeFileCache.resourcePath = resourcePath;
-  RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:[routeFileCache routesMapFile]];
-  self.routes = routesObject.routes;
-  self.routesDeployTime = routesObject.deployTime;
-  self.routesVersion = routesObject.version;
+  [self _rxr_initializeRoutesFromLocalFiles];
 }
 
 - (void)updateRoutesWithCompletion:(void (^)(BOOL success))completion
@@ -167,7 +157,7 @@
       return;
     }
 
-    // 如果下载的 routes deployTime 早于当前的 routesDeployTime，则不更新
+    // 如果下载的 routes version 早于当前的 version，则不更新
     RXRRoutesObject *routesObject = [self _rxr_routesObjectWithData:data];
 
     if (![RXRConfig needsIgnoreRoutesVersion]) {
@@ -180,7 +170,6 @@
     // 立即更新 `routes.json` 及内存中的 `routes`。
     if (routesObject.routes.count > 0) {
       self.routes = routesObject.routes;
-      self.routesDeployTime = routesObject.deployTime;
       self.routesVersion = routesObject.version;
       RXRRouteFileCache *routeFileCache = [RXRRouteFileCache sharedInstance];
       [routeFileCache saveRoutesMapFile:data];
@@ -260,6 +249,50 @@
 
   routesObject.routes = items;
   return routesObject;
+}
+
+/**
+ *  从本地缓存或预置的资源中初始化 routes，如果两者都存在，比较 routes 版本，优先使用高版本 routes
+ *  如果本地缓存中的 routes 版本较小，则自动清理掉。
+ */
+- (void)_rxr_initializeRoutesFromLocalFiles
+{
+  RXRRoutesObject *cacheRoutesObject = nil;
+  NSData *cacheRoutesData = [[RXRRouteFileCache sharedInstance] cacheRoutesMapFile];
+  if ([cacheRoutesData length] > 0) {
+    cacheRoutesObject = [self _rxr_routesObjectWithData:cacheRoutesData];
+  }
+
+  RXRRoutesObject *resourceRoutesObject = nil;
+  NSData *resourceRoutesData = [[RXRRouteFileCache sharedInstance] resourceRoutesMapFile];
+  if ([resourceRoutesData length] > 0) {
+    resourceRoutesObject = [self _rxr_routesObjectWithData:resourceRoutesData];
+  }
+
+  RXRRoutesObject *routesObject = nil;
+  if (cacheRoutesObject && resourceRoutesObject) {
+    if (cacheRoutesObject.version.length > 0 && resourceRoutesObject.version.length > 0) {
+      NSComparisonResult result = [self compareVersion:cacheRoutesObject.version toVersion:resourceRoutesObject.version];
+      if (result == NSOrderedAscending) {
+        routesObject = resourceRoutesObject;
+        [[RXRRouteFileCache sharedInstance] cleanCache];
+      } else {
+        routesObject = cacheRoutesObject;
+      }
+    } else {
+      routesObject = cacheRoutesObject;
+    }
+  } else if (cacheRoutesObject) {
+    routesObject = cacheRoutesObject;
+  } else if (resourceRoutesObject) {
+    routesObject = resourceRoutesObject;
+  }
+
+  NSAssert(routesObject != nil, @"Routes should not be nil");
+  if (routesObject) {
+    self.routes = routesObject.routes;
+    self.routesVersion = routesObject.version;
+  }
 }
 
 /**
