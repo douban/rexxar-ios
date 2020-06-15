@@ -279,6 +279,8 @@
       } else {
         routesObject = cacheRoutesObject;
       }
+    } else if (cacheRoutesObject.version.length == 0 && resourceRoutesObject.version.length > 0) {
+      routesObject = resourceRoutesObject;
     } else {
       routesObject = cacheRoutesObject;
     }
