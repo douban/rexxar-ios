@@ -279,8 +279,9 @@
       } else {
         routesObject = cacheRoutesObject;
       }
-    } else if (cacheRoutesObject.version.length == 0 && resourceRoutesObject.version.length > 0) {
+    } else if (resourceRoutesObject.version.length > 0) {
       routesObject = resourceRoutesObject;
+      [[RXRRouteFileCache sharedInstance] cleanCache];
     } else {
       routesObject = cacheRoutesObject;
     }

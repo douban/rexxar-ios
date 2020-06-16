@@ -67,9 +67,30 @@
   XCTAssert([[RXRRouteManager sharedInstance] compareVersion:@"6.36.4" toVersion:@"6.36.4.1"] == NSOrderedAscending);
 }
 
-- (void)testInitializeRoutes
+- (void)testInitializeRoutesFromResource
 {
   // Resource routes version: 6.4.0
+  NSString *jsonWithLowVersion = @"{\"version\": \"6.3.0\", \"items\": []}";
+  NSString *jsonWithNoVersion = @"{\"items\": []}";
+  for (NSString *json in @[jsonWithNoVersion, jsonWithLowVersion]) {
+    NSData *data = [json dataUsingEncoding:NSUTF8StringEncoding];
+    [[RXRRouteFileCache sharedInstance] saveRoutesMapFile:data];
+
+    XCTAssertNotNil([[RXRRouteFileCache sharedInstance] cacheRoutesMapFile]);
+    XCTAssertNotNil([[RXRRouteFileCache sharedInstance] resourceRoutesMapFile]);
+
+    RXRRouteManager *manager = [[RXRRouteManager alloc] init];
+    manager.routesMapURL = [RXRConfig routesMapURL];
+
+    XCTAssertNil([[RXRRouteFileCache sharedInstance] cacheRoutesMapFile]);
+
+    XCTAssertTrue(manager.routes.count == 1);
+    XCTAssertTrue([manager.routesVersion isEqualToString:@"6.4.0"]);
+  }
+}
+
+- (void)testInitializeRoutesFromCache
+{
   NSString *json = @"{\"version\": \"6.6.0\", \"items\": []}";
   NSData *data = [json dataUsingEncoding:NSUTF8StringEncoding];
   [[RXRRouteFileCache sharedInstance] saveRoutesMapFile:data];
