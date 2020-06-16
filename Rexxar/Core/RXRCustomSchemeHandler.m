@@ -7,7 +7,7 @@
 
 #import "RXRCustomSchemeHandler.h"
 #import "RXRURLSessionDemux.h"
-#import "RXRConfig.h"
+#import "RXRConfig+Rexxar.h"
 #import "NSHTTPURLResponse+Rexxar.h"
 #import "NSURL+Rexxar.h"
 
@@ -27,6 +27,8 @@ API_AVAILABLE(ios(11.0))
 @property (nonatomic, strong) NSURLSessionDataTask *dataTask;
 
 @property (nonatomic, weak) id<RXRCustomSchemeRunnerDelegate> delegate;
+
+@property (nonatomic, assign) BOOL hasReceiveResponse;
 
 @end
 
@@ -83,6 +85,7 @@ didReceiveResponse:(NSURLResponse *)response
 
   [self.schemeTask didReceiveResponse:URLResponse ?: response];
   completionHandler(NSURLSessionResponseAllow);
+  self.hasReceiveResponse = YES;
 }
 
 - (void)URLSession:(NSURLSession *)session
@@ -115,6 +118,12 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
               task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error
 {
+  if (error == nil && !self.hasReceiveResponse) {
+    error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil];
+    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogDescription:@"rxr_finish_before_response" error:error requestURL:task.currentRequest.URL localFilePath:nil otherInformation:nil];
+    [RXRConfig rxr_logWithLogObject:logObj];
+  }
+
   if (error == nil) {
     [self.schemeTask didFinish];
   } else {
