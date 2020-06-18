@@ -17,6 +17,17 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^RXRDidCompleteRequestBlock)(NSURL *_Nonnull url, NSURLResponse *_Nullable response, NSError *_Nullable error, NSTimeInterval timeElapsed);
 
 /**
+ * 设置静态文件缓存Key
+ * 当 URL 包含与缓存无关的参数时，可以清理掉，保证缓存结果能够通用。
+ */
+@protocol RXRURLCacheConverter <NSObject>
+
+- (NSString *)cacheKeyForURL:(NSURL *)URL;
+
+@end
+
+
+/**
  * `RXRConfig` 提供对 Rexxar 的全局配置接口。
  */
 @interface RXRConfig : NSObject
@@ -25,6 +36,8 @@ typedef void(^RXRDidCompleteRequestBlock)(NSURL *_Nonnull url, NSURLResponse *_N
  设置 `RXRLogger`，调用者需要实现 `rexxarDidLogWithLogObject:` 方法。
  */
 @property (nullable, class, nonatomic, weak) id<RXRLogger> logger;
+
+@property (nullable, class, nonatomic, weak) id<RXRURLCacheConverter> URLCacheConverter;
 
 /**
  设置 `RXRErrorHandler`，调用者需要实现 `reporter:didReceiveError:` 方法。
