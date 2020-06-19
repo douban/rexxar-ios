@@ -23,6 +23,7 @@ static NSString *sRoutesResourcePath;
 static BOOL sIsCacheEnable = YES;
 static BOOL sNeedsIgnoreRoutesVersion = NO;
 static id<RXRLogger> sLogger;
+static id<RXRURLCacheConverter> sURLCacheConverter;
 static id<RXRErrorHandler> sErrorHandler;
 static NSInteger sReloadLimitWhen404 = 2;
 static NSURLSessionConfiguration *sURLSessionConfiguration;
@@ -40,6 +41,16 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
 + (void)setLogger:(id<RXRLogger>)logger
 {
   sLogger = logger;
+}
+
++ (id<RXRURLCacheConverter>)URLCacheConverter
+{
+  return sURLCacheConverter;
+}
+
++ (void)setURLCacheConverter:(id<RXRURLCacheConverter>)URLCacheConverter
+{
+  sURLCacheConverter = URLCacheConverter;
 }
 
 + (id<RXRErrorHandler>)errorHandler

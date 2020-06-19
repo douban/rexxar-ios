@@ -175,7 +175,12 @@ static NSString * const RoutesMapFile = @"routes.json";
 
 - (NSString *)_rxr_cachedRouteFilePathForRemoteURL:(NSURL *)url
 {
-  NSString *md5 = [[url.absoluteString dataUsingEncoding:NSUTF8StringEncoding] md5];
+  NSString *cacheKey = url.absoluteString;
+  if (RXRConfig.URLCacheConverter != nil) {
+    cacheKey = [RXRConfig.URLCacheConverter cacheKeyForURL:url];
+  }
+
+  NSString *md5 = [[cacheKey dataUsingEncoding:NSUTF8StringEncoding] md5];
   NSString *filename = [self.cachePath stringByAppendingPathComponent:md5];
   return [filename stringByAppendingPathExtension:url.pathExtension];
 }
