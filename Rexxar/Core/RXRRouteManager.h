@@ -7,11 +7,17 @@
 //
 
 @import Foundation;
-#import "RXRDataValidator.h"
+#import <Rexxar/RXRDataValidator.h>
 
 @class RXRRoute;
 
 NS_ASSUME_NONNULL_BEGIN
+
+typedef NS_ENUM(NSInteger, RXRRouteUpdateState) {
+  RXRRouteUpdateStateFailed,      // 更新失败
+  RXRRouteUpdateStateSuccess,     // 更新成功
+  RXRRouteUpdateStateCancelled,   // 更新取消
+};
 
 /**
  * `RXRRouteManager` 提供了对路由信息的管理和使用接口。
@@ -73,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param completion 同步完成后的回调，可以为 nil
  */
-- (void)updateRoutesWithCompletion:(nullable void (^)(BOOL success))completion;
+- (void)updateRoutesWithCompletion:(nullable void (^)(RXRRouteUpdateState state))completion;
 
 - (NSComparisonResult)compareVersion:(NSString *)version toVersion:(NSString *)otherVersion;
 

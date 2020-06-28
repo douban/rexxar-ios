@@ -51,7 +51,7 @@
 		A35E71FB1D7FCA0200D38BC0 /* RXRRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E71EA1D7FCA0200D38BC0 /* RXRRoute.m */; };
 		A35E71FC1D7FCA0200D38BC0 /* RXRRouteFileCache.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E71EB1D7FCA0200D38BC0 /* RXRRouteFileCache.h */; };
 		A35E71FD1D7FCA0200D38BC0 /* RXRRouteFileCache.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E71EC1D7FCA0200D38BC0 /* RXRRouteFileCache.m */; };
-		A35E71FE1D7FCA0200D38BC0 /* RXRRouteManager.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E71ED1D7FCA0200D38BC0 /* RXRRouteManager.h */; };
+		A35E71FE1D7FCA0200D38BC0 /* RXRRouteManager.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E71ED1D7FCA0200D38BC0 /* RXRRouteManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A35E71FF1D7FCA0200D38BC0 /* RXRRouteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E71EE1D7FCA0200D38BC0 /* RXRRouteManager.m */; };
 		A35E72001D7FCA0200D38BC0 /* RXRViewController+Router.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E71EF1D7FCA0200D38BC0 /* RXRViewController+Router.m */; };
 		A35E72011D7FCA0200D38BC0 /* RXRViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = A35E71F01D7FCA0200D38BC0 /* RXRViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -89,6 +89,7 @@
 		B9E27ED01C049A9900C12DAF /* RXRRouteManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */; };
 		B9E27ED41C054A7A00C12DAF /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E27ED31C054A7A00C12DAF /* RoutesViewController.swift */; };
 		B9EF27D81C033C5300C7E2E9 /* www in Resources */ = {isa = PBXBuildFile; fileRef = B9EF27D71C033C5300C7E2E9 /* www */; };
+		D8E94D7024A8807300B7CEB4 /* RXRDataValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7196C5EC1FB06C6800E2B57C /* RXRDataValidator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -526,10 +527,11 @@
 				A35E72451D7FCBF900D38BC0 /* RXRContainerAPI.h in Headers */,
 				A35E71E01D7FC86000D38BC0 /* RXRPullRefreshWidget.h in Headers */,
 				A35D15A21D66AE2B009B24DC /* RXRAlertDialogWidget.h in Headers */,
+				A35E71FE1D7FCA0200D38BC0 /* RXRRouteManager.h in Headers */,
+				D8E94D7024A8807300B7CEB4 /* RXRDataValidator.h in Headers */,
 				98BCCFB81E698BAA007C2100 /* NSHTTPURLResponse+Rexxar.h in Headers */,
 				A398DC321D222CC1006D4817 /* RXRModel.h in Headers */,
 				7132597C1E713C4500A6D7EA /* RXRRequestInterceptor.h in Headers */,
-				A35E71FE1D7FCA0200D38BC0 /* RXRRouteManager.h in Headers */,
 				A35E72261D7FCB0B00D38BC0 /* NSMutableDictionary+RXRMultipleItems.h in Headers */,
 				A35E72221D7FCB0B00D38BC0 /* NSData+RXRDigest.h in Headers */,
 				A398DC2D1D221BA4006D4817 /* RXRNavTitleWidget.h in Headers */,

@@ -22,18 +22,18 @@ class FullRXRViewController: RXRViewController {
     let navMenuWidget = RXRNavMenuWidget()
     widgets = [titleWidget, alertDialogWidget, pullRefreshWidget, toastWidget, navMenuWidget]
 
-    // ContainerAPIs
-    let geoContainerAPI = RXRGeoContainerAPI()
-    let logContainerAPI = RXRLogContainerAPI()
-    RXRContainerInterceptor.containerAPIs = [geoContainerAPI, logContainerAPI]
-    RXRNSURLProtocol.registerRXRProtocolClass(RXRContainerInterceptor.self)
-
     // Decorators
     let headers = ["Customer-Authorization": "Bearer token"]
     let parameters = ["apikey": "apikey value"]
     let requestDecorator = RXRRequestDecorator(headers: headers, parameters: parameters)
     RXRRequestInterceptor.decorators = [requestDecorator]
     RXRNSURLProtocol.registerRXRProtocolClass(RXRRequestInterceptor.self)
+
+    // ContainerAPIs
+    let geoContainerAPI = RXRGeoContainerAPI()
+    let logContainerAPI = RXRLogContainerAPI()
+    RXRContainerInterceptor.containerAPIs = [geoContainerAPI, logContainerAPI]
+    RXRNSURLProtocol.registerRXRProtocolClass(RXRContainerInterceptor.self)
   }
 
   deinit {

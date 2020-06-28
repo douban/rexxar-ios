@@ -217,8 +217,8 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
     decisionHandler(WKNavigationResponsePolicyCancel);
 
     _reloadRecord[httpResponse.URL.absoluteString] = @(++reloadCount);
-    [[RXRRouteManager sharedInstance] updateRoutesWithCompletion:^(BOOL success) {
-      if (success) {
+    [[RXRRouteManager sharedInstance] updateRoutesWithCompletion:^(RXRRouteUpdateState state) {
+      if (state != RXRRouteUpdateStateFailed) {
         self.requestURL = nil;
         [self reloadWebView];
       }
