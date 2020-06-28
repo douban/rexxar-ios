@@ -12,8 +12,8 @@
 
 - (BOOL)shouldInterceptRequest:(NSURLRequest *)request
 {
-  // http://rexxar-container/api/event_location
-  if ([request.URL.scheme isEqualToString:@"http"] &&
+  // https://rexxar-container/api/event_location
+  if ([request.URL rxr_isHttpOrHttps] &&
       [request.URL.host isEqualToString:@"rexxar-container"] &&
       [request.URL.path hasPrefix:@"/api/geo"]) {
 

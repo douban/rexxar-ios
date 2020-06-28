@@ -7,6 +7,7 @@
 //
 
 #import <Rexxar/RXRWebViewController.h>
+#import <Rexxar/RXRRouteManager.h>
 
 @protocol RXRWidget;
 
@@ -87,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param completion 更新完成后将执行这个 block。
  */
-+ (void)updateRouteFilesWithCompletion:(nullable void (^)(BOOL success))completion;
++ (void)updateRouteFilesWithCompletion:(nullable void (^)(RXRRouteUpdateState state))completion;
 
 /**
  * 判断路由表是否存在对应于 uri 的 route 信息。

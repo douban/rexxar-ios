@@ -13,7 +13,7 @@
 
 #pragma mark - Route File Interface
 
-+ (void)updateRouteFilesWithCompletion:(void (^)(BOOL success))completion
++ (void)updateRouteFilesWithCompletion:(void (^)(RXRRouteUpdateState state))completion
 {
   RXRRouteManager *routeManager = [RXRRouteManager sharedInstance];
   [routeManager updateRoutesWithCompletion:completion];

@@ -93,7 +93,7 @@
   [self _rxr_initializeRoutesFromLocalFiles];
 }
 
-- (void)updateRoutesWithCompletion:(void (^)(BOOL success))completion
+- (void)updateRoutesWithCompletion:(void (^)(RXRRouteUpdateState state))completion
 {
   NSParameterAssert([NSThread isMainThread]);
 
@@ -113,10 +113,10 @@
 
   self.updatingRoutes = YES;
 
-  void (^APICompletion)(BOOL) = ^(BOOL success){
+  void (^APICompletion)(RXRRouteUpdateState) = ^(RXRRouteUpdateState state){
     dispatch_async(dispatch_get_main_queue(), ^{
-      for (void (^item)(BOOL) in self.updateRoutesCompletions) {
-        item(success);
+      for (void (^item)(RXRRouteUpdateState) in self.updateRoutesCompletions) {
+        item(state);
       }
       [self.updateRoutesCompletions removeAllObjects];
       self.updatingRoutes = NO;
@@ -151,7 +151,7 @@
 
     NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
     if (statusCode != 200) {
-      APICompletion(NO);
+      APICompletion(RXRRouteUpdateStateFailed);
       NSDictionary *userInfo = @{logOtherInfoStatusCodeKey: @(statusCode)};
       [RXRConfig rxr_logWithType:RXRLogTypeDownloadingRoutesError error:error requestURL:request.URL localFilePath:nil userInfo:userInfo];
       return;
@@ -162,7 +162,7 @@
 
     if (![RXRConfig needsIgnoreRoutesVersion]) {
       if (routesObject.version.length > 0 && self.routesVersion.length > 0 && [self compareVersion:self.routesVersion toVersion:routesObject.version] != NSOrderedAscending) {
-        APICompletion(NO);
+        APICompletion(RXRRouteUpdateStateCancelled);
         return;
       }
     }
@@ -175,7 +175,12 @@
       [routeFileCache saveRoutesMapFile:data];
     }
 
-    APICompletion(routesObject.routes.count > 0);
+    if (routesObject.routes.count > 0) {
+      APICompletion(RXRRouteUpdateStateSuccess);
+    } else {
+      APICompletion(RXRRouteUpdateStateFailed);
+    }
+
     [self _rxr_prefetchCommonUsedFilesWithinRoutes:routesObject.routes];
   }] resume];
 }
