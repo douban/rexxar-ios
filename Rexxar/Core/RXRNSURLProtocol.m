@@ -280,8 +280,8 @@ didReceiveResponse:(NSURLResponse *)response
   if ([self isRequestIgnored:request]) {
     return NO;
   }
-  // 请求不是来自浏览器，不处理
-  if (![request.allHTTPHeaderFields[@"User-Agent"] hasPrefix:@"Mozilla"]) {
+  // 请求不是来自Rexxar浏览器，不处理
+  if (![request.allHTTPHeaderFields[@"User-Agent"] hasPrefix:@"Mozilla"] || ![request.allHTTPHeaderFields[@"User-Agent"] containsString:@"Rexxar"]) {
     return NO;
   }
   return YES;
