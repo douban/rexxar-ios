@@ -92,6 +92,13 @@ didReceiveResponse:(NSURLResponse *)response
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data
 {
+  if (!self.hasReceiveResponse) {
+    NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil];
+    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogDescription:@"rxr_receive_data_before_response" error:error requestURL:dataTask.currentRequest.URL localFilePath:nil otherInformation:nil];
+    [RXRConfig rxr_logWithLogObject:logObj];
+    return;
+  }
+
   [self.schemeTask didReceiveData:data];
 }
 
