@@ -41,7 +41,7 @@
   [self setAutomaticallyAdjustsScrollViewInsets:NO];
   self.delegate = self;
 
-  _webView = [self _rxr_createWebView];
+  self.webView = [self _rxr_createWebView];
   [self.view addSubview:_webView];
 }
 
@@ -53,7 +53,7 @@
     [self _rxr_cancelInterceptorsForWebView:_webView];
     [_webView removeFromSuperview];
 
-    _webView = [self _rxr_createWebView];
+    self.webView = [self _rxr_createWebView];
     [self.view addSubview:_webView];
     [self.view setNeedsLayout];
   }
@@ -86,6 +86,13 @@
   [super viewDidLayoutSubviews];
 
   _webView.frame = [self webViewFrame];
+}
+
+- (void)setWebView:(WKWebView * _Nonnull)webView
+{
+  [self willChangeValueForKey:@"webView"];
+  _webView = webView;
+  [self didChangeValueForKey:@"webView"];
 }
 
 - (CGRect)webViewFrame
