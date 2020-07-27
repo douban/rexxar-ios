@@ -74,6 +74,12 @@ API_AVAILABLE(ios(11.0))
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
 {
+  if (self.hasReceiveResponse) {
+    NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil];
+    RXRLogObject *logObj = [[RXRLogObject alloc] initWithLogDescription:@"rxr_already_receive_response" error:error requestURL:dataTask.currentRequest.URL localFilePath:nil otherInformation:nil];
+    [RXRConfig rxr_logWithLogObject:logObj];
+    return;
+  }
   NSHTTPURLResponse *URLResponse = nil;
   if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
     URLResponse = (NSHTTPURLResponse *)response;
