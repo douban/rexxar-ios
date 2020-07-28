@@ -198,20 +198,8 @@ didCompleteWithError:(nullable NSError *)error
   if ([self client] != nil && (_dataTask == nil || _dataTask == task)) {
     if (error == nil) {
       [[self client] URLProtocolDidFinishLoading:self];
-    } else if ([error.domain isEqual:NSURLErrorDomain] && error.code >= NSURLErrorCannotFindHost) {
-      [[self client] URLProtocol:self didFailWithError:error];
     } else {
-      // Here we don't call `URLProtocol:didFailWithError:` method because browser may not be able to handle `error`
-      // object correctly. Instead we return HTTP response manually and you can handle this response easily
-      // in rexxar-web (https://github.com/douban/rexxar-web). In addition, we alse leave chance for
-      // native code to handle the error through `rxr_handleError:fromReporter:` method.
-      NSHTTPURLResponse *response = [NSHTTPURLResponse rxr_responseWithURL:task.currentRequest.URL
-                                                                statusCode:rxrHttpResponseURLProtocolError
-                                                              headerFields:nil
-                                                           noAccessControl:YES];
-
-      [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
-      [[self client] URLProtocolDidFinishLoading:self];
+      [[self client] URLProtocol:self didFailWithError:error];
 
       if ([RXRConfig rxr_canHandleError]) {
         [RXRConfig rxr_handleError:error fromReporter:self];
