@@ -544,7 +544,7 @@ static NSMapTable *sWebViewInterceptorTable()
 {
   [sStoreLock() lock];
   NSString *key = [NSString stringWithFormat:@"%@:%p", webViewID, interceptor];
-  [sWebViewInterceptorTable() setObject:interceptor forKey:key];
+  [sWebViewInterceptorTable() setObject:nil forKey:key];
   [sStoreLock() unlock];
 }
 
