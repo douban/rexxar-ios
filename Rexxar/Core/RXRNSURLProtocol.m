@@ -49,10 +49,12 @@ static NSMutableDictionary *sRegisteredClassCounter;
 {
   [self afterStopLoadingRequest];
 
-  if ([self dataTask] != nil) {
-    [[self dataTask] cancel];
-    [self setDataTask:nil];
-  }
+  [[self.class sharedDemux] performBlockWithTask:[self dataTask] block:^{
+    if ([self dataTask] != nil) {
+      [[self dataTask] cancel];
+      [self setDataTask:nil];
+    }
+  }];
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request
