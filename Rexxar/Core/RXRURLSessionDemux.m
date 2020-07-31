@@ -123,6 +123,12 @@
   return dataTask;
 }
 
+- (void)performBlockWithTask:(NSURLSessionTask *)task block:(dispatch_block_t)block
+{
+  RXRURLSessionDemuxTask *demuxTask = [self demuxTaskForTask:task];
+  [demuxTask performBlock:block];
+}
+
 - (RXRURLSessionDemuxTask *)demuxTaskForTask:(NSURLSessionTask *)task
 {
   RXRURLSessionDemuxTask *demuxTask = nil;

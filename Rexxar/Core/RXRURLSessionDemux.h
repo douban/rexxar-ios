@@ -24,6 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
                                      delegate:(id<NSURLSessionDataDelegate>)delegate
                                         modes:(nullable NSArray *)modes;
 
+- (void)performBlockWithTask:(NSURLSessionTask *)task
+                       block:(dispatch_block_t)block;
+
 @end
 
 NS_ASSUME_NONNULL_END
