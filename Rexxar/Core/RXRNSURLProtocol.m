@@ -50,9 +50,10 @@ static NSMutableDictionary *sRegisteredClassCounter;
   [self afterStopLoadingRequest];
 
   [[self.class sharedDemux] performBlockWithTask:[self dataTask] block:^{
-    if ([self dataTask] != nil) {
-      [[self dataTask] cancel];
+    NSURLSessionTask *task = [self dataTask];
+    if (task != nil) {
       [self setDataTask:nil];
+      [task cancel];
     }
   }];
 }
