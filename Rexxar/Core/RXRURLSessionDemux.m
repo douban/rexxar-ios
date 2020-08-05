@@ -126,7 +126,11 @@
 - (void)performBlockWithTask:(NSURLSessionTask *)task block:(dispatch_block_t)block
 {
   RXRURLSessionDemuxTask *demuxTask = [self demuxTaskForTask:task];
-  [demuxTask performBlock:block];
+  if (demuxTask) {
+    [demuxTask performBlock:block];
+  } else if (block) {
+    block();
+  }
 }
 
 - (RXRURLSessionDemuxTask *)demuxTaskForTask:(NSURLSessionTask *)task
