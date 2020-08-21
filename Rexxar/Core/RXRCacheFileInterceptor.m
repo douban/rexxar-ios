@@ -166,10 +166,19 @@ didCompleteWithError:(nullable NSError *)error
       if ([[self class] shouldInterceptRequest:task.currentRequest] && self.fileHandle) {
         [self.fileHandle closeFile];
         self.fileHandle = nil;
-        NSData *data = [NSData dataWithContentsOfFile:self.responseDataFilePath];
-        NSURL *cacheURL = [[self class] _rxr_cacheURL:task.currentRequest.URL];
-        [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:cacheURL];
-        RXRDebugLog(@"Download resource %@", cacheURL);
+
+        NSInteger statusCode = 200;
+        if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
+          statusCode = ((NSHTTPURLResponse *)task.response).statusCode;
+        }
+        if (statusCode >= 400) {
+          [[NSFileManager defaultManager] removeItemAtPath:self.responseDataFilePath error:nil];
+        } else {
+          NSData *data = [NSData dataWithContentsOfFile:self.responseDataFilePath];
+          NSURL *cacheURL = [[self class] _rxr_cacheURL:task.currentRequest.URL];
+          [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:cacheURL];
+          RXRDebugLog(@"Download resource %@", cacheURL);
+        }
       }
       [self.client URLProtocolDidFinishLoading:self];
     } else {
