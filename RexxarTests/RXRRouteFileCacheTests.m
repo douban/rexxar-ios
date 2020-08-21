@@ -58,13 +58,14 @@
 
 - (void)testCacheCss
 {
+  // 404 URL
   NSURL *resourceURL = [NSURL URLWithString:@"https://img3.doubanio.com/f/shire/7e852f2bb1782270ae227988d79adc8e7acb1e30/css/frontpage/_init_.css"];
 
   XCTestExpectation *expect = [self expectationWithDescription:@"Resource cached"];
   [[[self.class session] dataTaskWithRequest:[self webResourceRequest:resourceURL]
                                    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 
-                                     if (data && [[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:resourceURL]) {
+                                     if (data && [[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:resourceURL] == nil) {
                                        [expect fulfill];
                                      }
                                    }] resume];
