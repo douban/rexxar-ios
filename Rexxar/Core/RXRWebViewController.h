@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)loadRequest:(NSURLRequest *)request;
 - (CGRect)webViewFrame;
+- (void)initWebView;
 
 @end
 
