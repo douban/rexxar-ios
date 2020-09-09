@@ -41,7 +41,7 @@
   [self setAutomaticallyAdjustsScrollViewInsets:NO];
   self.delegate = self;
 
-  self.webView = [self _rxr_createWebView];
+  [self initWebView];
   [self.view addSubview:_webView];
 }
 
@@ -53,7 +53,7 @@
     [self _rxr_cancelInterceptorsForWebView:_webView];
     [_webView removeFromSuperview];
 
-    self.webView = [self _rxr_createWebView];
+    _webView = [self _rxr_createWebView];
     [self.view addSubview:_webView];
     [self.view setNeedsLayout];
   }
@@ -86,6 +86,13 @@
   [super viewDidLayoutSubviews];
 
   _webView.frame = [self webViewFrame];
+}
+
+- (void)initWebView
+{
+  if (!_webView) {
+    _webView = [self _rxr_createWebView];
+  }
 }
 
 - (void)setWebView:(WKWebView * _Nonnull)webView
