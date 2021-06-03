@@ -25,6 +25,7 @@ API_AVAILABLE(ios(11.0))
 
 @property (nonatomic, strong) id <WKURLSchemeTask> schemeTask;
 @property (nonatomic, strong) NSURLSessionDataTask *dataTask;
+@property(nonatomic, strong) RXRURLSessionDemux *sessionDemux;
 
 @property (nonatomic, weak) id<RXRCustomSchemeRunnerDelegate> delegate;
 
@@ -38,6 +39,7 @@ API_AVAILABLE(ios(11.0))
 {
   self = [super init];
   if (self) {
+    _sessionDemux = sessionDemux;
     _schemeTask = schemeTask;
 
     NSMutableURLRequest *request = [schemeTask.request mutableCopy];
@@ -63,8 +65,10 @@ API_AVAILABLE(ios(11.0))
 
 - (void)cancel
 {
-  self.schemeTask = nil;
-  [self.dataTask cancel];
+  [self.sessionDemux performBlockWithTask:self.dataTask block:^{
+    self.schemeTask = nil;
+    [self.dataTask cancel];
+  }];
 }
 
 #pragma mark - NSURLSessionDataDelegate
