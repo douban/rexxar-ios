@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * 对应的 uri。
  */
-@property (nonatomic, readonly) NSURL *uri;
+@property (nonatomic, copy) NSURL *uri;
 
 /**
  * activities 代表该 Rexxar Container 可以响应的协议。
