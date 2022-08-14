@@ -166,8 +166,7 @@
   if ([(id)klass respondsToSelector:sel]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [(id)klass performSelector:sel withObject:@"https"];
-    [(id)klass performSelector:sel withObject:@"http"];
+    [(id)klass performSelector:sel withObject:@"https" withObject:@"http"];
 #pragma clang diagnostic pop
   }
 }
@@ -182,8 +181,7 @@
   if ([(id)klass respondsToSelector:sel]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [(id)klass performSelector:sel withObject:@"https"];
-    [(id)klass performSelector:sel withObject:@"http"];
+    [(id)klass performSelector:sel withObject:@"https" withObject:@"http"];
 #pragma clang diagnostic pop
   }
 }
