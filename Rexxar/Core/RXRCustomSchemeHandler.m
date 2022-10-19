@@ -182,6 +182,11 @@ API_AVAILABLE(ios(11.0))
   return self;
 }
 
+- (void)dealloc
+{
+  [_sessionDemux.session finishTasksAndInvalidate];
+}
+
 - (void)webView:(WKWebView *)webView startURLSchemeTask:(id <WKURLSchemeTask>)urlSchemeTask API_AVAILABLE(ios(11.0))
 {
   RXRCustomSchemeDataTaskRunner *runner = [[RXRCustomSchemeDataTaskRunner alloc] initWithSchemeTask:urlSchemeTask sessionDemux:self.sessionDemux];
