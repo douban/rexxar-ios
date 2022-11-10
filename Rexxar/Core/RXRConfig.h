@@ -62,6 +62,11 @@ RXRRequestInterceptor处理请求完成时的回调
 @property (class, nonatomic) BOOL useCustomScheme;
 
 /**
+ 自定义的webView Class类型，需为WKWebView的子类
+*/
+@property (nullable, class, nonatomic) Class customWebViewClass;
+
+/**
  * 设置 rxrProtocolScheme。
  *
  * @discussion Rexxar-Container 实现了一些供 Web 调用的功能。Web 调用这些功能的方式是发出一个特定的请求。
