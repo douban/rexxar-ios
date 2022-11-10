@@ -233,7 +233,13 @@
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{@"UserAgent": userAgent}];
   }
 
-  WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
+  WKWebView *webView;
+  if ([[RXRConfig customWebViewClass] isSubclassOfClass:[WKWebView class]]) {
+    webView = [[[RXRConfig customWebViewClass] alloc] initWithFrame:CGRectZero configuration:webConfiguration];
+  }
+  if (!webView) {
+    webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:webConfiguration];
+  }
   webView.navigationDelegate = self;
   webView.UIDelegate = self;
   webView.scrollView.delegate = self;

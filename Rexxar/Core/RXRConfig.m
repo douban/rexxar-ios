@@ -29,6 +29,7 @@ static NSInteger sReloadLimitWhen404 = 2;
 static NSURLSessionConfiguration *sURLSessionConfiguration;
 static RXRDidCompleteRequestBlock _didCompleteRequestBlock;
 static BOOL sUseCustomScheme = NO;
+static Class sCustomWebViewClass;
 
 static NSString * const DefaultRXRScheme = @"douban";
 static NSString * const DefaultRXRHost = @"rexxar-container";
@@ -228,6 +229,16 @@ static NSString * const DefaultRXRHost = @"rexxar-container";
 +(void)setUseCustomScheme:(BOOL)useCustomScheme
 {
   sUseCustomScheme = useCustomScheme;
+}
+
++ (Class)customWebViewClass
+{
+  return sCustomWebViewClass;
+}
+
++(void)setCustomWebViewClass:(Class)customWebViewClass
+{
+  sCustomWebViewClass = customWebViewClass;
 }
 
 @end
