@@ -150,6 +150,21 @@
   }
 }
 
+- (void)openExternalURL:(NSURL *)url completionHandler:(void (^ _Nullable)(BOOL))completion
+{
+  if (!url) {
+    return;
+  }
+  if (@available(iOS 10.0, *)) {
+    [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:completion];
+  } else {
+    BOOL result = [[UIApplication sharedApplication] openURL:url];
+    if (completion) {
+      completion(result);
+    }
+  }
+}
+
 #pragma mark - NSURLProtocol
 
 /**
@@ -326,7 +341,7 @@
       BOOL useOpenURL = (isHTTP && [url.host isEqualToString:@"itunes.apple.com"]) // iTunes 链接。
       || (!isHTTP && [[UIApplication sharedApplication] canOpenURL:url]); // 可以处理的非 HTTP 链接。
       if (useOpenURL) {
-        [[UIApplication sharedApplication] openURL:url];
+        [self openExternalURL:url completionHandler:nil];
         allowed = NO;
       }
     }
