@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  * `RXRWidget` 是一个 Widget 协议。
  * 实现 RXRWidget 协议的类将完成一个 Web 对 Native 的功能调用。
  */
+NS_SWIFT_UI_ACTOR
 @protocol RXRWidget <NSObject>
 
 /**
