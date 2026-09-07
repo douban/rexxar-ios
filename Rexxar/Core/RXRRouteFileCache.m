@@ -13,6 +13,7 @@
 #import "NSData+RXRDigest.h"
 #import "RXRLogger.h"
 #import "RXRConfig+Rexxar.h"
+#import "RXRRouteManager.h"
 
 static NSString * const RoutesMapFile = @"routes.json";
 
@@ -131,9 +132,31 @@ static NSString * const RoutesMapFile = @"routes.json";
   NSString *filePath = [self _rxr_cachedRouteFilePathForRemoteURL:url];
   if (data == nil) {
     [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-  } else {
+  } else if ([self validateRouteFileData:data withRemoteURL:url]) {
     [data writeToFile:filePath atomically:YES];
   }
+}
+
+- (BOOL)validateRouteFileData:(NSData *)data withRemoteURL:(NSURL *)url
+{
+  BOOL isHTML = [url.pathExtension.lowercaseString isEqualToString:@"html"];
+  BOOL valid = data.length > 0;
+  if (valid && isHTML) {
+    id<RXRDataValidator> validator = [RXRRouteManager sharedInstance].dataValidator;
+    if ([validator respondsToSelector:@selector(validateRemoteHTMLFile:fileData:)]) {
+      valid = [validator validateRemoteHTMLFile:url fileData:data];
+    }
+  }
+
+  if (!valid) {
+    if (isHTML) {
+      [RXRConfig rxr_logWithType:RXRLogTypeValidatingHTMLFileError error:nil requestURL:url localFilePath:nil userInfo:nil];
+    } else {
+      RXRLogObject *log = [[RXRLogObject alloc] initWithLogDescription:@"rxr_invalid_resource_file" error:nil requestURL:url localFilePath:nil otherInformation:nil];
+      [RXRConfig rxr_logWithLogObject:log];
+    }
+  }
+  return valid;
 }
 
 - (NSData *)routeFileDataForRemoteURL:(NSURL *)url
@@ -150,12 +173,20 @@ static NSString * const RoutesMapFile = @"routes.json";
 {
   NSString *filePath = [self _rxr_cachedRouteFilePathForRemoteURL:url];
   if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-    return filePath;
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    if ([self validateRouteFileData:data withRemoteURL:url]) {
+      return filePath;
+    }
+    // Evict corrupt downloads so a bundled copy or a new download can recover.
+    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
   }
 
   filePath = [self _rxr_resourceRouteFilePathForRemoteURL:url];
   if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-    return filePath;
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    if ([self validateRouteFileData:data withRemoteURL:url]) {
+      return filePath;
+    }
   }
 
   return nil;

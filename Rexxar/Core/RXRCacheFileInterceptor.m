@@ -167,20 +167,25 @@ didCompleteWithError:(nullable NSError *)error
         [self.fileHandle closeFile];
         self.fileHandle = nil;
 
-        NSInteger statusCode = 200;
-        if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
-          statusCode = ((NSHTTPURLResponse *)task.response).statusCode;
-        }
-        if (statusCode >= 400) {
-          [[NSFileManager defaultManager] removeItemAtPath:self.responseDataFilePath error:nil];
-        } else {
+        if ([[self class] _rxr_isCacheableResponse:task.response]) {
           NSData *data = [NSData dataWithContentsOfFile:self.responseDataFilePath];
           NSURL *cacheURL = [[self class] _rxr_cacheURL:task.currentRequest.URL];
-          [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:cacheURL];
-          RXRDebugLog(@"Download resource %@", cacheURL);
+          RXRRouteFileCache *cache = [RXRRouteFileCache sharedInstance];
+          if ([cache validateRouteFileData:data withRemoteURL:cacheURL]) {
+            [cache saveRouteFileData:data withRemoteURL:cacheURL];
+            RXRDebugLog(@"Download resource %@", cacheURL);
+          } else {
+            error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCannotDecodeContentData
+                                    userInfo:@{NSURLErrorFailingURLErrorKey: cacheURL}];
+          }
         }
+        [[NSFileManager defaultManager] removeItemAtPath:self.responseDataFilePath error:nil];
       }
-      [self.client URLProtocolDidFinishLoading:self];
+      if (error) {
+        [self.client URLProtocol:self didFailWithError:error];
+      } else {
+        [self.client URLProtocolDidFinishLoading:self];
+      }
     } else {
       if ([[self class] shouldInterceptRequest:task.currentRequest] && self.fileHandle) {
         [self.fileHandle closeFile];
@@ -228,12 +233,23 @@ didCompleteWithError:(nullable NSError *)error
 
 + (BOOL)_rxr_isCacheableResponse:(NSURLResponse *)response
 {
-  NSSet *cacheableTypes = [NSSet setWithObjects:@"application/javascript",
-                           @"application/x-javascript",
-                           @"text/javascript",
-                           @"text/css",
-                           @"text/html", nil];
-  return [cacheableTypes containsObject:response.MIMEType];
+  if (![response isKindOfClass:[NSHTTPURLResponse class]] ||
+      ((NSHTTPURLResponse *)response).statusCode != 200) {
+    return NO;
+  }
+
+  NSString *extension = response.URL.pathExtension.lowercaseString;
+  NSString *mimeType = response.MIMEType.lowercaseString;
+  if ([extension isEqualToString:@"html"]) {
+    return [mimeType isEqualToString:@"text/html"];
+  }
+  if ([extension isEqualToString:@"css"]) {
+    return [mimeType isEqualToString:@"text/css"];
+  }
+  if ([extension isEqualToString:@"js"]) {
+    return [@[@"application/javascript", @"application/x-javascript", @"text/javascript"] containsObject:mimeType];
+  }
+  return NO;
 }
 
 - (NSString *)_rxr_temporaryFilePath
