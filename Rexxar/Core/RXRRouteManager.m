@@ -326,7 +326,10 @@
   [lock unlock];
 
   NSMutableSet<NSURL *> *htmlURLs = [NSMutableSet<NSURL *> set];
+  NSMutableArray<NSURLSessionDownloadTask *> *downloadTasks = [NSMutableArray array];
   dispatch_group_t downloadGroup = dispatch_group_create();
+  // Completion handlers run on the session's serial delegate queue.
+  __block BOOL stopped = NO;
 
   for (RXRRoute *route in routes) {
     if (!route.isPackageInApp) {
@@ -350,7 +353,12 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:route.remoteHTML
                                              cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                          timeoutInterval:60];
-    [[self.session downloadTaskWithRequest:request completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+    NSURLSessionDownloadTask *task = [self.session downloadTaskWithRequest:request completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+      if (stopped) {
+        dispatch_group_leave(downloadGroup);
+        return;
+      }
+
       RXRDebugLog(@"Download %@", response.URL);
       RXRDebugLog(@"Response: %@", response);
 
@@ -364,33 +372,47 @@
         return;
       }
 
-      NSData *data = [NSData dataWithContentsOfURL:location];
-
-      // Validate data
-      if (self.dataValidator
-          && [self.dataValidator respondsToSelector:@selector(validateRemoteHTMLFile:fileData:)]
-          && ![self.dataValidator validateRemoteHTMLFile:route.remoteHTML fileData:data]) {
-        // Log
-        [RXRConfig rxr_logWithType:RXRLogTypeValidatingHTMLFileError error:nil requestURL:route.remoteHTML localFilePath:nil userInfo:nil];
-
-        if ([self.dataValidator respondsToSelector:@selector(stopDownloadingIfValidationFailed)] &&
-            [self.dataValidator stopDownloadingIfValidationFailed]) {
-          dispatch_group_leave(downloadGroup);
-          return;
-        }
+      NSError *readError = nil;
+      NSData *data = [NSData dataWithContentsOfURL:location options:0 error:&readError];
+      if (!data) {
+        [RXRConfig rxr_logWithType:RXRLogTypeDownloadingHTMLFileError error:readError requestURL:route.remoteHTML localFilePath:location.path userInfo:nil];
+        dispatch_group_leave(downloadGroup);
+        return;
       }
 
-      [[RXRRouteFileCache sharedInstance] saveRouteFileData:data withRemoteURL:response.URL];
+      RXRRouteFileCache *cache = [RXRRouteFileCache sharedInstance];
+      if (![cache validateRouteFileData:data withRemoteURL:route.remoteHTML]) {
+        // Never cache the invalid file. The policy only controls other files.
+        if ([self.dataValidator respondsToSelector:@selector(stopDownloadingIfValidationFailed)] &&
+            [self.dataValidator stopDownloadingIfValidationFailed]) {
+          stopped = YES;
+          for (NSURLSessionDownloadTask *otherTask in downloadTasks) {
+            [otherTask cancel];
+          }
+        }
+        dispatch_group_leave(downloadGroup);
+        return;
+      }
+
+      [cache saveRouteFileData:data withRemoteURL:route.remoteHTML];
 
       dispatch_group_leave(downloadGroup);
-    }] resume];
+    }];
+    [downloadTasks addObject:task];
   }
 
   dispatch_group_notify(downloadGroup, dispatch_get_main_queue(), ^{
+    // Tasks retain their completion handlers, which retain this batch list.
+    [downloadTasks removeAllObjects];
     [lock lock];
     isRuning = NO;
     [lock unlock];
   });
+
+  // Register the whole batch before any completion can cancel the remainder.
+  for (NSURLSessionDownloadTask *task in [downloadTasks copy]) {
+    [task resume];
+  }
 }
 
 - (NSComparisonResult)compareVersion:(NSString *)version1 toVersion:(NSString *)version2

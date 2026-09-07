@@ -71,7 +71,13 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * Save the route file with url.
  */
-- (void)saveRouteFileData:(NSData *)data withRemoteURL:(NSURL *)url;
+- (void)saveRouteFileData:(nullable NSData *)data withRemoteURL:(NSURL *)url;
+
+/**
+ * Reject empty resources and validate HTML with the configured RXRDataValidator.
+ * Downloads and local cache reads use the same validation policy.
+ */
+- (BOOL)validateRouteFileData:(nullable NSData *)data withRemoteURL:(NSURL *)url;
 
 /**
  * 从缓存中读取出 `url` 下载的资源。

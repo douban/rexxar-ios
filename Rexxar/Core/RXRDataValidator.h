@@ -29,6 +29,9 @@
 /**
  如果验证失败，是否停止继续下载其他文件。
 
+ 当前校验失败的文件始终不会缓存。返回 NO 时继续其他文件；
+ 返回 YES 时取消本批尚未完成的预下载，不影响其他请求。
+
  @return 是否停止继续下载其他文件
  */
 - (BOOL)stopDownloadingIfValidationFailed;
