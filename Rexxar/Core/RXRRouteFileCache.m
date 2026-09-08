@@ -17,6 +17,12 @@
 
 static NSString * const RoutesMapFile = @"routes.json";
 
+// Resource URLs identify immutable content. Only this class writes cache files.
+@interface RXRRouteFileCache ()
+@property (nonatomic, strong) NSCache<NSString *, NSNumber *> *validatedFiles;
+@property (nonatomic, weak) id<RXRDataValidator> validationDataValidator;
+@end
+
 @implementation RXRRouteFileCache
 
 + (RXRRouteFileCache *)sharedInstance
@@ -84,12 +90,12 @@ static NSString * const RoutesMapFile = @"routes.json";
 
 - (void)cleanCache
 {
-  NSFileManager *manager = [NSFileManager defaultManager];
-  [manager removeItemAtPath:self.cachePath error:nil];
-  [manager createDirectoryAtPath:self.cachePath
-     withIntermediateDirectories:YES
-                      attributes:@{}
-                           error:NULL];
+  @synchronized (self) {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    [manager removeItemAtPath:self.cachePath error:nil];
+    [manager createDirectoryAtPath:self.cachePath withIntermediateDirectories:YES attributes:@{} error:NULL];
+    [_validatedFiles removeAllObjects];
+  }
 }
 
 - (NSUInteger)cacheFileSize
@@ -129,11 +135,33 @@ static NSString * const RoutesMapFile = @"routes.json";
 
 - (void)saveRouteFileData:(NSData *)data withRemoteURL:(NSURL *)url
 {
-  NSString *filePath = [self _rxr_cachedRouteFilePathForRemoteURL:url];
-  if (data == nil) {
-    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-  } else if ([self validateRouteFileData:data withRemoteURL:url]) {
-    [data writeToFile:filePath atomically:YES];
+  if (data) {
+    [self storeRouteFileData:data withRemoteURL:url];
+  } else {
+    @synchronized (self) {
+      NSString *path = [self _rxr_cachedRouteFilePathForRemoteURL:url];
+      [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+      [_validatedFiles removeObjectForKey:path];
+    }
+  }
+}
+
+- (RXRRouteFileStoreResult)storeRouteFileData:(NSData *)data withRemoteURL:(NSURL *)url
+{
+  @synchronized (self) {
+    NSCache *validatedFiles = self.validatedFiles;
+    if (![self validateRouteFileData:data withRemoteURL:url]) {
+      return RXRRouteFileStoreResultInvalidData;
+    }
+    NSString *path = [self _rxr_cachedRouteFilePathForRemoteURL:url];
+    NSError *error = nil;
+    if (![data writeToFile:path options:NSDataWritingAtomic error:&error]) {
+      RXRLogObject *log = [[RXRLogObject alloc] initWithLogDescription:@"rxr_write_resource_file_error" error:error requestURL:url localFilePath:path otherInformation:nil];
+      [RXRConfig rxr_logWithLogObject:log];
+      return RXRRouteFileStoreResultWriteFailed;
+    }
+    [validatedFiles setObject:@YES forKey:path];
+    return RXRRouteFileStoreResultSaved;
   }
 }
 
@@ -171,25 +199,23 @@ static NSString * const RoutesMapFile = @"routes.json";
 
 - (NSString *)routeFilePathForRemoteURL:(NSURL *)url
 {
-  NSString *filePath = [self _rxr_cachedRouteFilePathForRemoteURL:url];
-  if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-    NSData *data = [NSData dataWithContentsOfFile:filePath];
-    if ([self validateRouteFileData:data withRemoteURL:url]) {
-      return filePath;
+  @synchronized (self) {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSString *path = [self _rxr_cachedRouteFilePathForRemoteURL:url];
+    if ([manager fileExistsAtPath:path]) {
+      if ([self _rxr_validateFileAtPath:path remoteURL:url]) {
+        return path;
+      }
+      [manager removeItemAtPath:path error:nil];
     }
-    // Evict corrupt downloads so a bundled copy or a new download can recover.
-    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-  }
+    [_validatedFiles removeObjectForKey:path];
 
-  filePath = [self _rxr_resourceRouteFilePathForRemoteURL:url];
-  if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-    NSData *data = [NSData dataWithContentsOfFile:filePath];
-    if ([self validateRouteFileData:data withRemoteURL:url]) {
-      return filePath;
+    path = [self _rxr_resourceRouteFilePathForRemoteURL:url];
+    if ([manager fileExistsAtPath:path] && [self _rxr_validateFileAtPath:path remoteURL:url]) {
+      return path;
     }
+    return nil;
   }
-
-  return nil;
 }
 
 - (NSURL *)routeFileURLForRemoteURL:(NSURL *)url
@@ -203,6 +229,30 @@ static NSString * const RoutesMapFile = @"routes.json";
 }
 
 #pragma mark - Private methods
+
+// Accessed under @synchronized(self), together with cache file reads/writes.
+- (NSCache<NSString *, NSNumber *> *)validatedFiles
+{
+  id<RXRDataValidator> validator = [RXRRouteManager sharedInstance].dataValidator;
+  if (!_validatedFiles || _validationDataValidator != validator) {
+    _validatedFiles = [[NSCache alloc] init];
+    _validationDataValidator = validator;
+  }
+  return _validatedFiles;
+}
+
+- (BOOL)_rxr_validateFileAtPath:(NSString *)path remoteURL:(NSURL *)url
+{
+  NSCache *validatedFiles = self.validatedFiles;
+  if ([validatedFiles objectForKey:path]) {
+    return YES;
+  }
+  if (![self validateRouteFileData:[NSData dataWithContentsOfFile:path] withRemoteURL:url]) {
+    return NO;
+  }
+  [validatedFiles setObject:@YES forKey:path];
+  return YES;
+}
 
 - (NSString *)_rxr_cachedRouteFilePathForRemoteURL:(NSURL *)url
 {

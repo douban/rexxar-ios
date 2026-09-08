@@ -19,6 +19,7 @@
 @interface RXRWebViewController () <WKNavigationDelegate, WKUIDelegate>
 
 @property (nonatomic, assign) BOOL viewDidAppeared;
+@property (nonatomic, assign) BOOL webContentProcessTerminated;
 @property (nonatomic, weak) id<RXRWebViewDelegate> delegate;
 
 @end
@@ -49,13 +50,15 @@
 {
   [super viewWillAppear:animated];
 
-  if (_webView.URL == nil) {  // means webContentProcess is terminated
+  // An empty URL also occurs while the first local file is being resolved.
+  if (self.webContentProcessTerminated && _webView.URL == nil) {
     [self _rxr_cancelInterceptorsForWebView:_webView];
     [_webView removeFromSuperview];
 
     _webView = [self _rxr_createWebView];
     [self.view addSubview:_webView];
     [self.view setNeedsLayout];
+    self.webContentProcessTerminated = NO;
   }
 }
 
@@ -358,6 +361,7 @@
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
+  self.webContentProcessTerminated = NO;
   if ([self.delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
     [self.delegate webViewDidFinishLoad:webView];
   }
@@ -379,6 +383,7 @@
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
 {
+  self.webContentProcessTerminated = YES;
   if ([self.delegate respondsToSelector:@selector(webViewDidTerminate:)]) {
     [self.delegate webViewDidTerminate:webView];
   }

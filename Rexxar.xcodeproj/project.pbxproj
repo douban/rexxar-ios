@@ -37,6 +37,7 @@
 		A3249A1A1D66F941006CCCCB /* FullRXRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249A191D66F941006CCCCB /* FullRXRViewController.swift */; };
 		A330D9D21DA49B1800BAB863 /* RXRLogContainerAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = A330D9D11DA49B1800BAB863 /* RXRLogContainerAPI.m */; };
 		A35925261CE487870032B1E6 /* RXRRouteFileCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A35925251CE487870032B1E6 /* RXRRouteFileCacheTests.m */; };
+		3F8C11022F99000100000001 /* RXRCachePerformanceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F8C11012F99000100000001 /* RXRCachePerformanceTests.m */; };
 		A35D15A21D66AE2B009B24DC /* RXRAlertDialogWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = A35D15A01D66AE2B009B24DC /* RXRAlertDialogWidget.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A35D15A31D66AE2B009B24DC /* RXRAlertDialogWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = A35D15A11D66AE2B009B24DC /* RXRAlertDialogWidget.m */; };
 		A35E71DF1D7FC86000D38BC0 /* RXRPullRefreshWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = A35E71DD1D7FC86000D38BC0 /* RXRPullRefreshWidget.m */; };
@@ -150,6 +151,7 @@
 		A330D9D01DA49B1800BAB863 /* RXRLogContainerAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXRLogContainerAPI.h; path = RexxarDemo/ContainerAPI/RXRLogContainerAPI.h; sourceTree = SOURCE_ROOT; };
 		A330D9D11DA49B1800BAB863 /* RXRLogContainerAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXRLogContainerAPI.m; path = RexxarDemo/ContainerAPI/RXRLogContainerAPI.m; sourceTree = SOURCE_ROOT; };
 		A35925251CE487870032B1E6 /* RXRRouteFileCacheTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRRouteFileCacheTests.m; sourceTree = "<group>"; };
+		3F8C11012F99000100000001 /* RXRCachePerformanceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RXRCachePerformanceTests.m; sourceTree = "<group>"; };
 		A35D15A01D66AE2B009B24DC /* RXRAlertDialogWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXRAlertDialogWidget.h; sourceTree = "<group>"; };
 		A35D15A11D66AE2B009B24DC /* RXRAlertDialogWidget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRAlertDialogWidget.m; sourceTree = "<group>"; };
 		A35E71DD1D7FC86000D38BC0 /* RXRPullRefreshWidget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXRPullRefreshWidget.m; sourceTree = "<group>"; };
@@ -486,6 +488,7 @@
 			children = (
 				B9E27ECF1C049A9900C12DAF /* RXRRouteManagerTests.m */,
 				A35925251CE487870032B1E6 /* RXRRouteFileCacheTests.m */,
+				3F8C11012F99000100000001 /* RXRCachePerformanceTests.m */,
 				B90EBEC01BFEAA830055D477 /* Info.plist */,
 				B9EF27D71C033C5300C7E2E9 /* www */,
 			);
@@ -734,6 +737,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A35925261CE487870032B1E6 /* RXRRouteFileCacheTests.m in Sources */,
+				3F8C11022F99000100000001 /* RXRCachePerformanceTests.m in Sources */,
 				B9E27ED01C049A9900C12DAF /* RXRRouteManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

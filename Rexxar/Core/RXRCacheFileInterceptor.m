@@ -171,10 +171,10 @@ didCompleteWithError:(nullable NSError *)error
           NSData *data = [NSData dataWithContentsOfFile:self.responseDataFilePath];
           NSURL *cacheURL = [[self class] _rxr_cacheURL:task.currentRequest.URL];
           RXRRouteFileCache *cache = [RXRRouteFileCache sharedInstance];
-          if ([cache validateRouteFileData:data withRemoteURL:cacheURL]) {
-            [cache saveRouteFileData:data withRemoteURL:cacheURL];
+          RXRRouteFileStoreResult result = [cache storeRouteFileData:data withRemoteURL:cacheURL];
+          if (result == RXRRouteFileStoreResultSaved) {
             RXRDebugLog(@"Download resource %@", cacheURL);
-          } else {
+          } else if (result == RXRRouteFileStoreResultInvalidData) {
             error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCannotDecodeContentData
                                     userInfo:@{NSURLErrorFailingURLErrorKey: cacheURL}];
           }

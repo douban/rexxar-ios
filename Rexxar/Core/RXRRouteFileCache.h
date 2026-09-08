@@ -10,6 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, RXRRouteFileStoreResult) {
+  RXRRouteFileStoreResultSaved,
+  RXRRouteFileStoreResultInvalidData,
+  RXRRouteFileStoreResultWriteFailed,
+};
+
 /**
  * `RXRRouteCache` 提供对 Route files 的读取。
  * Route files 包括用于渲染 rexxar 页面的静态 html 文件。
@@ -72,6 +78,9 @@ NS_ASSUME_NONNULL_BEGIN
  * Save the route file with url.
  */
 - (void)saveRouteFileData:(nullable NSData *)data withRemoteURL:(NSURL *)url;
+
+/** Validate once and save. A disk write failure is not a validation failure. */
+- (RXRRouteFileStoreResult)storeRouteFileData:(NSData *)data withRemoteURL:(NSURL *)url;
 
 /**
  * Reject empty resources and validate HTML with the configured RXRDataValidator.

@@ -336,18 +336,18 @@
       continue;
     }
 
-    // 如果文件在本地文件存在（要么在缓存，要么在资源文件夹），什么都不需要做
-    if ([[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:route.remoteHTML]) {
-      continue;
-    }
-
     if ([htmlURLs containsObject:route.remoteHTML]) {
       RXRDebugLog(@"Download %@ abort! Alread in download queue.", route.remoteHTML);
       continue;
     }
+    [htmlURLs addObject:route.remoteHTML];
+
+    // Check each resource once, even when multiple routes share a cached file.
+    if ([[RXRRouteFileCache sharedInstance] routeFileURLForRemoteURL:route.remoteHTML]) {
+      continue;
+    }
 
     dispatch_group_enter(downloadGroup);
-    [htmlURLs addObject:route.remoteHTML];
 
     // 文件不存在，下载下来。
     NSURLRequest *request = [NSURLRequest requestWithURL:route.remoteHTML
@@ -381,7 +381,8 @@
       }
 
       RXRRouteFileCache *cache = [RXRRouteFileCache sharedInstance];
-      if (![cache validateRouteFileData:data withRemoteURL:route.remoteHTML]) {
+      RXRRouteFileStoreResult result = [cache storeRouteFileData:data withRemoteURL:route.remoteHTML];
+      if (result == RXRRouteFileStoreResultInvalidData) {
         // Never cache the invalid file. The policy only controls other files.
         if ([self.dataValidator respondsToSelector:@selector(stopDownloadingIfValidationFailed)] &&
             [self.dataValidator stopDownloadingIfValidationFailed]) {
@@ -393,8 +394,6 @@
         dispatch_group_leave(downloadGroup);
         return;
       }
-
-      [cache saveRouteFileData:data withRemoteURL:route.remoteHTML];
 
       dispatch_group_leave(downloadGroup);
     }];
