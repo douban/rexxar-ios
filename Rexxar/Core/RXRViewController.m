@@ -26,6 +26,7 @@
 
 @property (nonatomic, strong) NSMutableDictionary *reloadRecord;
 @property (nonatomic, assign) BOOL isWebViewOnceLoaded;
+@property (nonatomic, assign) NSUInteger loadGeneration;
 
 @end
 
@@ -99,13 +100,26 @@
 
 - (void)reloadWebView
 {
-  if (!_requestURL) {
-    _requestURL = [self _rxr_htmlURLWithUri:self.uri htmlFileURL:self.htmlFileURL];
-  }
-
+  NSUInteger generation = ++self.loadGeneration;
   if (_requestURL) {
     [self loadRequest:[NSURLRequest requestWithURL:_requestURL]];
+    return;
   }
+
+  NSURL *uri = self.uri;
+  NSURL *htmlFileURL = self.htmlFileURL;
+  __weak typeof(self) weakSelf = self;
+  dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+    NSURL *url = [weakSelf _rxr_htmlURLWithUri:uri htmlFileURL:htmlFileURL];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      typeof(self) self = weakSelf;
+      if (!self || generation != self.loadGeneration || !url) {
+        return;
+      }
+      self->_requestURL = url;
+      [self loadRequest:[NSURLRequest requestWithURL:url]];
+    });
+  });
 }
 
 #pragma mark - Native Call WebView JavaScript interfaces.
@@ -261,20 +275,20 @@ decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
   if (!htmlFileURL) {
     // 没有设置 htmlFileURL，则使用本地 html 文件或者服务器读取 html 文件。
 
-    htmlFileURL = [[RXRRouteManager sharedInstance] remoteHtmlURLForURI:self.uri];
+    htmlFileURL = [[RXRRouteManager sharedInstance] remoteHtmlURLForURI:uri];
 
     if (!htmlFileURL && [RXRConfig rxr_canLog]) {
-      [RXRConfig rxr_logWithType:RXRLogTypeNoRemoteHTMLForURI error:nil requestURL:self.uri localFilePath:nil userInfo:nil];
+      [RXRConfig rxr_logWithType:RXRLogTypeNoRemoteHTMLForURI error:nil requestURL:uri localFilePath:nil userInfo:nil];
     }
 
     if ([RXRConfig isCacheEnable]) {
       // 如果缓存启用，尝试读取本地文件。如果没有本地文件（本地文件包括缓存，和资源文件夹），则从服务器读取。
-      NSURL *localHtmlURL = [[RXRRouteManager sharedInstance] localHtmlURLForURI:self.uri];
+      NSURL *localHtmlURL = [[RXRRouteManager sharedInstance] localHtmlURLForURI:uri];
       if (localHtmlURL) {
         htmlFileURL = localHtmlURL;
       }
       else if (!localHtmlURL && [RXRConfig rxr_canLog]) {
-        [RXRConfig rxr_logWithType:RXRLogTypeNoLocalHTMLForURI error:nil requestURL:self.uri localFilePath:nil userInfo:nil];
+        [RXRConfig rxr_logWithType:RXRLogTypeNoLocalHTMLForURI error:nil requestURL:uri localFilePath:nil userInfo:nil];
       }
     }
   }
