@@ -202,9 +202,10 @@ API_AVAILABLE(ios(11.0))
 {
   NSString *taskID = [self taskIDForSchemeTask:urlSchemeTask];
   dispatch_semaphore_wait(self.listSema, DISPATCH_TIME_FOREVER);
-  [self.runningTasks[taskID] cancel];
+  RXRCustomSchemeDataTaskRunner *runner = self.runningTasks[taskID];
   self.runningTasks[taskID] = nil;
   dispatch_semaphore_signal(self.listSema);
+  [runner cancel];
 }
 
 - (NSString *)taskIDForSchemeTask:(id <WKURLSchemeTask>)urlSchemeTask API_AVAILABLE(ios(11.0))
